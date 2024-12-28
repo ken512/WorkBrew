@@ -1,7 +1,10 @@
 "use client";
 import { supabase } from "@/utils/supabase";
 import { useState } from "react";
+import { Input } from "../_components/Input";
+import { Label } from "../_components/Label";
 import { HeaderBase } from "../_components/HeaderBase";
+import { Button } from "../_components/Button";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +17,7 @@ const SignUp = () => {
       email,
       password,
       options: {
-        emailRedirectTo: `http://localhost:3000/login`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
       },
     });
 
@@ -29,14 +32,18 @@ const SignUp = () => {
 
   return (
     <div>
-      <HeaderBase />
+      <div className="w-full min-h-36 flex justify-between  px-10 h-15 bg-beige-200">
+      <HeaderBase href="/" className="py-12">
+        WorkBrew
+      </HeaderBase>
+      </div>
       <div className=" min-h-screen bg-tan-300 flex flex-col items-center justify-center">
         <form onSubmit={handleSubmit} className="w-full max-w-[500px] ">
           <div className="py-5">
-            <label htmlFor="email" className="block md-2">
+            <Label htmlFor="email" className="block md-2">
               メールアドレス
-            </label>
-            <input
+            </Label>
+            <Input
               type="email"
               name="email"
               id="email"
@@ -47,10 +54,10 @@ const SignUp = () => {
             />
           </div>
           <div className="py-5">
-            <label htmlFor="password" className="block md-2">
+            <Label htmlFor="password" className="block md-2">
               パスワード
-            </label>
-            <input
+            </Label>
+            <Input
               type="password"
               name="password"
               id="password"
@@ -62,12 +69,13 @@ const SignUp = () => {
             />
           </div>
           <div className="py-5 flex justify-center">
-            <button
+            <Button
+              href="/"
               type="submit"
               className="w-[120px]  text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-3xl text-sm px-5 py-2.5 text-center"
             >
               登録
-            </button>
+            </Button>
           </div>
         </form>
       </div>
