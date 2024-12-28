@@ -1,15 +1,22 @@
 "use client";
 import React from "react";
+import Link from "next/link";
+type HeaderProps = {
+  href: string;
+  className: string;
+  children: string;
+};
 
-
-export const HeaderBase: React.FC = () => {
+export const HeaderBase: React.FC<HeaderProps> = ({
+  href,
+  className,
+  children,
+}) => {
   return (
-    <header className="w-full min-h-36 flex justify-between py-6 px- h-15 bg-beige-200">
-      <div className="my-6">
-      <a href="/" className="px-10"> 
-        WorkBrew
-      </a>
-      </div>
+    <header className={className}>
+      <Link href={href} className={className}>
+        {children}
+      </Link>
     </header>
   );
 };

@@ -1,4 +1,4 @@
-export type Cafes = {
+export type Cafe = {
   cafeName: string;
   area: string;
   storeAddress: string;
