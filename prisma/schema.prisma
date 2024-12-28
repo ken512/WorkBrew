@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Users {
+  id                  Int                @id @default(autoincrement())
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  userName            String
+  profileIcon         String
+  biography           String             @db.Text
+  cafes               Cafe[]
+  contacts            Contact[]
+  information         Information[]
+  favorites           Favorite[]             
+}
+
+model Contact {
+  id                   Int               @id @default(autoincrement())
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  userId               Int                @unique
+  contactContent       String            @db.Text
+  users                Users             @relation(fields: [userId], references: [id])           
+}
+
+model Information {
+  id                      Int              @id @default(autoincrement())
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  is_suggested            Boolean           
+  latestInfo              String 
+  timeElapsed             String           @db.VarChar(50)
+  recommended_cafe        String
+  recommendation_reason   String           @db.Text
+  userId                  Int
+  cafeId                  Int              
+  user                    Users            @relation(fields: [userId], references: [id])
+  cafe                    Cafe             @relation(fields: [cafeId], references: [id])
+}
+
+model Cafe {
+  id                     Int               @id @default(autoincrement())
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  cafeName               String            @db.VarChar(100)
+  thumbnailImage         String            @db.VarChar(255) 
+  area                   String
+  storeAddress           String  
+  openingTime            String            @db.VarChar(5)
+  closingHours           String            @db.VarChar(5)
+  closingDays            String
+  cafeUrl                String            @db.VarChar(255)
+  wifiAvailable          Boolean
+  wifiSpeed              Boolean
+  wifiStability          Boolean
+  powerOutlets           Boolean
+  seatAvailability       Boolean
+  starRating             Int               
+  comment                String
+  locationCoordinates    String
+  userId                 Int
+  information            Information[]
+  favorites              Favorite[]
+  users                  Users             @relation(fields: [userId], references: [id])
+}
+
+
+model Favorite {
+  id                     Int               @id @default(autoincrement())
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  userId                 Int
+  cafeId                 Int
+  user                   Users             @relation(fields: [userId], references: [id])
+  cafe                   Cafe              @relation(fields: [cafeId], references: [id])
+}
