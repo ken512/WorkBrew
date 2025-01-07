@@ -1,44 +1,41 @@
 "use client";
 import { supabase } from "@/utils/supabase";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
-import { HeaderBase } from "../_components/HeaderBase";
+import { HederAdminBase } from "../_components/HeaderAdminBase";
 
-const SignUp = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const { error } = await supabase.auth.signUp({
+  
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
-      options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
-      },
     });
-
+  
     if (error) {
-      alert("登録に失敗しました");
+      alert("ログイン失敗しました。詳細: " + error.message);
     } else {
-      setEmail("");
-      setPassword("");
-      alert("確認メールを送信しました");
+      alert("ログインに成功しました");
+      router.replace("/admin/home");
     }
   };
+  
 
   return (
     <div>
-      <div className="w-full min-h-36 flex justify-between  px-10 h-15 bg-beige-200">
-        <HeaderBase href="/" className="py-12">
-          WorkBrew
-        </HeaderBase>
-      </div>
-      <div className=" min-h-screen bg-tan-300 flex flex-col items-center justify-center">
-      <h1 className="text-5xl">ユーザー登録</h1>
-        <form onSubmit={handleSubmit} className="w-full max-w-[500px] ">
+      <HederAdminBase href="/" className="py-12">
+        WorkBrew
+      </HederAdminBase>
+      <div className="min-h-screen bg-tan-300 flex flex-col items-center justify-center">
+        <h1 className="text-5xl">ログイン</h1>
+        <form onSubmit={handleSubmit} className="w-full max-w-[500px]">
           <div className="py-5">
             <Label htmlFor="email" className="block md-2">
               メールアドレス
@@ -48,8 +45,10 @@ const SignUp = () => {
               name="email"
               id="email"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
-              required
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@company.com"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
               value={email}
             />
           </div>
@@ -64,16 +63,18 @@ const SignUp = () => {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
               placeholder="••••••••"
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               value={password}
             />
           </div>
           <div className="py-5 flex justify-center">
             <button
               type="submit"
-              className="w-[120px]  text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-3xl text-sm px-5 py-2.5 text-center"
+              className="w-[120px] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-3xl text-sm px-5 py-2.5 text-center"
             >
-              登録
+              ログイン
             </button>
           </div>
         </form>
@@ -82,4 +83,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;
