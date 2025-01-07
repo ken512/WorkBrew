@@ -1,13 +1,12 @@
 "use client";
-// import { Cafes } from "@/_types/cafes";
 import React from "react";
-import { HeaderTop } from "./_components/HeaderTop";
+import { HeaderPublic } from "./_components/HeaderPublic"; 
 import { Sections } from "@/data/Sections";
 import "./globals.css";
 const TopPage: React.FC = () => {
   return (
     <div>
-      <HeaderTop />
+      <HeaderPublic />
       {/* <img src="" alt="" /> */}
       <div className="min-h-[600px] flex flex-col items-center justify-center">
         <h1>WorkBrew</h1>

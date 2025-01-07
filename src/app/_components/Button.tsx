@@ -1,21 +1,26 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React from "react";
-import Link from "next/link";
 
 type ButtonProps = {
   href: string;
-  type: string;
-  children: string;
+  children: React.ReactNode;
   className: string;
 };
 
-export const Button: React.FC<ButtonProps> = ({ href, type, children, className }) => {
+export const Button: React.FC<ButtonProps> = ({
+  href,
+  children,
+  className,
+}) => {
+  const router = useRouter();
 
+  const handleClick = () => {
+    router.push(href);
+  };
   return (
-    <button className={className}>
-    <Link href={href} type={type}>
-    {children}
-    </Link>
+    <button onClick={handleClick} className={className}>
+      <span>{children}</span>
     </button>
-  )
-}
+  );
+};

@@ -5,13 +5,13 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-const token = request.headers.get('Authorization') ?? ''
+  const token = request.headers.get('Authorization') ?? ''
 
-  // supabaseに対してtokenを送る
-  const { error } = await supabase.auth.getUser(token);
-  if (error) {
-    return NextResponse.json({ status: error.message }, { status: 200 });
-  }
+  	// supabaseに対してtokenを送る
+    const { error } = await supabase.auth.getUser(token)
+    if( error ) {
+      return NextResponse.json({status: error.message}, {status: 200});
+    }
 
   try {
     const cafes = await prisma.cafe.findMany({
@@ -37,6 +37,7 @@ const token = request.headers.get('Authorization') ?? ''
 };
 
 type Cafe = {
+  id: string;
   cafeName: string;
   area: string;
   storeAddress: string;
@@ -56,58 +57,43 @@ type Cafe = {
   userId: number;
 };
 
-export const POST = async (request: NextRequest) => {
-  const token = request.headers.get('Authorization') ?? ''
+export const PUT = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const token = request.headers.get("Authorization") ?? "";
 
-  console.log("Received Token:", token);
-  const {data, error } = await supabase.auth.getUser(token);
-  console.log("Auth Data:", data, "Auth Error:", error);
+  // supabaseに対してtokenを送る
+  const { error } = await supabase.auth.getUser(token);
   if (error) {
     return NextResponse.json({ status: error.message }, { status: 200 });
   }
 
+  const {
+    cafeName,
+    area,
+    storeAddress,
+    openingTime,
+    closingHours,
+    thumbnailImage,
+    closingDays,
+    cafeUrl,
+    wifiAvailable,
+    wifiSpeed,
+    wifiStability,
+    powerOutlets,
+    seatAvailability,
+    starRating,
+    comment,
+    locationCoordinates,
+    userId,
+  }: Cafe = await request.json();
+
+  const { id } = params;
+
   try {
-    const {
-      cafeName,
-      area,
-      storeAddress,
-      openingTime,
-      closingHours,
-      thumbnailImage,
-      closingDays,
-      cafeUrl,
-      wifiAvailable,
-      wifiSpeed,
-      wifiStability,
-      powerOutlets,
-      seatAvailability,
-      starRating,
-      comment,
-      locationCoordinates,
-      userId,
-    }: Cafe = await request.json();
-
-    //cafe投稿で必須項目のみをエラーハンドリング
-    if (
-      !cafeName ||
-      !storeAddress ||
-      wifiAvailable === undefined ||
-      powerOutlets === undefined ||
-      seatAvailability === undefined
-    ) {
-      throw new Error("Invalid input data");
-    }
-
-    // 既存のカフェをチェック
-    const existingCafe = await prisma.cafe.findMany({
-      where: { cafeName, storeAddress },
-    });
-    if (existingCafe.length > 0) {
-      throw new Error("Cafe Already exists");
-    }
-
-    // 新しいカフェを作成
-    const newCafe = await prisma.cafe.create({
+    const updatedCafe = await prisma.cafe.update({
+      where: { id: parseInt(id) },
       data: {
         cafeName,
         area,
@@ -129,11 +115,16 @@ export const POST = async (request: NextRequest) => {
       },
     });
 
-    return NextResponse.json({ status: "OK", cafe: newCafe }, { status: 200 });
+    return NextResponse.json(
+      { status: "更新が成功しました", cafe: updatedCafe },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error creating post:", error);
     if (error instanceof Error) {
-      return NextResponse.json({ status: error.message }, { status: 400 });
+      return NextResponse.json(
+        { status: "更新が失敗しました", message: error.message },
+        { status: 400 }
+      );
     }
   }
 };
