@@ -3,5 +3,5 @@ export type User = {
   userId: string;
   userName: string;
   profileIcon: string;
-  biography: Text;
+  biography: string;
 }

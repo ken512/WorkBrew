@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button } from "./Button";
+import { LinkButton } from "./LinkButton";
 import { HeaderBase } from "./HeaderBase";
 
 export const HeaderPublic: React.FC = () => {
@@ -19,25 +19,25 @@ export const HeaderPublic: React.FC = () => {
         </HeaderBase>
       </div>
       <div className="flex justify-between my-5">
-        <Button
+        <LinkButton
           href="/cafe_post"
 
           className="rounded-3xl bg-yellow-400 p-2 px-6 mx-6"
         >
           カフェ一覧
-        </Button>
-        <Button
+        </LinkButton>
+        <LinkButton
           href="/login"
           className="rounded-3xl bg-yellow-400 p-2 px-6 mx-6"
         >
           ログイン
-        </Button>
-        <Button
+        </LinkButton>
+        <LinkButton
           href="/signup"
           className="rounded-3xl bg-yellow-400 p-2 px-6 mx-6"
         >
           ユーザー登録
-        </Button>
+        </LinkButton>
       </div>
     </header>
   );

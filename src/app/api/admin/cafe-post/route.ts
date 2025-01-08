@@ -1,6 +1,7 @@
 import { supabase } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { Cafe } from "@/_types/cafe";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,7 @@ const token = request.headers.get('Authorization') ?? ''
   const { error } = await supabase.auth.getUser(token);
   if (error) {
     return NextResponse.json({ status: error.message }, { status: 200 });
-  }
+  } 
 
   try {
     const cafes = await prisma.cafe.findMany({
@@ -36,25 +37,6 @@ const token = request.headers.get('Authorization') ?? ''
   }
 };
 
-type Cafe = {
-  cafeName: string;
-  area: string;
-  storeAddress: string;
-  openingTime: string;
-  closingHours: string;
-  thumbnailImage: string;
-  closingDays: string;
-  cafeUrl: string;
-  wifiAvailable: boolean;
-  wifiSpeed: boolean;
-  wifiStability: boolean;
-  powerOutlets: boolean;
-  seatAvailability: boolean;
-  starRating: number;
-  comment: string;
-  locationCoordinates: string;
-  userId: number;
-};
 
 export const POST = async (request: NextRequest) => {
   const token = request.headers.get('Authorization') ?? ''

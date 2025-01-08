@@ -4,21 +4,22 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export const GET = async (request: NextRequest,  { params }: { params: { id: string } },) => {
-  const token = request.headers.get('Authorization') ?? ''
 
-
-	// supabaseに対してtokenを送る
-  const { error } = await supabase.auth.getUser(token)
-  if( error ) {
-    return NextResponse.json({status: error.message}, {status: 200});
+const getUserFormToken = async (token: string) => {
+  const {data, error} = await supabase.auth.getUser(token);
+  if(error || !data.user) {
+    throw new Error("Invalid or missing token");
   }
+  return data.user.id;
+}
 
-  const { id } = params
+export const GET = async (request: NextRequest) => {
+  const token = request.headers.get('Authorization') ?? ''
+  const userId = await getUserFormToken(token);
 
   try {
     const userData = await prisma.users.findUnique({
-      where: { id: parseInt(id), },
+      where: { id: parseInt(userId), },
       include: {
         cafes: {
           select: { id: true },
@@ -133,7 +134,7 @@ export const DELETE = async (request: NextRequest,  { params }: { params: { id: 
   try {
     const userDelete = await prisma.users.delete({
       where: {
-        id: parseInt(id) // 削除対象を一意に識別するために `id` を指定
+        id: parseInt(id), // 削除対象を一意に識別するために `id` を指定
       },
     });
 

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
-import { HederAdminBase } from "../_components/HeaderAdminBase";
+import { HederAdminBase } from "../admin/_components/HeaderAdminBase";
+import { Button } from "../_components/Button";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,12 +14,12 @@ const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-  
+
     if (error) {
       alert("ログイン失敗しました。詳細: " + error.message);
     } else {
@@ -26,7 +27,6 @@ const Login = () => {
       router.replace("/admin/home");
     }
   };
-  
 
   return (
     <div>
@@ -70,12 +70,12 @@ const Login = () => {
             />
           </div>
           <div className="py-5 flex justify-center">
-            <button
+            <Button
               type="submit"
               className="w-[120px] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-3xl text-sm px-5 py-2.5 text-center"
             >
               ログイン
-            </button>
+            </Button>
           </div>
         </form>
       </div>

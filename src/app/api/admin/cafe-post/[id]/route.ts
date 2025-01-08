@@ -1,7 +1,7 @@
 import { supabase } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-
+import { Cafe } from "@/_types/cafe";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
@@ -36,26 +36,7 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
-type Cafe = {
-  id: string;
-  cafeName: string;
-  area: string;
-  storeAddress: string;
-  openingTime: string;
-  closingHours: string;
-  thumbnailImage: string;
-  closingDays: string;
-  cafeUrl: string;
-  wifiAvailable: boolean;
-  wifiSpeed: boolean;
-  wifiStability: boolean;
-  powerOutlets: boolean;
-  seatAvailability: boolean;
-  starRating: number;
-  comment: string;
-  locationCoordinates: string;
-  userId: number;
-};
+
 
 export const PUT = async (
   request: NextRequest,
@@ -86,7 +67,6 @@ export const PUT = async (
     starRating,
     comment,
     locationCoordinates,
-    userId,
   }: Cafe = await request.json();
 
   const { id } = params;
@@ -111,7 +91,6 @@ export const PUT = async (
         starRating,
         comment,
         locationCoordinates,
-        userId,
       },
     });
 
