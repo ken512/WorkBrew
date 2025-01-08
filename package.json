@@ -10,15 +10,17 @@
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/supabase-js": "^2.47.10",
     "bootstrap-icons": "^1.11.3",
-    "next": "14.2.16",
+    "next": "^14.2.16",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^18.3.18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.16",

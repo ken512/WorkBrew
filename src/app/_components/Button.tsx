@@ -1,21 +1,20 @@
 "use client";
 import React from "react";
-import Link from "next/link";
 
 type ButtonProps = {
-  href: string;
-  type: string;
-  children: string;
+  type: "button" | "submit" | "reset";
   className: string;
+  children: React.ReactNode;
 };
 
-export const Button: React.FC<ButtonProps> = ({ href, type, children, className }) => {
-
+export const Button: React.FC<ButtonProps> = ({
+  type,
+  className,
+  children,
+}) => {
   return (
-    <button className={className}>
-    <Link href={href} type={type}>
-    {children}
-    </Link>
+    <button type={type} className={className}>
+      {children}
     </button>
-  )
-}
+  );
+};

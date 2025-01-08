@@ -4,7 +4,7 @@ import Link from "next/link";
 type HeaderProps = {
   href: string;
   className: string;
-  children: string;
+  children: React.ReactNode;
 };
 
 export const HeaderBase: React.FC<HeaderProps> = ({
@@ -12,11 +12,11 @@ export const HeaderBase: React.FC<HeaderProps> = ({
   className,
   children,
 }) => {
+
   return (
-    <header className={className}>
+
       <Link href={href} className={className}>
         {children}
       </Link>
-    </header>
   );
 };

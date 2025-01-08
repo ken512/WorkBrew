@@ -2,7 +2,7 @@ export type Cafe = {
   cafeName: string;
   area: string;
   storeAddress: string;
-  openingTime: string
+  openingTime: string;
   closingHours: string;
   thumbnailImage: string;
   closingDays: string;
