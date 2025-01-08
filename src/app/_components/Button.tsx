@@ -1,26 +1,20 @@
 "use client";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 type ButtonProps = {
-  href: string;
-  children: React.ReactNode;
+  type: "button" | "submit" | "reset";
   className: string;
+  children: React.ReactNode;
 };
 
 export const Button: React.FC<ButtonProps> = ({
-  href,
-  children,
+  type,
   className,
+  children,
 }) => {
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push(href);
-  };
   return (
-    <button onClick={handleClick} className={className}>
-      <span>{children}</span>
+    <button type={type} className={className}>
+      {children}
     </button>
   );
 };

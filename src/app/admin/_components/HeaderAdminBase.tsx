@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { useSupabaseSession } from "../_hooks/useSupabaseSession";
+import { useRouter } from "next/navigation";
+import { useSupabaseSession } from "../../_hooks/useSupabaseSession";
 import { supabase } from "@/utils/supabase";
-import AdminMenu from "../admin/AdminMenu";
-import "../globals.css";
+import AdminMenu from "../AdminMenu";
+import "../../globals.css";
+import Link from "next/link";
 
 type HeaderProps = {
   href: string;
@@ -15,10 +16,11 @@ type HeaderProps = {
 
 export const HederAdminBase = ({ href, className, children }: HeaderProps) => {
   const { session, isLoading } = useSupabaseSession();
+  const router = useRouter();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/";
+    router.replace("/");
   };
 
   if (isLoading) {

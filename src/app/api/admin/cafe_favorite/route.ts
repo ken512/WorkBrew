@@ -4,20 +4,21 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export const GET = async (request: NextRequest,  { params }: { params: { id: string } },) => {
-  const token = request.headers.get("Authorization") ?? "";
-
-  // supabaseに対してtokenを送る
-  const { error } = await supabase.auth.getUser(token);
-  if (error) {
-    return NextResponse.json({ status: error.message }, { status: 200 });
+const getUserFormToken = async (token: string) => {
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data.user) {
+    throw new Error("Invalid or missing token");
   }
+  return data.user.id;
+};
 
-  const { id } = params;
+export const GET = async (request: NextRequest) => {
+  const token = request.headers.get("Authorization") ?? "";
+  const userId = await getUserFormToken(token);
 
   try {
     const favoritesCafes = await prisma.favorite.findMany({
-      where: { id: parseInt(id), },
+      where: { id: parseInt(userId) },
       include: {
         cafe: true, // 関連するカフェ情報を取得
         user: true, // 関連するユーザー情報を取得

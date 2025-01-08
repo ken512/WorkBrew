@@ -12,7 +12,7 @@ const SignUp = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { error } = await supabase.auth.signUp({
+    const { data,error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -23,6 +23,7 @@ const SignUp = () => {
     if (error) {
       alert("登録に失敗しました");
     } else {
+      console.log(data)
       setEmail("");
       setPassword("");
       alert("確認メールを送信しました");
