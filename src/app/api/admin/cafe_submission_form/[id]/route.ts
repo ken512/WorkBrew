@@ -1,17 +1,17 @@
-import { supabase } from "@/utils/supabase";
+import { getCurrentUser } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { Cafe } from "@/_types/cafe";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-  const token = request.headers.get('Authorization') ?? ''
 
-  	// supabaseに対してtokenを送る
-    const { error } = await supabase.auth.getUser(token)
-    if( error ) {
-      return NextResponse.json({status: error.message}, {status: 200});
-    }
+  const { currentUser, error } = await getCurrentUser(request);
+
+  if (error || !currentUser) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+  }
+
 
   try {
     const cafes = await prisma.cafe.findMany({
@@ -42,13 +42,13 @@ export const PUT = async (
   request: NextRequest,
   { params }: { params: { id: string } }
 ) => {
-  const token = request.headers.get("Authorization") ?? "";
 
-  // supabaseに対してtokenを送る
-  const { error } = await supabase.auth.getUser(token);
-  if (error) {
-    return NextResponse.json({ status: error.message }, { status: 200 });
+  const { currentUser, error } = await getCurrentUser(request);
+
+  if (error || !currentUser) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
   }
+
 
   const {
     cafeName,
@@ -72,6 +72,13 @@ export const PUT = async (
   const { id } = params;
 
   try {
+
+    if (
+      starRating === null 
+    ) {
+      throw new Error("Invalid input data");
+    }
+
     const updatedCafe = await prisma.cafe.update({
       where: { id: parseInt(id) },
       data: {
@@ -107,3 +114,16 @@ export const PUT = async (
     }
   }
 };
+
+
+export const DELETE = async(request: NextRequest) => {
+
+  const { currentUser, error } = await getCurrentUser(request);
+
+  if (error || !currentUser) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+  }
+
+
+
+}

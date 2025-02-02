@@ -16,7 +16,7 @@ export const NavLink: React.FC<NavLinkProps> = ({ children, href }) => {
       <li>
         <Link
           href={href}
-          className={`block px-4 py-2 text-gray-700 hover:bg-gray-100 ${
+          className={`block w-60 px-2 py-1 text-gray-700 hover:bg-gray-100 ${
             isSelected ? "font-bold" : ""
           }`}
         >

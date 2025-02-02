@@ -1,41 +1,40 @@
 import { PrismaClient } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/utils/supabase";
+import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export const GET = async (request: NextRequest) => {
-
-  const { currentUser, error } = await getCurrentUser(request);
-  if (error || !currentUser) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-  }
-  
+export const GET = async () => {
   try {
     // 最新カフェ情報を取得
     const latestCafes = await prisma.cafe.findMany({
-      orderBy: {
-        createdAt: 'desc',
+      include: {
+        users: {
+          select: { id: true, userName: true },
+        },
       },
-      take: 5, // 取得する件数を指定
+      orderBy: {
+        createdAt: "desc",
+      },
     });
-    if(latestCafes.length === 0) {
-      console.warn("No latest cafes found");
-    }
+    console.log("Latest cafes fetched:", latestCafes);
 
     // おすすめカフェ情報を取得（評価が高いカフェ）
     const recommendedCafes = await prisma.cafe.findMany({
       where: {
         starRating: {
-          gte: 3, 
+          gte: 5,
         },
       },
-      take: 5,
+      include: {
+        users: {
+          select: { id: true, userName: true },
+        },
+      },
+      orderBy: {
+        starRating: "desc",
+      },
     });
-
-    if(recommendedCafes.length === 0) {
-      console.warn("No recommended cafes found");
-    }
+    console.log("Recommended cafes fetched:", recommendedCafes);  
 
     return NextResponse.json({ status: "OK", latestCafes, recommendedCafes }, { status: 200 });
   } catch (error) {

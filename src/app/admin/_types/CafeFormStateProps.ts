@@ -1,10 +1,11 @@
-export type Cafe = {
+// カフェの状態管理用の型定義
+export type CafeFormStateProps = {
   cafeName: string;
+  thumbnailImage: string;
   area: string;
   storeAddress: string;
   openingTime: string;
   closingHours: string;
-  thumbnailImage: string;
   closingDays: string;
   cafeUrl: string;
   menuOrdered: string;
@@ -14,7 +15,6 @@ export type Cafe = {
   powerOutlets: boolean;
   seatAvailability: boolean;
   starRating: number | null;
-  comment: string; 
+  comment: string;
   locationCoordinates: string;
-  userId: number;
 }
