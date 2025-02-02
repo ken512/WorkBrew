@@ -5,7 +5,7 @@ type InputProps = {
   type: string;
   name: string;
   id: string;
-  value: string;
+  value?: string
   placeholder?: string;
   required?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -18,7 +18,7 @@ export const Input: React.FC<InputProps> = ({
   id,
   value,
   placeholder,
-  required,
+  required = true,
   onChange,
   className,
 }) => {

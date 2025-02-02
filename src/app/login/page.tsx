@@ -1,13 +1,13 @@
 "use client";
 import { supabase } from "@/utils/supabase";
-import { useState } from "react";
+import React,{ useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
-import { HederAdminBase } from "../admin/_components/HeaderAdminBase";
-import { Button } from "../_components/Button";
+import { HeaderAdminBase } from "../admin/_components/HeaderAdminBase";
+import { Button } from "../admin/_components/Button";
 
-const Login = () => {
+const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -15,7 +15,7 @@ const Login = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data,error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -23,6 +23,7 @@ const Login = () => {
     if (error) {
       alert("ログイン失敗しました。詳細: " + error.message);
     } else {
+      console.log("Login successful, session data:", data);
       alert("ログインに成功しました");
       router.replace("/admin/home");
     }
@@ -30,9 +31,7 @@ const Login = () => {
 
   return (
     <div>
-      <HederAdminBase href="/" className="py-12">
-        WorkBrew
-      </HederAdminBase>
+      <HeaderAdminBase href="/" />
       <div className="min-h-screen bg-tan-300 flex flex-col items-center justify-center">
         <h1 className="text-5xl">ログイン</h1>
         <form onSubmit={handleSubmit} className="w-full max-w-[500px]">
@@ -62,7 +61,6 @@ const Login = () => {
               id="password"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
               placeholder="••••••••"
-              required
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
