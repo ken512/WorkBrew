@@ -3,27 +3,31 @@ import { PrismaClient } from "@prisma/client";
 import { UserAccountFormProps } from "@/app/admin/_types/UserAccountForm";
 import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
-const  convertUUIDtoInt = (uuid: string): number => {
-  // UUIDを数値に変換する例 (シンプルな変換例)
-  return parseInt(uuid.replace(/[^0-9]/g, '').slice(0, 9), 10);
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
 }
 
 export const GET = async (request: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(request);
-
-  if (error || !currentUser || !currentUser.user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
-  }
-
-  console.log("currentUser:", currentUser);
-
   try {
-     // UUIDをIntに変換
-    const userId = convertUUIDtoInt(currentUser.user.id);
-    console.log("userId", userId);// UUIDをIntに変換できているか確認
+    const { currentUser, error } = await getCurrentUser(request);
+    
+    if (error) {
+      console.error("Authentication error:", error);
+      return NextResponse.json({ message: "Authentication failed", error }, { status: 401 });
+    }
+
+    if (!currentUser?.user) {
+      return NextResponse.json({ message: "No authenticated user found" }, { status: 401 });
+    }
+
     const userData = await prisma.users.findUnique({
-      where: { id: userId },
+      where: { supabaseUserId: currentUser.user.id },
       include: {
         cafes: {
           select: {
@@ -54,15 +58,34 @@ export const GET = async (request: NextRequest) => {
         },
       },
     });
+
+    console.log("Found userData:", userData);
+
     if (!userData) {
-      return NextResponse.json(
-        { status: "Not Found", message: "ユーザー情報が見つかりません" },
-        { status: 400 }
-      );
+      return NextResponse.json({ 
+        status: "OK", 
+        user: {
+          userName: '',
+          profileIcon: '',
+          biography: '',
+        }
+      });
     }
 
-    return NextResponse.json({ status: "OK", user: userData }, { status: 200 });
+    const response = {
+      status: "OK", 
+      user: {
+        userName: userData.userName,
+        profileIcon: userData.profileIcon,
+        biography: userData.biography
+      }
+    };
+
+    console.log("Sending response:", response);
+
+    return NextResponse.json(response, { status: 200 });
   } catch (error) {
+    console.error("Error in GET handler:", error);
     if (error instanceof Error)
       return NextResponse.json({ status: error.message }, { status: 400 });
   }
@@ -79,22 +102,28 @@ export const POST = async (request: NextRequest) => {
   try {
     const { userName, profileIcon, biography }: UserAccountFormProps = await request.json();
     if (!userName) {
-      throw new Error("Invalid input data");
+      return NextResponse.json({ 
+        status: "ERROR", 
+        message: "ユーザー名は必須です" 
+      }, { status: 400 });
     }
 
-    //ユーザー名を一意にするため、同じユーザー名の存在確認
     const existingUser = await prisma.users.findUnique({
       where: { userName: userName},
     });
     if(existingUser) {
       return NextResponse.json(
-        {status:"User already exists", user: existingUser },
-        {status: 400}
+        { 
+          status: "ERROR", 
+          message: "このユーザー名は既に登録されているか、すでにアカウントが存在します" 
+        },
+        { status: 409 } // 409 Conflict
       );
     }
 
     const newUser = await prisma.users.create({
       data: {
+        supabaseUserId: currentUser.user.id,
         userName,
         profileIcon,
         biography,
@@ -109,32 +138,40 @@ export const POST = async (request: NextRequest) => {
   }
 };
 
-export const PUT = async (
-  request: NextRequest
-) => {
-  const { currentUser, error } = await getCurrentUser(request);
-
-  if (error || !currentUser || !currentUser.user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
-  }
-
+export const PUT = async (request: NextRequest) => {
   try {
-    // UUIDをIntに変換
-    const userId = convertUUIDtoInt(currentUser.user.id); 
+    const { currentUser, error } = await getCurrentUser(request);
+
+    if (error || !currentUser || !currentUser.user) {
+      return NextResponse.json({ 
+        status: "ERROR",
+        message: "認証エラー" 
+      }, { status: 401 });
+    }
+
     const { userName, profileIcon, biography }: UserAccountFormProps = await request.json();
 
     const updateUser = await prisma.users.update({
-      where:  { id: userId } ,
-      data: { userName, profileIcon, biography },
+      where: { supabaseUserId: currentUser.user.id },
+      data: { 
+        userName, 
+        profileIcon: profileIcon || '', // nullの場合は空文字を設定
+        biography: biography || '' 
+      },
     });
 
-    return NextResponse.json(
-      { status: "更新成功", user: updateUser },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      status: "SUCCESS",
+      message: "ユーザー情報を更新しました",
+      user: updateUser
+    }, { status: 200 });
+
   } catch (error) {
-    if (error instanceof Error)
-      return NextResponse.json({ status: error.message }, { status: 400 });
+    console.error("Update error:", error);
+    return NextResponse.json({ 
+      status: "ERROR",
+      message: error instanceof Error ? error.message : "更新処理に失敗しました"
+    }, { status: 500 });
   }
 };
 

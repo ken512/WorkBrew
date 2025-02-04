@@ -1,65 +1,77 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "@/utils/supabase";
 import { v4 as uuidv4 } from "uuid";
-import heic2any from "heic2any";
 import Image from "next/image";
-import imageCompression from "browser-image-compression";
-
-import { Label } from "@/app/_components/Label";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { Button } from "@/app/admin/_components/Button";
 import "../../globals.css";
 
-export const ThumbnailHandle: React.FC = () => {
-  const [convertedFile, setConvertedFile] = useState<File | null>(null);
-  const [thumbnailImage, setThumbnailImage] = useState<string | null>(null);
+// Dynamic imports for browser-only libraries
+const importHeic2any = () => import('heic2any');
+const importImageCompression = () => import('browser-image-compression');
+
+export const ThumbnailHandle: React.FC<{
+  onImageUpload: (imageUrl: string) => void;
+  initialImage?: string;
+}> = ({ onImageUpload, initialImage }) => {
+  const [thumbnailImage, setThumbnailImage] = useState<string | null>(initialImage || null);
+  const {token} = useSupabaseSession();
 
   useEffect(() => {
-    if (thumbnailImage) {
-      fetchImageUrl(thumbnailImage);
+    if (initialImage) {
+      setThumbnailImage(initialImage);
     }
-  }, [thumbnailImage]);
+  }, [initialImage]);
 
-  const fetchImageUrl = async (path: string) => {
-    const { data } = supabase.storage.from("thumbnailImage").getPublicUrl(path);
-    if (data?.publicUrl) {
-      setThumbnailImage(data.publicUrl);
-    } else {
-      console.error("URL取得失敗");
-    }
-  };
-
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    //HEIC/HEIF形式をJPEGに変換
-    const converted = await convertFile(file);
-    if(!converted) return;
+    // ファイルタイプの検証を追加
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
+    if (!allowedTypes.includes(file.type.toLowerCase())) {
+      alert('JPG、PNG、HEICのみアップロード可能です');
+      return;
+    }
 
-    //圧縮処理
-    const compressed = await compressImage(converted);
-    if (compressed) {
-      setConvertedFile(compressed); // 状態を更新
-      uploadFile(compressed); // アップロード
+    // ファイルサイズの検証を追加
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      alert('ファイルサイズは10MB以下にしてください');
+      return;
+    }
+
+    try {
+      const converted = await convertFile(file);
+      if(!converted) {
+        alert('画像の変換に失敗しました');
+        return;
+      }
+
+      const compressed = await compressImage(converted);
+      if (compressed) {
+        await uploadFile(compressed);
+      } else {
+        alert('画像の圧縮に失敗しました');
+      }
+    } catch (error) {
+      console.error('画像処理エラー:', error);
+      alert('画像のアップロードに失敗しました');
     }
   };
 
   const convertFile = async (file: File): Promise<File | null> => {
     if (file.type === "image/heic" || file.type === "image/heif") {
       try {
+        const heic2any = (await importHeic2any()).default;
         const convertedBlob = await heic2any({
           blob: file,
           toType: "image/jpeg",
         });
-        return new File(
-          [convertedBlob as Blob],
-          file.name.replace(/\.\w+$/, ".jpg"),
-          {
-            type: "image/jpeg",
-          }
-        );
+        return new File([convertedBlob as Blob], file.name.replace(/\.\w+$/, ".jpg"), {
+          type: "image/jpeg",
+        });
       } catch (error) {
         console.error("変換失敗", error);
         return null;
@@ -67,14 +79,15 @@ export const ThumbnailHandle: React.FC = () => {
     }
     return file;
   };
-  //画像を圧縮処理
+
   const compressImage = async (file: File): Promise<File | null> => {
     const options = {
-      maxSizeMB: 1, // 最大ファイルサイズ (1MB)
-      maxWidthOrHeight: 1200, // 最大の横幅または高さ
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1200,
       useWebWorker: true,
     };
     try {
+      const imageCompression = (await importImageCompression()).default;
       const compressedBlob = await imageCompression(file, options);
       return new File([compressedBlob], file.name, { type: file.type });
     } catch (error) {
@@ -83,14 +96,26 @@ export const ThumbnailHandle: React.FC = () => {
     }
   };
 
-
   const uploadFile = async (file: File) => {
-    const filePath = `uploads/${uuidv4()}-${file.name}`;
+    if (!token) {
+      alert('認証エラー: もう一度ログインしてください');
+      return;
+    }
+
+    const sanitizedFileName = file.name
+      .replace(/[^a-zA-Z0-9.]/g, '_')
+      .toLowerCase();
+    
+    const filePath = `uploads/${uuidv4()}-${sanitizedFileName}`;
+    
     const { error } = await supabase.storage
       .from("thumbnailImage")
       .upload(filePath, file, {
         cacheControl: "3600",
         upsert: false,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
 
     if (error) {
@@ -98,36 +123,87 @@ export const ThumbnailHandle: React.FC = () => {
       return;
     }
 
-    fetchImageUrl(filePath);
+    const { data } = supabase.storage.from("thumbnailImage").getPublicUrl(filePath);
+    if (data?.publicUrl) {
+      setThumbnailImage(data.publicUrl);
+      onImageUpload(data.publicUrl);
+    }
+  };
+
+  const handleAddClick = () => {
+    document.getElementById("thumbnail-input")?.click();
+  };
+
+  const handleRemoveClick = async () => {
+    if (!token) {
+      alert('認証エラー: もう一度ログインしてください');
+      return;
+    }
+
+    try {
+      if (thumbnailImage) {
+        const filePathMatch = thumbnailImage.match(/thumbnailImage\/(.+)$/);
+        if (filePathMatch) {
+          const filePath = filePathMatch[1];
+          
+          const { error } = await supabase.storage
+            .from("thumbnailImage")
+            .remove([filePath]);
+
+          if (error) {
+            throw error;
+          }
+        }
+      }
+
+      setThumbnailImage(null);
+      onImageUpload('');
+
+    } catch (error) {
+      console.error("画像削除エラー:", error);
+      alert('画像の削除に失敗しました');
+    }
   };
 
   return (
-    <div className="text-center">
-      <Label
-        htmlFor="file-input"
-        className="btn btn-secondary rounded-full w-15 h-15 flex items-center justify-center cursor-pointer"
-      >
-        <i className="i bi-camera text-xl"></i>
-      </Label>
+    <div className="flex flex-col items-center space-y-4">
+      <div className="relative w-full h-64">
+        {thumbnailImage ? (
+          <Image
+            src={thumbnailImage}
+            alt="Thumbnail"
+            className="rounded-lg object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 800px"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-gray-200 rounded-lg">
+            <i className="bi bi-camera text-3xl text-gray-500"></i>
+          </div>
+        )}
+      </div>
       <input
-        id="file-input"
+        id="thumbnail-input"
         type="file"
         className="hidden"
-        placeholder="サムネイルURLを入力してください。"
         onChange={handleFileChange}
       />
-      {convertedFile && (
-        <div className="mt-3">
-        <Image
-          src={URL.createObjectURL(convertedFile)}
-          alt="Converted Preview"
-          className="rounded"
-          width={400}
-          height={400}
-        />
-        </div>
-      )}
-      {thumbnailImage && <Image src={thumbnailImage} alt="Thumbnail" />}
+      <div className="flex space-x-4">
+        <Button
+          type="button"
+          className="px-5 bg-beige-200 rounded-3xl font-bold hover:bg-custom-green"
+          onClick={handleAddClick}
+        >
+          追加
+        </Button>
+        <Button
+          type="button"
+          className="px-5 bg-custom-red rounded-3xl font-bold hover:bg-custom-green"
+          onClick={handleRemoveClick}
+        >
+          削除
+        </Button>
+      </div>
     </div>
   );
 };
