@@ -1,22 +1,29 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "@/utils/supabase";
 import { v4 as uuidv4 } from "uuid";
-import heic2any from "heic2any";
 import Image from "next/image";
-import imageCompression from "browser-image-compression";
-import { Label } from "@/app/_components/Label";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Button } from "@/app/admin/_components/Button";
 import "../../globals.css";
 
-export const UserIcon: React.FC = () => {
-  const [thumbnailImage, setThumbnailImage] = useState<string | null>(null);
+// Dynamic imports for browser-only libraries
+const importHeic2any = () => import('heic2any');
+const importImageCompression = () => import('browser-image-compression');
 
+export const UserIcon: React.FC<{
+  onImageUpload: (imageUrl: string) => void;
+  initialImage?: string;
+}> = ({ onImageUpload, initialImage }) => {
+  const [thumbnailImage, setThumbnailImage] = useState<string | null>(initialImage || null);
+  const {token} = useSupabaseSession();
+
+  // initialImageの変更を監視
   useEffect(() => {
-    if (thumbnailImage) {
-      fetchImageUrl(thumbnailImage);
+    if (initialImage) {
+      setThumbnailImage(initialImage);
     }
-  }, [thumbnailImage]);
+  }, [initialImage]);
 
   const fetchImageUrl = async (path: string) => {
     const { data } = supabase.storage.from("thumbnailImage").getPublicUrl(path);
@@ -27,26 +34,49 @@ export const UserIcon: React.FC = () => {
     }
   };
 
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    //HEIC/HEIF形式をJPEGに変換
-    const converted = await convertFile(file);
-    if(!converted) return;
+    // ファイルタイプの検証を追加
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
+    if (!allowedTypes.includes(file.type.toLowerCase())) {
+      alert('JPG、PNG、HEICのみアップロード可能です');
+      return;
+    }
 
-    //圧縮処理
-    const compressed = await compressImage(converted);
-    if (compressed) {
-      uploadFile(compressed); // アップロード
+    // ファイルサイズの検証を追加
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      alert('ファイルサイズは10MB以下にしてください');
+      return;
+    }
+
+    try {
+      //HEIC/HEIF形式をJPEGに変換
+      const converted = await convertFile(file);
+      if(!converted) {
+        alert('画像の変換に失敗しました');
+        return;
+      }
+
+      //圧縮処理
+      const compressed = await compressImage(converted);
+      if (compressed) {
+        await uploadFile(compressed);
+      } else {
+        alert('画像の圧縮に失敗しました');
+      }
+    } catch (error) {
+      console.error('画像処理エラー:', error);
+      alert('画像のアップロードに失敗しました');
     }
   };
 
   const convertFile = async (file: File): Promise<File | null> => {
     if (file.type === "image/heic" || file.type === "image/heif") {
       try {
+        const heic2any = (await importHeic2any()).default;
         const convertedBlob = await heic2any({
           blob: file,
           toType: "image/jpeg",
@@ -73,6 +103,7 @@ export const UserIcon: React.FC = () => {
       useWebWorker: true,
     };
     try {
+      const imageCompression = (await importImageCompression()).default;
       const compressedBlob = await imageCompression(file, options);
       return new File([compressedBlob], file.name, { type: file.type });
     } catch (error) {
@@ -81,14 +112,26 @@ export const UserIcon: React.FC = () => {
     }
   };
 
-
   const uploadFile = async (file: File) => {
-    const filePath = `uploads/${uuidv4()}-${file.name}`;
+    if (!token) {
+      alert('認証エラー: もう一度ログインしてください');
+      return;
+    }
+
+    const sanitizedFileName = file.name
+      .replace(/[^a-zA-Z0-9.]/g, '_')
+      .toLowerCase();
+      
+    const filePath = `uploads/${uuidv4()}-${sanitizedFileName}`;
+    
     const { error } = await supabase.storage
       .from("thumbnailImage")
       .upload(filePath, file, {
         cacheControl: "3600",
         upsert: false,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
 
     if (error) {
@@ -96,39 +139,68 @@ export const UserIcon: React.FC = () => {
       return;
     }
 
-    fetchImageUrl(filePath);
+    // 画像URLを取得して親コンポーネントに通知
+    const { data } = supabase.storage.from("thumbnailImage").getPublicUrl(filePath);
+    if (data?.publicUrl) {
+      setThumbnailImage(data.publicUrl);
+      onImageUpload(data.publicUrl);
+    }
   };
 
   const handleAddClick = () => {
     document.getElementById("file-input")?.click();
   };
-  const handleRemoveClick = () => {
-    setThumbnailImage(null);
-    // サーバーからも削除する場合は、ここで削除処理を追加
-    console.log("アイコン削除");
+  const handleRemoveClick = async () => {
+    if (!token) {
+      alert('認証エラー: もう一度ログインしてください');
+      return;
+    }
+
+    try {
+      if (thumbnailImage) {
+        // URLからファイルパスを抽出
+        const filePathMatch = thumbnailImage.match(/thumbnailImage\/(.+)$/);
+        if (filePathMatch) {
+          const filePath = filePathMatch[1];
+          
+          // Supabaseのストレージから画像を削除
+          const { error } = await supabase.storage
+            .from("thumbnailImage")
+            .remove([filePath]);
+
+          if (error) {
+            throw error;
+          }
+        }
+      }
+
+      // ローカルの状態をクリア
+      setThumbnailImage(null);
+      // 親コンポーネントに空の文字列を渡して状態をクリア
+      onImageUpload('');
+
+    } catch (error) {
+      console.error("画像削除エラー:", error);
+      alert('画像の削除に失敗しました');
+    }
   };
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <div className="relative w-32 h-32">
+      <div className="relative w-24 h-24 sm:w-32 sm:h-32">
         {thumbnailImage ? (
           <Image
             src={thumbnailImage}
             alt="User Icon"
             className="rounded-full object-cover"
             fill
+            sizes="(max-width: 640px) 96px, 128px"
           />
         ) : (
           <div className="flex items-center justify-center w-full h-full bg-gray-200 rounded-full">
-            <i className="bi bi-camera text-2xl text-gray-500"></i>
+            <i className="bi bi-camera text-xl sm:text-2xl text-gray-500"></i>
           </div>
         )}
-        <Label
-          htmlFor="file-input"
-          className="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-2 cursor-pointer hover:bg-blue-700"
-        >
-          <i className="bi bi-upload"></i>
-        </Label>
       </div>
       <input
         id="file-input"

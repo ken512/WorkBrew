@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-// import { UserIcon } from "./UserIcon";
+import { UserIcon } from "./UserIcon";
 import { UserAccountFormProps } from "../_types/UserAccountForm";
 import { Label } from "@/app/_components/Label";
 import { Input } from "@/app/_components/Input";
@@ -17,30 +17,40 @@ type UserAccountFormPropsWithHandler = {
 export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({formState, setFormState, errors}) => {
   const {token} = useSupabaseSession();
 
-
   useEffect(() => {
     if(!token) return;
     
     const fetchData = async() => {
       try {
-        const response = await fetch("/api/admin/user_account" , {
+        const response = await fetch("/api/admin/user_account", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            "Authorization": `Bearer ${token}`
           },
-
         });
         if(!response.ok) {
-          throw new Error("Failed to fetch user");
+          const errorData = await response.json();
+          console.error("Error response:", errorData);
+          throw new Error(errorData.message || "Failed to fetch user");
+        }
+        const data = await response.json();
+        console.log("Fetched user data:", data);
+
+        if (data.user) {
+          console.log("Setting form state with:", data.user);
+          setFormState({
+            userName: data.user.userName || '',
+            profileIcon: data.user.profileIcon || '',
+            biography: data.user.biography || '',
+          });
         }
       } catch(error) {
         console.log("Failed to fetch user", error);
       }
     };
     fetchData();
-  }, [token]);
-
+  }, [token, setFormState]);
 
   // 状態を更新するための関数
   const updateFormState = (key: keyof UserAccountFormProps, value: string) => {
@@ -55,13 +65,20 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({form
     updateFormState(name as keyof UserAccountFormProps, value);
   };
 
+  const handleImageUpload = (imageUrl: string) => {
+    updateFormState("profileIcon", imageUrl);
+  };
+
   return (
     <div className="flex flex-col font-bold items-center py-60">
       <div className=" my-3 font-bold flex justify-center text-black">
         <Label htmlFor="profileIcon" className=" text-black mr-2">
           ユーザーアイコン
         </Label>
-        {/* <UserIcon /> */}
+        <UserIcon 
+          onImageUpload={handleImageUpload} 
+          initialImage={formState.profileIcon}
+        />
       </div>
       <div className="my-10 w-[800px] py-5">
         <Label htmlFor="userName" className="text-gray-700 mr-2">
