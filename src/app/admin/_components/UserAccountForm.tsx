@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { UserIcon } from "./userIcon";
 import { UserAccountFormProps } from "../_types/userAccountForm";
-import { Label } from "@/app/_components/label";
+import { Label } from "@/app/_components/Label";
 import { Input } from "@/app/_components/Input";
 import { TextArea } from "@/app/_components/textArea";
 import { UserAccountErrorType } from "../_types/userAccountErrorType";
