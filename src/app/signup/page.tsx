@@ -1,11 +1,11 @@
 "use client";
 import { supabase } from "@/utils/supabase";
-import { useState } from "react";
+import React,{ useState } from "react";
 import { Input } from "../_components/Input";
-import { Label } from "../_components/Label";
-import { HeaderBase } from "../_components/HeaderBase";
+import { Label } from "../_components/label";
+import { HeaderBase } from "../_components/headerBase";
 
-const SignUp = () => {
+const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

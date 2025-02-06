@@ -1,8 +1,9 @@
 "use client";
-import { NavLink } from "../_components/navLink";
-import { useRouteGuard } from "./_hooks/useRouteGuard";
+import { NavLink } from "./navLink";
+import { useRouteGuard } from "../admin/_hooks/useRouteGuard";
+import "../globals.css";
 
-const AdminMenu = () => {
+export const MenuBar = () => {
   useRouteGuard();
 
   return (
@@ -19,10 +20,11 @@ const AdminMenu = () => {
             {/* ドロップダウンメニュー */}
             <NavLink href="/admin/home">ホーム</NavLink>
             <NavLink href="/admin/cafe_submission_form">投稿</NavLink>
-            <NavLink href="/public/cafe-post">投稿一覧</NavLink>
-            <NavLink href="/admin/cafe-favorites">お気に入り一覧</NavLink>
-            <NavLink href="/admin/user-account">ユーザーアカウント</NavLink>
-            <NavLink href="/public/faq">FAQ</NavLink>
+            <NavLink href="/cafe_post">投稿一覧</NavLink>
+            <NavLink href="/admin/cafe_favorites">お気に入り一覧</NavLink>
+            <NavLink href="/admin/user_account">ユーザーアカウント</NavLink>
+            <NavLink href="/faq">FAQ</NavLink>
+            <NavLink href="/">トップ</NavLink>
           </ul>
         </li>
       </ul>
@@ -30,4 +32,4 @@ const AdminMenu = () => {
   );
 };
 
-export default AdminMenu;
+
