@@ -1,5 +1,5 @@
 import { supabase } from '@/utils/supabase'
-import { Session } from '@supabase/supabase-js'
+import { Session } from '@supabase/supabase-js' 
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from 'react'
 
