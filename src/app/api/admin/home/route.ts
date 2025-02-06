@@ -2,7 +2,17 @@ import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/utils/supabase";
 
-const prisma = new PrismaClient();
+// グローバルスコープでPrismaClientのインスタンスを保持
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+}
+// PrismaClientのインスタンスを取得（存在しない場合は新規作成）
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+// 本番環境以外ではグローバルにインスタンスを保持
+if(process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
 
 export const GET = async (request: NextRequest) => {
 
@@ -14,6 +24,11 @@ export const GET = async (request: NextRequest) => {
   try {
     // 最新カフェ情報を取得
     const latestCafes = await prisma.cafe.findMany({
+      where: {
+        users: {
+          supabaseUserId: currentUser.user.id
+        },
+      },
       orderBy: {
         createdAt: 'desc',
       },

@@ -3,8 +3,8 @@ import { supabase } from "@/utils/supabase";
 import React,{ useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
-import { Label } from "../_components/Label";
-import { HeaderAdminBase } from "../admin/_components/HeaderAdminBase";
+import { Label } from "../_components/label";
+import { HeaderAdminBase } from "../admin/_components/headerAdminBase";
 import { Button } from "../admin/_components/Button";
 
 const Login: React.FC = () => {

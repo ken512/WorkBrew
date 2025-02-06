@@ -3,18 +3,20 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Input } from "@/app/_components/Input";
 import { CafeFormFields } from "../_data/cafeFormFields";
-import { CafePostButtons } from "./CafePostButtons";
-import { ButtonFields } from "../_data/ButtonFields";
-import { PostClearButton } from "./PostClearButton";
-import { TextArea } from "@/app/_components/TextArea";
+import { CafePostButtons } from "./cafePostButtons";
+import { ButtonFields } from "../_data/buttonFields";
+import { PostClearButton } from "./postClearButton";
+import { TextArea } from "@/app/_components/textArea";
 import { FormErrorsType } from "@/_types/FormErrorsType";
-import { UseCafeFormStateReturn } from "../_types/UseCafeFormStateReturn";
+import { UseCafeFormStateReturn } from "../_types/useCafeFormStateReturn";
 import "../../globals.css";
 
-export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({formState,
+export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({
+  formState,
   setFormState,
-  handleChange,
-  clearForm,}) => {
+  onChange,
+  clearForm,
+}) => {
   const { token } = useSupabaseSession();
   const [errors, setErrors] = useState<FormErrorsType>({});
 
@@ -26,7 +28,7 @@ export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({formState,
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            "Authorization": token,
           },
           
         });
@@ -80,7 +82,7 @@ export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({formState,
   };
 
   const handleClear = () => {
-    clearForm(); // 全フィールドを初期化
+    clearForm();
   };
 
   // URLのリンク生成
@@ -94,74 +96,73 @@ export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({formState,
   };
 
   return (
-      <div className="flex flex-col items-center py-60">
-        <form onSubmit={handleSubmit}>
-          {/* テキスト入力フィールド */}
-          {CafeFormFields.map(({ name, label, placeholder, required }) => (
-            <div key={name} className=" py-2 font-bold w-[600px] ">
-              <div className="flex items-center mb-2">
-                <label className="text-gray-700 mr-2">{label}</label>
-                {errors[name] && (
-                  <p className="text-red-500 text-sm">{errors[name]}</p>
-                )}
-              </div>
-              <Input
-                type="text"
-                name={name}
-                id={name}
-                value={
-                  (formState[name as keyof typeof formState] as string) || ""
-                }
-                placeholder={placeholder}
-                onChange={handleChange}
-                required={required}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
-              />
+    <div className="flex flex-col items-center py-60">
+      <form onSubmit={handleSubmit}>
+        {CafeFormFields.map(({ name, label, placeholder, required }) => (
+          <div key={name} className="py-2 font-bold w-[600px]">
+            <div className="flex items-center mb-2">
+              <label className="text-gray-700 mr-2">{label}</label>
+              {errors[name] && (
+                <p className="text-red-500 text-sm">{errors[name]}</p>
+              )}
             </div>
-          ))}
-
-          {formState.cafeUrl && isValidUrl(formState.cafeUrl) && (
-            <a
-              href={formState.cafeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline"
-            >
-              カフェのウェブサイト
-            </a>
-          )}
-          {/* ボタン選択フィールド */}
-          <div className="mt-10">
-          {ButtonFields.map(({ label, options, fieldName }) => (
-            <CafePostButtons
-              key={fieldName}
-              label={label}
-              options={options}
-              error={errors[fieldName]}
-              onSelect={(selected) => {
-                const convertedValue = convertSelection(selected, fieldName);
-                setFormState((prevState) => ({
-                  ...prevState,
-                  [fieldName]: convertedValue,
-                }));
-              }}
-            />
-          ))}
-        </div>
-          <div className="mt-10">
-            <TextArea
-              label="コメント欄（カフェの感想やおすすめポイントを記入してください）"
-              placeholder="200文字以内"
-              value={formState.comment}
-              maxLength={200}
-              name="comment"
-              onChange={handleChange}
-              rows={15}
-              col={80}
+            <Input
+              type="text"
+              name={name}
+              id={name}
+              value={(formState[name as keyof typeof formState] as string) || ""}
+              placeholder={placeholder}
+              onChange={onChange}
+              required={required}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
             />
           </div>
-        <PostClearButton ClickPost={handleSubmit} ClickClear={handleClear} />
-        </form>
-      </div>
+        ))}
+
+        {formState.cafeUrl && isValidUrl(formState.cafeUrl) && (
+          <a
+            href={formState.cafeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            カフェのウェブサイト
+          </a>
+        )}
+        <div className="mt-10">
+          {ButtonFields.map(({ label, options, fieldName }) => (
+            <CafePostButtons
+            key={fieldName}
+            label={label}
+            options={options}
+            error={errors[fieldName]}
+            onSelect={(selected: string) => {
+              const convertedValue = convertSelection(selected, fieldName);
+              setFormState((prevState) => ({
+                ...prevState,
+                [fieldName]: convertedValue,
+              }));
+            }}
+          />
+          ))}
+        </div>
+        <div className="mt-10">
+          <TextArea
+            label="コメント欄（カフェの感想やおすすめポイントを記入してください）"
+            placeholder="200文字以内"
+            value={formState.comment}
+            maxLength={200}
+            name="comment"
+            onChange={onChange}
+            rows={15}
+            col={80}
+          />
+        </div>
+        <PostClearButton 
+          onPost={handleSubmit}
+          onClear={handleClear}
+        />
+      </form>
+    </div>
   );
 };

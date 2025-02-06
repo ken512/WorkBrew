@@ -1,22 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ButtonColorSwitching } from "./ButtonColorSwitching";
+import { ButtonColorSwitching } from "./buttonColorSwitching";
 import "../../globals.css";
+
 type CafePostButtonsProps = {
   label: string; //フィールド名（例: Wi-Fiの有無）
   options: string[]; //ボタンの選択肢
-  onSelect?: (selected: string) => void; // 選択変更時のコールバック
+  onSelect: (selected: string) => void; // 選択変更時のコールバック
   error?: string; // エラーメッセージ
-  clearSignal?: boolean; // クリアシグナルを受け取るプロパティ
+  clearSignal?: boolean;  // オプショナルに設定
 };
 
-export const CafePostButtons: React.FC<CafePostButtonsProps> = ({
+export const CafePostButtons = ({
   label,
   options,
   onSelect,
   error,
-  clearSignal,
-}) => {
+  clearSignal = false,  // デフォルト値を設定
+}: CafePostButtonsProps) => {
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
@@ -25,16 +26,15 @@ export const CafePostButtons: React.FC<CafePostButtonsProps> = ({
     }
   }, [clearSignal]); // クリアシグナルが来たら選択状態をリセット
 
-  const handleClick = (option: string | number | undefined) => {
+  const handleClick = (option: string | number) => {
     if(typeof option === "string") {
-    setSelected((prevSelected) => ({
-      ...prevSelected,
-      [option]: !prevSelected[option],
-    }));
-    if (onSelect) onSelect(option);
-    } else if(typeof option === "number") {
-      // 数値の場合は文字列に変換してからコールバックを呼び出す
-      if(onSelect) onSelect(option.toString());
+      setSelected((prevSelected) => ({
+        ...prevSelected,
+        [option]: !prevSelected[option],
+      }));
+      onSelect(option);
+    } else {
+      onSelect(option.toString());
     }
   };
 
@@ -74,7 +74,7 @@ export const CafePostButtons: React.FC<CafePostButtonsProps> = ({
           <ButtonColorSwitching
             isStarRating={true}
             initialRating={3}
-            onClick={(rating) => handleClick(rating)}
+            onClick={(rating) => rating !== undefined && handleClick(rating)}
           />
         ) : (
           options.map((option) => (

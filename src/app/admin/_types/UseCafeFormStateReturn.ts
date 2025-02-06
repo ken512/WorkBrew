@@ -1,8 +1,8 @@
-import { CafeFormStateProps } from "./CafeFormStateProps";
+import { CafeFormStateProps } from "./cafeFormStateProps";
 
 export type UseCafeFormStateReturn = {
   formState: CafeFormStateProps;
   setFormState: React.Dispatch<React.SetStateAction<CafeFormStateProps>>;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  clearForm:() => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  clearForm: () => void;
 }

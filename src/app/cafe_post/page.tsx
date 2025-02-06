@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { HeaderPublic } from "@/app/_components/HeaderPublic";
+import { HeaderPublic } from "@/app/_components/headerPublic";
 const CafePost:React.FC = () => {
 
   useEffect(() => {

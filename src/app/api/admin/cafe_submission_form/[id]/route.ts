@@ -2,19 +2,32 @@ import { getCurrentUser } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { Cafe } from "@/_types/cafe";
-const prisma = new PrismaClient();
+// グローバルスコープでPrismaClientのインスタンスを保持
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+// PrismaClientのインスタンスを取得（存在しない場合は新規作成）
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+// 本番環境以外ではグローバルにインスタンスを保持
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
 
 export const GET = async (request: NextRequest) => {
-
   const { currentUser, error } = await getCurrentUser(request);
 
   if (error || !currentUser) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
-
 
   try {
     const cafes = await prisma.cafe.findMany({
+      where: {
+        users: {
+          supabaseUserId: currentUser.user.id,
+        },
+      },
       include: {
         users: {
           select: { id: true, userName: true },
@@ -36,51 +49,55 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
-
-
-export const PUT = async (
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) => {
-
+export const PUT = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
 
   if (error || !currentUser) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
 
-
-  const {
-    cafeName,
-    area,
-    storeAddress,
-    openingTime,
-    closingHours,
-    thumbnailImage,
-    closingDays,
-    cafeUrl,
-    wifiAvailable,
-    wifiSpeed,
-    wifiStability,
-    powerOutlets,
-    seatAvailability,
-    starRating,
-    comment,
-    locationCoordinates,
-  }: Cafe = await request.json();
-
-  const { id } = params;
-
   try {
+    // ユーザーの取得
+    const user = await prisma.users.findUnique({
+      where: { supabaseUserId: currentUser.user.id },
+      select: { id: true }
+    });
 
-    if (
-      starRating === null 
-    ) {
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    const {
+      cafeName,
+      area,
+      storeAddress,
+      openingTime,
+      closingHours,
+      thumbnailImage,
+      closingDays,
+      cafeUrl,
+      wifiAvailable,
+      wifiSpeed,
+      wifiStability,
+      powerOutlets,
+      seatAvailability,
+      starRating,
+      comment,
+      locationCoordinates,
+    }: Cafe = await request.json();
+
+    // URLからカフェIDを取得
+    const cafeId = parseInt(request.url.split('/').pop() || '');
+
+    if (starRating === null) {
       throw new Error("Invalid input data");
     }
 
     const updatedCafe = await prisma.cafe.update({
-      where: { id: parseInt(id) },
+      where: { 
+        id: cafeId,
+        userId: user.id  // このユーザーのカフェのみ更新可能
+      },
       data: {
         cafeName,
         area,
@@ -115,15 +132,11 @@ export const PUT = async (
   }
 };
 
-
-export const DELETE = async(request: NextRequest) => {
-
+export const DELETE = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
 
   if (error || !currentUser) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
-
-
-
-}
+  
+};

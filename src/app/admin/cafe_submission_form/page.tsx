@@ -1,16 +1,16 @@
 "use client";
 import React, { useState, FormEvent } from "react";
-import { HeaderAdminBase } from "../_components/HeaderAdminBase";
+import { HeaderAdminBase } from "../_components/headerAdminBase";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { CafePostForm } from "../_components/CafePostForm";
-import { ThumbnailHandle } from "../_components/ThumbnailHandle";
-import { useCafeFormState } from "../_components/cafeFormState";
+import { CafePostForm } from "../_components/cafePostForm";
+import { ThumbnailHandle } from "../_components/thumbnailHandle";
+import { UseCafeFormState } from "../_hooks/cafeFormState";
 import "../../globals.css";
 
 const CafeSubmissionForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { token } = useSupabaseSession();
-  const { formState, setFormState, handleChange, clearForm} = useCafeFormState();
+  const { formState, setFormState, clearForm} = UseCafeFormState();
 
   const handleImageUpload = (imageUrl: string) => {
     setFormState(prev => ({
@@ -29,7 +29,7 @@ const CafeSubmissionForm: React.FC = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token!,
+          "Authorization": token!,
         },
         body: JSON.stringify(formState),
       });
@@ -60,7 +60,7 @@ const CafeSubmissionForm: React.FC = () => {
           formState={formState} 
           setFormState={setFormState} 
           clearForm={clearForm} 
-          handleChange={handleChange}
+          onChange={handleSubmit}
         />
         <div className="flex justify-center pb-10">
           <button

@@ -1,16 +1,21 @@
 import { getCurrentUser } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { Cafe } from "@/_types/cafe";
-import { v4 as uuidv4 } from 'uuid';
 import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
-
-
-const  convertUUIDtoInt = (uuid: string): number => {
-  // UUIDの最初の部分を数値に変換する例 (シンプルな変換例)
-  return parseInt(uuid.replace(/[^0-9]/g, '').slice(0, 9), 10);
+// グローバルスコープでPrismaClientのインスタンスを保持
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 }
+// PrismaClientのインスタンスを取得（存在しない場合は新規作成）
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+// 本番環境以外ではグローバルにインスタンスを保持
+if(process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
+
+
 
 export const GET = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
@@ -23,12 +28,11 @@ export const GET = async (request: NextRequest) => {
   console.log("currentUser:", currentUser);
 
   try {
-     // UUIDをIntに変換
-    const userId = convertUUIDtoInt(currentUser.user.id);
+  
 
 
     const user = await prisma.users.findUnique({
-      where: { id: userId }, // Int型に変換したuserIdを使う
+      where: { supabaseUserId: currentUser.user.id }, // Int型に変換したuserIdを使う
       include: {
         cafes: {
           select: {
@@ -79,15 +83,23 @@ export const GET = async (request: NextRequest) => {
 };
 
 
-export const POST = async (
-  request: NextRequest
-) => {
+export const POST = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
   if (error || !currentUser || !currentUser.user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
 
   try {
+    // まず、supabaseUserIdに基づいてユーザーを検索
+    const user = await prisma.users.findUnique({
+      where: { supabaseUserId: currentUser.user.id },
+      select: { id: true }
+    });
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
     const {
       cafeName,
       area,
@@ -118,8 +130,7 @@ export const POST = async (
     ) {
       throw new Error("Invalid input data");
     }
-    // UUIDをIntに変換
-    const userId = convertUUIDtoInt(currentUser.user.id);
+
     // カフェの作成
     const newCafe = await prisma.cafe.create({
       data: {
@@ -140,7 +151,7 @@ export const POST = async (
         starRating,
         comment,
         locationCoordinates,
-        userId: userId,
+        userId: user.id,  // 取得したユーザーIDを使用
       },
     });
 
