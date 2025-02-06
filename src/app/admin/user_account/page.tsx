@@ -3,7 +3,7 @@ import React, { FormEvent, useState } from "react";
 import { HeaderAdminBase } from "../_components/headerAdminBase";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { UserAccountFormProps } from "../_types/userAccountForm";
-import { UserAccountForm } from "../_components/userAccountForm";
+import { UserAccountForm } from "../_components/UserAccountForm";
 import { UserAccountErrorType } from "../_types/userAccountErrorType";
 import "./../../globals.css";
 
