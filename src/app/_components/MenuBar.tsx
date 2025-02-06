@@ -1,5 +1,5 @@
 "use client";
-import { NavLink } from "./NavLink";
+import { NavLink } from "./navLink";
 import { useRouteGuard } from "../admin/_hooks/useRouteGuard";
 import "../globals.css";
 

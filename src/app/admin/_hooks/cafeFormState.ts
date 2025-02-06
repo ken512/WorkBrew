@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { CafeFormStateProps } from "../_types/CafeFormStateProps";
-import { UseCafeFormStateReturn } from "../_types/UseCafeFormStateReturn";
-export const useCafeFormState = (): UseCafeFormStateReturn => {
+import { CafeFormStateProps } from "../_types/cafeFormStateProps";
+import { UseCafeFormStateReturn } from "../_types/useCafeFormStateReturn";
+export const UseCafeFormState = (): UseCafeFormStateReturn => {
   const cafeState:CafeFormStateProps = {
     cafeName: "",
     thumbnailImage: "",
@@ -25,7 +25,7 @@ export const useCafeFormState = (): UseCafeFormStateReturn => {
 
   const [formState, setFormState] = useState<CafeFormStateProps>(cafeState);
 
-  const handleChange = (
+  const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
@@ -43,5 +43,5 @@ export const useCafeFormState = (): UseCafeFormStateReturn => {
 
   
 
-  return { formState, setFormState, handleChange, clearForm };
+  return { formState, setFormState, onChange, clearForm };
 };

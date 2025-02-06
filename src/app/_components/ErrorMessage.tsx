@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { FormErrors } from "@/_types/FormErrorsType";
+import { FormErrorsType } from "@/_types/FormErrorsType";
 
 type ErrorMessagesProps = {
-  errors: FormErrors;
+  errors: FormErrorsType;
 }
 
 const ErrorMessage: React.FC<ErrorMessagesProps> = ({errors}) => {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { HeaderAdminBase } from "@/app/admin/_components/HeaderAdminBase";
+import { HeaderAdminBase } from "@/app/admin/_components/headerAdminBase";
 import "../../globals.css";
 
 const Home: React.FC = () => {

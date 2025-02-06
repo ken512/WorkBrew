@@ -1,11 +1,10 @@
 "use client";
 import React, { FormEvent, useState } from "react";
-import { HeaderAdminBase } from "../_components/HeaderAdminBase";
+import { HeaderAdminBase } from "../_components/headerAdminBase";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { UserAccountFormProps } from "../_types/UserAccountForm";
-import { UserAccountForm } from "../_components/UserAccountForm";
-import { Button } from "../_components/Button";
-import { UserAccountErrorType } from "../_types/UserAccountErrorType";
+import { UserAccountFormProps } from "../_types/userAccountForm";
+import { UserAccountForm } from "../_components/userAccountForm";
+import { UserAccountErrorType } from "../_types/userAccountErrorType";
 import "./../../globals.css";
 
 const UserAccount: React.FC = () => {
@@ -111,23 +110,13 @@ const UserAccount: React.FC = () => {
       <HeaderAdminBase href="/admin/home" />
       <div className="bg-tan-300">
         <form>
-          <UserAccountForm formState={formState} setFormState={setFormState} errors={errors}/>
-          <div className="flex flex-col items-center">
-            <Button
-              type="button"
-              className="my-10 py-3 px-[80px] bg-gray-300 rounded-3xl font-bold hover:bg-custom-green"
-              onClick={handleSubmit}
-            >
-              保存
-            </Button>
-            <Button
-              type="button"
-              className="my-10 py-3 px-[80px] bg-gray-300 rounded-3xl font-bold hover:bg-custom-green"
-              onClick={handleUpdate}
-            >
-              更新
-            </Button>
-          </div>
+          <UserAccountForm 
+            formState={formState} 
+            setFormState={setFormState} 
+            errors={errors}
+            onSubmit={handleSubmit}
+            onUpdate={handleUpdate}
+          />
         </form>
       </div>
     </div>

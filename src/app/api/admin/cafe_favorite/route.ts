@@ -2,13 +2,27 @@ import { getCurrentUser } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+// グローバルスコープでPrismaClientのインスタンスを保持
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+}
+// PrismaClientのインスタンスを取得（存在しない場合は新規作成）
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+// 本番環境以外ではグローバルにインスタンスを保持
+if(process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
 
 export const GET = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
 
   if (error || !currentUser || !currentUser.user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  if(!currentUser?.user) {
+    return NextResponse.json({message: "No authenticated user found"}, {status:401});
   }
 
   // クエリパラメータからフィルタ条件を取得
@@ -32,11 +46,12 @@ export const GET = async (request: NextRequest) => {
 
   try {
 
-    const userId = parseInt(currentUser.user.id);
     // ユーザーのお気に入りカフェを取得
     const favoritesCafes = await prisma.favorite.findMany({
       where: {
-        userId: userId,
+        user: {
+          supabaseUserId: currentUser.user.id
+        },
         cafe: {
           ...cafeFilters,
         },

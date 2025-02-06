@@ -1,42 +1,45 @@
 "use client";
 import React from "react";
-import { LinkButton } from "./LinkButton";
-import { HeaderBase } from "./HeaderBase";
+import { LinkButton } from "./linkButton";
+import { HeaderBase } from "./headerBase";
 
 export const TopPageHeader: React.FC = () => {
+  const containerStyles = "min-h-36 flex justify-between py-6 h-15 bg-beige-200";
+  const navStyles = "my-6 flex flex-row items-center";
+  const buttonContainerStyles = "flex justify-between my-5";
+
   return (
-    <header className="min-h-36 flex justify-between py-6  h-15 bg-beige-200">
-      <div className="my-6 flex flex-row items-center">
-        <HeaderBase href="#WorkBrewとは？" className="border-b-6 px-2">
+    <header className={containerStyles}>
+      <div className={navStyles}>
+        <HeaderBase href="#WorkBrewとは？" variant="default">
           WorkBrewとは？
         </HeaderBase>
-        <HeaderBase href="#WorkBrewの特徴" className="border-b-6 px-2">
+        <HeaderBase href="#WorkBrewの特徴" variant="default">
           WorkBrewの特徴
         </HeaderBase>
-
-        <HeaderBase href="#WorkBrewの使い方" className="border-b-6 px-2">
+        <HeaderBase href="#WorkBrewの使い方" variant="default">
           WorkBrewの使い方
         </HeaderBase>
       </div>
-      <div className="flex justify-between my-5">
+      <div className={buttonContainerStyles}>
         <LinkButton
           href="/cafe-post"
           type="button"
-          className="rounded-3xl bg-yellow-400 p-2 px-6 mx-6"
+          variant="primary"
         >
           カフェ一覧
         </LinkButton>
         <LinkButton
           href="/login"
           type="button"
-          className="rounded-3xl bg-yellow-400 p-2 px-6 mx-6"
+          variant="primary"
         >
           ログイン
         </LinkButton>
         <LinkButton
           href="/signup"
           type="button"
-          className="rounded-3xl bg-yellow-400 p-2 px-6 mx-6"
+          variant="primary"
         >
           ユーザー登録
         </LinkButton>

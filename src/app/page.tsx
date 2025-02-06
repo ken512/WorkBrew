@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { TopPageHeader } from "./_components/TopPageHeader";
+import { TopPageHeader } from "./_components/topPageHeader";
 import { Sections } from "@/data/Sections";
 import "./globals.css";
 const TopPage: React.FC = () => {

@@ -3,20 +3,23 @@ import React from "react";
 import { Button } from "@/app/admin/_components/Button";
 import "../../globals.css";
 
-  type PostClearButtonProps = {
-    ClickPost: (e: React.FormEvent) => void;
-    ClickClear: () => void;
-  }
+type PostClearButtonProps = {
+  onPost: (e: React.FormEvent) => void;
+  onClear: () => void;
+};
 
-export const PostClearButton: React.FC<PostClearButtonProps> = ({ClickPost, ClickClear}) => {
+export const PostClearButton: React.FC<PostClearButtonProps> = ({
+  onPost,
+  onClear
+}) => {
   return (
     <div className="py-10 my-[100px] font-bold flex justify-center text-black">
       {/* 投稿ボタン */}
       <div
       className="cursor-pointer mx-16"
-      onClick={(e) => {e.preventDefault(); ClickPost(e)}}
+      onClick={(e) => {e.preventDefault(); onPost(e)}}
       >
-    <Button type="button" className="py-3 px-16 bg-custom-blue rounded-3xl font-bold hover:bg-custom-green">
+    <Button type="button">
       投稿
     </Button>
     </div>
@@ -24,10 +27,10 @@ export const PostClearButton: React.FC<PostClearButtonProps> = ({ClickPost, Clic
     <div
       className="cursor-pointer mx-16"
       onClick={() => {
-        ClickClear();
+        onClear();
       }}
     >
-    <Button type="button" className=" py-3 px-16 bg-beige-200 rounded-3xl font-bold hover:bg-custom-green">
+    <Button type="button">
       クリア
     </Button>
     </div>
