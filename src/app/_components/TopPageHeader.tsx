@@ -11,13 +11,13 @@ export const TopPageHeader: React.FC = () => {
   return (
     <header className={containerStyles}>
       <div className={navStyles}>
-        <HeaderBase id="WorkBrewとは？">
+        <HeaderBase href="WorkBrewとは？">
           WorkBrewとは？
         </HeaderBase>
-        <HeaderBase id="WorkBrewの特徴">
+        <HeaderBase href="WorkBrewの特徴">
           WorkBrewの特徴
         </HeaderBase>
-        <HeaderBase id="WorkBrewの使い方">
+        <HeaderBase href="WorkBrewの使い方">
           WorkBrewの使い方
         </HeaderBase>
       </div>
