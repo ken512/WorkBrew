@@ -3,7 +3,7 @@ import { supabase } from "@/utils/supabase";
 import React,{ useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
-import { Label } from "../_components/label";
+import { Label } from "../_components/Label";
 import { HeaderAdminBase } from "../admin/_components/headerAdminBase";
 import { Button } from "../admin/_components/Button";
 
@@ -36,7 +36,7 @@ const Login: React.FC = () => {
         <h1 className="text-5xl">ログイン</h1>
         <form onSubmit={handleSubmit} className="w-full max-w-[500px]">
           <div className="py-5">
-            <Label htmlFor="email" className="block md-2">
+            <Label htmlFor="email">
               メールアドレス
             </Label>
             <Input
@@ -52,7 +52,7 @@ const Login: React.FC = () => {
             />
           </div>
           <div className="py-5">
-            <Label htmlFor="password" className="block md-2">
+            <Label htmlFor="password">
               パスワード
             </Label>
             <Input
@@ -70,7 +70,6 @@ const Login: React.FC = () => {
           <div className="py-5 flex justify-center">
             <Button
               type="submit"
-              className="w-[120px] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-3xl text-sm px-5 py-2.5 text-center"
             >
               ログイン
             </Button>

@@ -1,18 +1,19 @@
+import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
+
 export type Cafe = {
   cafeName: string;
   area: string;
   storeAddress: string;
-  openingTime: string;
-  closingHours: string;
+  businessHours: string;
   thumbnailImage: string;
   closingDays: string;
   cafeUrl: string;
   menuOrdered: string;
   wifiAvailable: boolean;
-  wifiSpeed: boolean;
-  wifiStability: boolean;
+  wifiSpeed: WifiSpeed;
+  wifiStability: WifiStability;
   powerOutlets: boolean;
-  seatAvailability: boolean;
+  seatAvailability: SeatAvailability;
   starRating: number | null;
   comment: string; 
   locationCoordinates: string;

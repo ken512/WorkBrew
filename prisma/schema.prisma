@@ -65,6 +65,8 @@ enum SeatAvailability {
 }
 
 
+
+
 model Cafe {
   id                     Int               @id @default(autoincrement())
   createdAt              DateTime          @default(now())
@@ -79,10 +81,10 @@ model Cafe {
   cafeUrl                String            @db.VarChar(255)
   menuOrdered            String
   wifiAvailable          Boolean
-  wifiSpeed              Boolean
-  wifiStability          Boolean
+  wifiSpeed              WifiSpeed?
+  wifiStability          WifiStability?
   powerOutlets           Boolean
-  seatAvailability       Boolean
+  seatAvailability       SeatAvailability?
   starRating             Int               
   comment                String
   locationCoordinates    String

@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from "react";
+"use client";
+import React, { useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { Prisma } from "@prisma/client";
 
-// Dynamic imports for browser-only libraries
+// heic2any と browser-image-compression を動的にインポート
 const importHeic2any = () => import("heic2any");
 const importImageCompression = () => import("browser-image-compression");
 
 type UseImageHandlerReturn = {
   thumbnailImage: string | null;
+  isSubmitting: boolean;
+  setIsSubmitting: (isSubmitting: boolean) => void;
+  uploadSpeed: number | null;
+  downloadSpeed: number | null;
+  measureDownloadSpeed: () => Promise<void>;
   handleFileChange: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => Promise<void>;
@@ -25,13 +32,9 @@ export const useImageHandler = (
     initialImage || null
   );
   const { token } = useSupabaseSession();
-
-  useEffect(() => {
-    if (initialImage) {
-      setThumbnailImage(initialImage);
-    }
-  }, [initialImage]);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadSpeed, setUploadSpeed] = useState<number | null>(null);
+  const [ downloadSpeed, setDownloadSpeed] = useState<number | null>(null);
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -76,6 +79,7 @@ export const useImageHandler = (
     }
   };
 
+  //ファイル変換処理
   const convertFile = async (file: File): Promise<File | null> => {
     if (file.type === "image/heic" || file.type === "image/heif") {
       try {
@@ -99,6 +103,7 @@ export const useImageHandler = (
     return file;
   };
 
+  //画像の圧縮処理
   const compressImage = async (file: File): Promise<File | null> => {
     const options = {
       maxSizeMB: 1,
@@ -115,6 +120,8 @@ export const useImageHandler = (
     }
   };
 
+
+  //アップロード処理
   const uploadFile = async (file: File) => {
     if (!token) {
       alert("認証エラー: もう一度ログインしてください");
@@ -124,8 +131,10 @@ export const useImageHandler = (
     const sanitizedFileName = file.name
       .replace(/[^a-zA-Z0-9.]/g, "_")
       .toLowerCase();
-
     const filePath = `uploads/${uuidv4()}-${sanitizedFileName}`;
+
+    //アップロード開始前のタイムスタンプ
+    const uploadStartTime = performance.now();
 
     const { error } = await supabase.storage
       .from("thumbnailImage")
@@ -136,6 +145,20 @@ export const useImageHandler = (
           Authorization: `Bearer ${token}`,
         },
       });
+
+    //アップロード終了時のタイムスタンプ
+    const uploadEndTime = performance.now();
+    //アップロードにかかった時間(秒)
+    let uploadDuration = (uploadEndTime - uploadStartTime) / 1000;
+    //0 秒未満の計測を防ぐ (最低 0.01秒)
+    uploadDuration = Math.max(uploadDuration, 0.01);
+    //ファイルサイズ取得
+    const fileSizeInBits = file.size * 8;
+
+    //Mbps（メガビット毎秒）換算
+    const uploadSpeedMbps = fileSizeInBits / uploadDuration / (1024 * 1024);
+    //Wi-Fi速度をセット
+    setUploadSpeed(uploadSpeedMbps);
 
     if (error) {
       alert(`アップロードに失敗しました: ${error.message}`);
@@ -148,11 +171,41 @@ export const useImageHandler = (
     if (data?.publicUrl) {
       setThumbnailImage(data.publicUrl);
       onImageUpload(data.publicUrl);
+      setIsSubmitting(false); // アップロード完了後、送信フラグをfalseに戻す
     }
   };
 
+  //ダウンロード速度判定の関数
+  const measureDownloadSpeed = async() => {
+    //Cloudflareのスピードテスト用のファイル
+    const testFileUrl = "https://speed.cloudflare.com/__down?bytes=1048576";
+    
+    try {
+      const downloadStartTime = performance.now();  //ダウンロード開始時間
+      const response = await fetch(testFileUrl);
+      const blob = await response.blob(); //ダウンロード完了
+      const downloadEndTime = performance.now(); //ダウンロード終了時間
+
+      const fileSizeInBits = blob.size * 8; // ファイルサイズ（ビット換算）
+      const downloadDuration = (downloadEndTime - downloadStartTime) / 1000; //ダウンロード時間（秒
+
+      const downloadSpeedMbps = fileSizeInBits / downloadDuration / (1024 * 1024); // 速度計算（Mbps）
+
+      setDownloadSpeed(downloadSpeedMbps); //UI更新
+
+    } catch(error) {
+      console.error("ダウンロード速度測定エラー:", error);
+      alert("ダウンロード速度測定に失敗しました");
+    }
+  }
+
   const handleAddClick = () => {
-    document.getElementById(inputId)?.click();
+    // ファイル選択ボタンをクリックする
+    const inputElement = document.getElementById(inputId) as HTMLInputElement;
+    if (inputElement && !isSubmitting) {
+      inputElement.click();
+      setIsSubmitting(true);
+    }
   };
 
   const handleRemove = async () => {
@@ -167,7 +220,7 @@ export const useImageHandler = (
         const filePathMatch = thumbnailImage.match(/thumbnailImage\/(.+)$/);
         if (filePathMatch) {
           const filePath = filePathMatch[1];
-          
+
           // Supabaseストレージから画像を削除
           const { error } = await supabase.storage
             .from("thumbnailImage")
@@ -181,18 +234,22 @@ export const useImageHandler = (
 
       // 状態をリセット
       setThumbnailImage(null);
-      onImageUpload('');
-
+      onImageUpload("");
     } catch (error) {
       console.error("画像削除エラー:", error);
-      alert('画像の削除に失敗しました');
+      alert("画像の削除に失敗しました");
     }
   };
 
   return {
     thumbnailImage,
+    uploadSpeed,
+    downloadSpeed,
+    measureDownloadSpeed,
     handleFileChange,
     handleAddClick,
     handleRemove,
+    isSubmitting,
+    setIsSubmitting,
   };
 };

@@ -1,6 +1,8 @@
+import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
+
 type ButtonFieldsProps = {
   label: string;
-  options: string[];
+  options: string[] | WifiSpeed[] | WifiStability[] | SeatAvailability[];
   required?: boolean; // boolean型であることを明示
   fieldName: string;
 }
