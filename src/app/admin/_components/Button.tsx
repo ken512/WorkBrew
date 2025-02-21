@@ -3,7 +3,7 @@ import React from "react";
 
 type ButtonProps = {
   type: "button" | "submit" | "reset";
-  onClick?: (e: React.FormEvent) => void;
+  onClick: (e: React.FormEvent) => void;
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "danger";
   disabled?: boolean;

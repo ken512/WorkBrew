@@ -2,7 +2,7 @@
 import { supabase } from "@/utils/supabase";
 import React,{ useState } from "react";
 import { Input } from "../_components/Input";
-import { Label } from "../_components/label";
+import { Label } from "../_components/Label";
 import { HeaderBase } from "../_components/headerBase";
 
 const SignUp: React.FC = () => {
@@ -33,7 +33,7 @@ const SignUp: React.FC = () => {
   return (
     <div>
       <div className="w-full min-h-36 flex justify-between  px-10 h-15 bg-beige-200">
-        <HeaderBase href="/" className="py-12">
+        <HeaderBase href="/">
           WorkBrew
         </HeaderBase>
       </div>
@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
       <h1 className="text-5xl">ユーザー登録</h1>
         <form onSubmit={handleSubmit} className="w-full max-w-[500px] ">
           <div className="py-5">
-            <Label htmlFor="email" className="block md-2">
+            <Label htmlFor="email">
               メールアドレス
             </Label>
             <Input
@@ -55,7 +55,7 @@ const SignUp: React.FC = () => {
             />
           </div>
           <div className="py-5">
-            <Label htmlFor="password" className="block md-2">
+            <Label htmlFor="password">
               パスワード
             </Label>
             <Input

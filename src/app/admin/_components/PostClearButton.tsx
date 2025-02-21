@@ -4,36 +4,41 @@ import { Button } from "@/app/admin/_components/Button";
 import "../../globals.css";
 
 type PostClearButtonProps = {
-  onPost: (e: React.FormEvent) => void;
   onClear: () => void;
+  onSubmit: (e: React.FormEvent) => void;
+  isSubmitting?: boolean;
+  starRating: number;
 };
 
 export const PostClearButton: React.FC<PostClearButtonProps> = ({
-  onPost,
-  onClear
+  onClear,
+  onSubmit,
+  isSubmitting = false,
+  starRating,
+
 }) => {
   return (
     <div className="py-10 my-[100px] font-bold flex justify-center text-black">
       {/* 投稿ボタン */}
-      <div
-      className="cursor-pointer mx-16"
-      onClick={(e) => {e.preventDefault(); onPost(e)}}
-      >
-    <Button type="button">
-      投稿
-    </Button>
-    </div>
-    {/* クリアボタン */}
-    <div
-      className="cursor-pointer mx-16"
-      onClick={() => {
-        onClear();
-      }}
-    >
-    <Button type="button">
-      クリア
-    </Button>
-    </div>
+      <div className="cursor-pointer mx-16">
+        <Button 
+          type="submit"
+          onClick={onSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "投稿中..." : "投稿"}
+        </Button>
+      </div>
+      {/* クリアボタン */}
+      <div className="cursor-pointer mx-16">
+        <Button 
+          type="button"
+          onClick={onClear}
+          disabled = {starRating === 0}
+        >
+          クリア
+        </Button>
+      </div>
     </div>
   );
 };

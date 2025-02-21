@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 type ButtonProps = {
   type?: "button" | "submit" | "reset";
@@ -8,6 +8,8 @@ type ButtonProps = {
   onClick?: (index?: number) => void;
   isStarRating?: boolean; // 星評価として使用するかどうか
   initialRating?: number; // 初期評価の星の数
+  disabled?: boolean;
+  clearSignal?: boolean;
 };
 
 export const ButtonColorSwitching: React.FC<ButtonProps> = ({
@@ -15,11 +17,19 @@ export const ButtonColorSwitching: React.FC<ButtonProps> = ({
   className,
   children,
   isStarRating = false,
-  initialRating = 3,
+  initialRating = 0,
   onClick,
+  disabled = false, 
+  clearSignal = false
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [rating, setRating] = useState(initialRating);
+
+  useEffect(() => {
+    if (clearSignal) {
+      setRating(0); // clearSignalがtrueの場合、ratingをリセット
+    }
+  }, [clearSignal]);
 
   const handleClick = (index?: number) => {
     if(isStarRating && index !== undefined) {
@@ -42,7 +52,7 @@ export const ButtonColorSwitching: React.FC<ButtonProps> = ({
             key={index}
             onClick={() => handleClick(index)}
             className={`cursor-pointer text-2xl ${
-              index < rating ? "text-white" : "text-custom-red"
+              rating === 0 || index >= rating ? "text-white" : "text-custom-red" 
             }`}
           >
             ★
@@ -57,6 +67,7 @@ export const ButtonColorSwitching: React.FC<ButtonProps> = ({
       type={type}
       className={`${className} ${isClicked ? className : ""}`}
       onClick={() => handleClick()}
+      disabled={disabled}
     >
       {children}
     </button>
