@@ -15,8 +15,8 @@ export const ThumbnailHandle: React.FC<{
     handleFileChange,
     handleAddClick,
     handleRemove,
-    uploadSpeed,
-    downloadSpeed,
+    uploadJudgment,
+    downloadJudgment,
     measureDownloadSpeed,
   } = useImageHandler(onImageUpload, initialImage, "thumbnail-input");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,26 +65,30 @@ export const ThumbnailHandle: React.FC<{
       />
       <div className="flex flex-col items-center space-y-4">
         {/*アップロード測定*/}
-        {uploadSpeed !== null && (
+        {uploadJudgment !== null && (
           <p className="text-custom-blue font-bold text-lg">
-            Wi-Fi速度(アップロード): {uploadSpeed.toFixed(2)}Mbps
+            Wi-Fi速度(アップロード): {uploadJudgment.toFixed(2)}Mbps
           </p>
         )}
         {/*ダウンロード測定*/}
-        {downloadSpeed !== null && (
-          <p className="text-custom-red font-bold text-lg">Wi-Fi速度(ダウンロード): : {downloadSpeed.toFixed(2)} Mbps</p>
+        {downloadJudgment !== null && (
+          <p className="text-custom-red font-bold text-lg">
+            Wi-Fi速度(ダウンロード):{downloadJudgment.toFixed(2)} Mbps
+          </p>
         )}
-        <button 
-        className="px-4 py-2 bg-blue-500 text-white rounded-md mt-2"
-        onClick={measureDownloadSpeed}
-        >ダウンロード速度測定</button>
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded-md mt-2"
+          onClick={measureDownloadSpeed}
+        >
+          ダウンロード速度測定
+        </button>
       </div>
       <div className="flex ml-[400px] space-x-4 mt-3">
         <div className="px-3">
           <Button
             type="button"
             variant="primary"
-            onClick={handleAddClickWithSubmitFlag} // 修正した関数を呼び出す
+            onClick={handleAddClickWithSubmitFlag}
             disabled={isSubmitting}
           >
             {isSubmitting ? "追加中..." : "追加"}

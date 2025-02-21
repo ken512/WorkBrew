@@ -12,8 +12,8 @@ type UseImageHandlerReturn = {
   thumbnailImage: string | null;
   isSubmitting: boolean;
   setIsSubmitting: (isSubmitting: boolean) => void;
-  uploadSpeed: number | null;
-  downloadSpeed: number | null;
+  uploadJudgment: number | null;
+  downloadJudgment: number | null;
   measureDownloadSpeed: () => Promise<void>;
   handleFileChange: (
     event: React.ChangeEvent<HTMLInputElement>
@@ -32,8 +32,8 @@ export const useImageHandler = (
   );
   const { token } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadSpeed, setUploadSpeed] = useState<number | null>(null);
-  const [ downloadSpeed, setDownloadSpeed] = useState<number | null>(null);
+  const [uploadJudgment, setUploadJudgment] = useState<number | null>(null);
+  const [ downloadJudgment, setDownloadJudgment] = useState<number | null>(null);
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -155,9 +155,9 @@ export const useImageHandler = (
     const fileSizeInBits = file.size * 8;
 
     //Mbps（メガビット毎秒）換算
-    const uploadSpeedMbps = fileSizeInBits / uploadDuration / (1024 * 1024);
-    //Wi-Fi速度をセット
-    setUploadSpeed(uploadSpeedMbps);
+    const uploadSpeed = fileSizeInBits / uploadDuration / (1024 * 1024);
+    //アップロード速度をセット
+    setUploadJudgment(uploadSpeed);
 
     if (error) {
       alert(`アップロードに失敗しました: ${error.message}`);
@@ -188,9 +188,9 @@ export const useImageHandler = (
       const fileSizeInBits = blob.size * 8; // ファイルサイズ（ビット換算）
       const downloadDuration = (downloadEndTime - downloadStartTime) / 1000; //ダウンロード時間（秒
 
-      const downloadSpeedMbps = fileSizeInBits / downloadDuration / (1024 * 1024); // 速度計算（Mbps）
+      const downloadSpeed = fileSizeInBits / downloadDuration / (1024 * 1024); // 速度計算（Mbps）
 
-      setDownloadSpeed(downloadSpeedMbps); //UI更新
+      setDownloadJudgment(downloadSpeed); //UI更新
 
     } catch(error) {
       console.error("ダウンロード速度測定エラー:", error);
@@ -242,8 +242,8 @@ export const useImageHandler = (
 
   return {
     thumbnailImage,
-    uploadSpeed,
-    downloadSpeed,
+    uploadJudgment,
+    downloadJudgment,
     measureDownloadSpeed,
     handleFileChange,
     handleAddClick,
