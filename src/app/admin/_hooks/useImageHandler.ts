@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { Prisma } from "@prisma/client";
 
 // heic2any と browser-image-compression を動的にインポート
 const importHeic2any = () => import("heic2any");
