@@ -1,3 +1,5 @@
+import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
+
 export type CafePostFormProps = {
   cafeName: string;
   setCafeName:(cafeName: string) => void;
@@ -17,16 +19,16 @@ export type CafePostFormProps = {
   setCafeUrl: (cafeUrl: string) => void;
   menuOrdered: string;
   setMenuOrdered: (menuOrdered: string) => void;
-  wifiAvailable: boolean;
-  setWifiAvailable: (wifiAvailable: boolean) => void;
-  wifiSpeed: boolean;
-  setWifiSpeed: (wifiSpeed: boolean) => void;
-  wifiStability: boolean;
-  setWifiStability: (wifiStability: boolean) => void;
+  wifiAvailable?: boolean;
+  setWifiAvailable?: (wifiAvailable: boolean) => void;
+  wifiSpeed?: WifiSpeed;
+  setWifiSpeed?: (wifiSpeed: WifiSpeed) => void;
+  wifiStability?: WifiStability;
+  setWifiStability?: (wifiStability: WifiStability) => void;
   powerOutlets: boolean;
   setPowerOutlets: (powerOutlets: boolean) => void;
-  seatAvailability: boolean;
-  setSeatAvailability: (seatAvailability: boolean) => void;
+  seatAvailability: SeatAvailability;
+  setSeatAvailability: (seatAvailability: SeatAvailability) => void;
   starRating: number;
   setStarRating:(starRating: number) => void;
   comment: string;

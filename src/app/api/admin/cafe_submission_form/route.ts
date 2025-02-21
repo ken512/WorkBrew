@@ -1,21 +1,9 @@
 import { getCurrentUser } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
-import { Cafe } from "@/_types/cafe";
+import { Cafe } from "@/app/_types/Cafe";
 import { NextRequest, NextResponse } from "next/server";
 
-// グローバルスコープでPrismaClientのインスタンスを保持
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-}
-// PrismaClientのインスタンスを取得（存在しない場合は新規作成）
-const prisma = globalForPrisma.prisma ?? new PrismaClient();
-
-// 本番環境以外ではグローバルにインスタンスを保持
-if(process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
-
-
+const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
@@ -23,14 +11,9 @@ export const GET = async (request: NextRequest) => {
   if (error || !currentUser || !currentUser.user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
-  
-  console.log("getCurrentUser Error:", error);
-  console.log("currentUser:", currentUser);
 
   try {
   
-
-
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id }, // Int型に変換したuserIdを使う
       include: {
@@ -90,7 +73,7 @@ export const POST = async (request: NextRequest) => {
   }
 
   try {
-    // まず、supabaseUserIdに基づいてユーザーを検索
+    // supabaseUserIdに基づいてユーザーを検索
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id },
       select: { id: true }
@@ -104,8 +87,7 @@ export const POST = async (request: NextRequest) => {
       cafeName,
       area,
       storeAddress,
-      openingTime,
-      closingHours,
+      businessHours,
       thumbnailImage,
       closingDays,
       cafeUrl,
@@ -125,14 +107,25 @@ export const POST = async (request: NextRequest) => {
       !storeAddress ||
       starRating === null ||
       wifiAvailable === null ||
-      powerOutlets === null ||
       seatAvailability === null
     ) {
       throw new Error("Invalid input data");
-    }
 
-    // カフェの作成
+    }
+    //バックエンドでは、受け取った businessHours を開店時間と閉店時間に分割して保存
+    let openingTime = "";
+    let closingHours = "";
+
+    if (businessHours && businessHours.includes("-")) {
+      const [open, close] = businessHours.split("-").map(time => time.trim());
+      openingTime = open;
+      closingHours = close;
+    } 
+
+
+    // カフェデータを作成
     const newCafe = await prisma.cafe.create({
+      
       data: {
         cafeName,
         area,
@@ -145,15 +138,16 @@ export const POST = async (request: NextRequest) => {
         menuOrdered,
         wifiAvailable,
         wifiSpeed,
-        wifiStability,
+        wifiStability,  
         powerOutlets,
         seatAvailability,
         starRating,
         comment,
         locationCoordinates,
-        userId: user.id,  // 取得したユーザーIDを使用
+        userId: user.id,
       },
     });
+
 
     return NextResponse.json({ status: "OK", cafe: newCafe }, { status: 200 });
   } catch (error) {

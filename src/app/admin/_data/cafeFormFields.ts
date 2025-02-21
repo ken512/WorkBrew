@@ -6,11 +6,11 @@ type Field = {
 };
 
 export const CafeFormFields: Field[] = [
-  { name: "cafeName", label: "店舗名", placeholder: "店舗名", required: true },
-  { name: "area", label: "エリア", placeholder: "エリア" },
-  { name: "storeAddress", label: "店舗住所", placeholder: "店舗住所", required: true },
-  { name: "openingTime", label: "営業時間", placeholder: "営業時間" },
-  { name: "closingDays", label: "休業日", placeholder: "休業日" },
-  { name: "cafeUrl", label: "カフェのURL", placeholder: "カフェのURL" },
-  { name: "menuOrdered", label: "頼んだメニュー", placeholder: "頼んだメニュー" },
+  { name: "cafeName", label: "店舗名", placeholder: "渋谷カフェ", required: true },
+  { name: "area", label: "エリア", placeholder: "東京・表参道" },
+  { name: "storeAddress", label: "店舗住所", placeholder: "東京都渋谷区渋谷xxxxxx", required: true },
+  { name: "businessHours", label: "営業時間", placeholder: "7:00 - 22:00", required: true },//openingTimeとclosingHoursをまとめる
+  { name: "closingDays", label: "休業日", placeholder: "火曜日" },
+  { name: "cafeUrl", label: "カフェのURL", placeholder: "example.com" },
+  { name: "menuOrdered", label: "頼んだメニュー", placeholder: "カフェラテ" },
 ];

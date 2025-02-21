@@ -2,17 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/utils/supabase";
 
-// グローバルスコープでPrismaClientのインスタンスを保持
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-}
-// PrismaClientのインスタンスを取得（存在しない場合は新規作成）
-const prisma = globalForPrisma.prisma ?? new PrismaClient();
-
-// 本番環境以外ではグローバルにインスタンスを保持
-if(process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
 

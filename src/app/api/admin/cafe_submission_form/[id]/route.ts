@@ -1,18 +1,9 @@
 import { getCurrentUser } from "@/utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { Cafe } from "@/_types/cafe";
-// グローバルスコープでPrismaClientのインスタンスを保持
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-// PrismaClientのインスタンスを取得（存在しない場合は新規作成）
-const prisma = globalForPrisma.prisma ?? new PrismaClient();
+import { Cafe } from "@/app/_types/Cafe";
 
-// 本番環境以外ではグローバルにインスタンスを保持
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
@@ -132,11 +123,11 @@ export const PUT = async (request: NextRequest) => {
   }
 };
 
-export const DELETE = async (request: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(request);
+// export const DELETE = async (request: NextRequest) => {
+//   const { currentUser, error } = await getCurrentUser(request);
 
-  if (error || !currentUser) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
-  }
+//   if (error || !currentUser) {
+//     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
+//   }
   
-};
+// };

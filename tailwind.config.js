@@ -15,7 +15,7 @@ module.exports = {
         'custom-blue': '#1B8DFF',
         'custom-green': '#1EF0BC',
         "custom-orange": '#F5A623',
-        customOrange: '#C95807',
+        "customOrange": '#C95807',
         beige: {
           200: '#F5F5DC', // ここに希望の色を設定します
         },

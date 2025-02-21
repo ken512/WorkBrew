@@ -1,6 +1,16 @@
+-- CreateEnum
+CREATE TYPE "wifiSpeed" AS ENUM ('HIGH', 'MEDIUM', 'LOW');
+
+-- CreateEnum
+CREATE TYPE "wifiStability" AS ENUM ('VERY_STABLE', 'STABLE', 'UNSTABLE');
+
+-- CreateEnum
+CREATE TYPE "seatAvailability" AS ENUM ('AVAILABLE', 'CROWDED', 'FULL');
+
 -- CreateTable
 CREATE TABLE "Users" (
     "id" SERIAL NOT NULL,
+    "supabaseUserId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userName" TEXT NOT NULL,
@@ -46,16 +56,16 @@ CREATE TABLE "Cafe" (
     "thumbnailImage" VARCHAR(255) NOT NULL,
     "area" TEXT NOT NULL,
     "storeAddress" TEXT NOT NULL,
-    "openingTime" VARCHAR(5) NOT NULL,
-    "closingHours" VARCHAR(5) NOT NULL,
+    "openingTime" VARCHAR(20) NOT NULL,
+    "closingHours" VARCHAR(20) NOT NULL,
     "closingDays" TEXT NOT NULL,
     "cafeUrl" VARCHAR(255) NOT NULL,
     "menuOrdered" TEXT NOT NULL,
-    "wifiAvailable" BOOLEAN NOT NULL,
-    "wifiSpeed" BOOLEAN NOT NULL,
-    "wifiStability" BOOLEAN NOT NULL,
+    "wifiAvailable" BOOLEAN,
+    "wifiSpeed" BOOLEAN,
+    "wifiStability" BOOLEAN,
     "powerOutlets" BOOLEAN NOT NULL,
-    "seatAvailability" BOOLEAN NOT NULL,
+    "seatAvailability" BOOLEAN,
     "starRating" INTEGER NOT NULL,
     "comment" TEXT NOT NULL,
     "locationCoordinates" TEXT NOT NULL,
@@ -74,6 +84,12 @@ CREATE TABLE "Favorite" (
 
     CONSTRAINT "Favorite_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Users_supabaseUserId_key" ON "Users"("supabaseUserId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Users_userName_key" ON "Users"("userName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Contact_userId_key" ON "Contact"("userId");
