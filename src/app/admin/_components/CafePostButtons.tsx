@@ -8,7 +8,8 @@ type CafePostButtonsProps = {
   options: string[]; //ボタンの選択肢
   onSelect: (selected: string) => void; // 選択変更時のコールバック
   error?: string; // エラーメッセージ
-  clearSignal?: boolean;  // オプショナルに設定
+  clearSignal?: boolean;  // クリアのシグナルを受け取るプロパティ
+  disabled?: boolean;
 };
 
 export const CafePostButtons = ({
@@ -16,13 +17,15 @@ export const CafePostButtons = ({
   options,
   onSelect,
   error,
-  clearSignal = false,  // デフォルト値を設定
+  clearSignal = false,
+  disabled = false, 
+
 }: CafePostButtonsProps) => {
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     if (clearSignal) {
-      setSelected({});
+      setSelected({}); // clearSignalがtrueの場合、選択状態をリセット
     }
   }, [clearSignal]); // クリアシグナルが来たら選択状態をリセット
 
@@ -73,7 +76,7 @@ export const CafePostButtons = ({
         {isStarRating ? (
           <ButtonColorSwitching
             isStarRating={true}
-            initialRating={3}
+            clearSignal={clearSignal}
             onClick={(rating) => rating !== undefined && handleClick(rating)}
           />
         ) : (
@@ -83,6 +86,7 @@ export const CafePostButtons = ({
               type="button"
               className={getButtonClass(option)}
               onClick={() => handleClick(option)}
+              disabled={disabled} 
             >
               {option}
             </ButtonColorSwitching>

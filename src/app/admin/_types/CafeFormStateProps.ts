@@ -1,20 +1,21 @@
+import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
+
 // カフェの状態管理用の型定義
 export type CafeFormStateProps = {
   cafeName: string;
   thumbnailImage: string;
   area: string;
   storeAddress: string;
-  openingTime: string;
-  closingHours: string;
+  businessHours: string,
   closingDays: string;
   cafeUrl: string;
   menuOrdered: string;
-  wifiAvailable: boolean;
-  wifiSpeed: boolean;
-  wifiStability: boolean;
+  wifiAvailable?: boolean;
+  wifiSpeed?: WifiSpeed | null;
+  wifiStability?: WifiStability | null;
   powerOutlets: boolean;
-  seatAvailability: boolean;
-  starRating: number | null;
+  seatAvailability: SeatAvailability | null;
+  starRating: number;
   comment: string;
   locationCoordinates: string;
 }

@@ -3,15 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { UserAccountFormProps } from "@/app/admin/_types/userAccountForm";
 import { NextRequest, NextResponse } from "next/server";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
-const prisma = globalForPrisma.prisma ?? new PrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
   try {
