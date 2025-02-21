@@ -46,6 +46,25 @@ model Information {
   cafe                    Cafe             @relation(fields: [cafeId], references: [id])
 }
 
+enum WifiSpeed {
+  HIGH    
+  MEDIUM
+  LOW
+}
+
+enum WifiStability {
+  VERY_STABLE
+  STABLE
+  UNSTABLE
+}
+
+enum SeatAvailability {
+  AVAILABLE
+  CROWDED
+  FULL
+}
+
+
 model Cafe {
   id                     Int               @id @default(autoincrement())
   createdAt              DateTime          @default(now())
