@@ -8,11 +8,11 @@ import { ButtonFields } from "../_data/buttonFields";
 import { PostClearButton } from "./postClearButton";
 import { TextArea } from "@/app/_components/textArea";
 import { FormErrorsType } from "@/app/_types/formErrorsType";
-import { UseCafeFormStateReturn } from "../_types/useCafeFormStateReturn";
+import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import "../../globals.css";
 
-export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({
+export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   formState,
   setFormState,
   onChange,
@@ -330,9 +330,9 @@ export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({
       <div className="mt-10">
         <TextArea
           label="コメント欄（カフェの感想やおすすめポイントを記入してください）"
-          placeholder="200文字以内"
+          placeholder="500文字以内"
           value={formState.comment}
-          maxLength={200}
+          maxLength={500}
           name="comment"
           onChange={onChange}
           rows={15}
