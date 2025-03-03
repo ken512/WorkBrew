@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/utils/supabase";
+import { getCurrentUser } from "@/_utils/supabase";
 
 const prisma = new PrismaClient();
 

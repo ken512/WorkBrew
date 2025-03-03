@@ -4,8 +4,8 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Cafe } from "@/app/_types/Cafe";
-import { timeAgo } from "../utils/timeAgo";
-import { RenderStars } from "../utils/renderStars";
+import { timeAgo } from "../_utils/timeAgo";
+import { RenderStars } from "../_utils/renderStars";
 import "../../globals.css";
 
 // Swiper のスタイルをインポート

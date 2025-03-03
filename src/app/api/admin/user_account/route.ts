@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/utils/supabase";
+import { getCurrentUser } from "@/_utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { UserAccountFormProps } from "@/app/admin/_types/userAccountForm";
 import { NextRequest, NextResponse } from "next/server";

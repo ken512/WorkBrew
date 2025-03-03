@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import { Cafe } from "@/app/_types/Cafe";
-import { RenderStars } from "../utils/renderStars";
-import { timeAgo } from "../utils/timeAgo";
+import { RenderStars } from "../_utils/renderStars";
+import { timeAgo } from "../_utils/timeAgo";
 import Image from "next/image";
 import {
   convertSeatAvailability,
   convertWifiSpeed,
-} from "../utils/convertLabels";
+} from "../_utils/convertLabels";
 import ReactModal from "react-modal";
 
 type Props = {
