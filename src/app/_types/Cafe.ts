@@ -1,6 +1,7 @@
 import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
 
 export type Cafe = {
+  id: string;
   cafeName: string;
   area: string;
   storeAddress: string;
@@ -17,5 +18,7 @@ export type Cafe = {
   starRating: number | null;
   comment: string; 
   locationCoordinates: string;
+  createdAt: Date;
+  updatedAt: Date;
   userId: number;
 }
