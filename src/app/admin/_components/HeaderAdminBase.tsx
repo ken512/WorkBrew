@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useSupabaseSession } from "../../_hooks/useSupabaseSession";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/_utils/supabase";
 import { MenuBar } from "../../_components/menuBar";
 import { HeaderProps } from "../_types/headerProps";
 import "../../globals.css";
