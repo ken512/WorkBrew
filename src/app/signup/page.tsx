@@ -1,5 +1,5 @@
 "use client";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/_utils/supabase";
 import React,{ useState } from "react";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";

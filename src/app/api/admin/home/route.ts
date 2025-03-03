@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/utils/supabase";
+import { getCurrentUser } from "@/_utils/supabase";
 
 const prisma = new PrismaClient();
 
@@ -13,17 +13,40 @@ export const GET = async (request: NextRequest) => {
   
   try {
     // 最新カフェ情報を取得
-    const latestCafes = await prisma.cafe.findMany({
+    const cafesRaw = await prisma.cafe.findMany({
       where: {
         users: {
           supabaseUserId: currentUser.user.id
         },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 5, // 取得する件数を指定
+      orderBy: [
+        { updatedAt: 'desc' },
+        { createdAt: 'desc' } // 更新されていない場合は、作成日時（createdAt）がその代わりとして使う
+      ],
+      take: 10, // 取得する件数を指定
     });
+    //最新カフェ情報を一意で表示させる(カフェ名、店舗住所)
+    const uniqueCafesMap = new Map<string, typeof cafesRaw[0]>();
+    for(const cafe of cafesRaw) {
+      const key = `${cafe.cafeName}-${cafe.storeAddress}`;
+      if(!uniqueCafesMap.has(key)) {
+        uniqueCafesMap.set(key, cafe);
+      } else {
+        const existing = uniqueCafesMap.get(key);
+        if(new Date(cafe.updatedAt) > new Date(existing!.updatedAt)) {
+          uniqueCafesMap.set(key, cafe);
+        }
+      }
+    }
+    const uniqueCafes = Array.from(uniqueCafesMap.values());
+
+    const latestCafes = uniqueCafes.slice(0, 10);
+
+    if(latestCafes.length === 0) {
+      console.warn("No latest cafes found");
+    }
+    
+
     if(latestCafes.length === 0) {
       console.warn("No latest cafes found");
     }
@@ -35,7 +58,7 @@ export const GET = async (request: NextRequest) => {
           gte: 3, 
         },
       },
-      take: 5,
+      take: 10,
     });
 
     if(recommendedCafes.length === 0) {

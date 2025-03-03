@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { CafeFormStateProps } from "../_types/cafeFormStateProps";
-import { UseCafeFormStateReturn } from "../_types/useCafeFormStateReturn";
+import { UseCafeFormStateReturn } from "../_types/cafeFormStateReturn";
 export const UseCafeFormState = (): UseCafeFormStateReturn => {
   const cafeState: CafeFormStateProps = {
     cafeName: "",
