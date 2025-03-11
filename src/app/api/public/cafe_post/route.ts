@@ -5,38 +5,24 @@ const prisma = new PrismaClient();
 
 export const GET = async () => {
   try {
-    // 最新カフェ情報を取得
-    const latestCafes = await prisma.cafe.findMany({
+    // カフェ投稿一覧を取得する
+    const cafePostList = await prisma.cafe.findMany({
       include: {
         users: {
-          select: { id: true, userName: true },
+          select: { id: true, userName: true, profileIcon: true },// ユーザー情報を取得
         },
+        favorites: { // お気に入り情報も取得
+          select: {id: true, userId: true},
+        }
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        { createdAt: "desc"},
+        { updatedAt: 'desc' },
+      ],
     });
-    console.log("Latest cafes fetched:", latestCafes);
+    console.log("カフェ投稿一覧:", cafePostList );
 
-    // おすすめカフェ情報を取得（評価が高いカフェ）
-    const recommendedCafes = await prisma.cafe.findMany({
-      where: {
-        starRating: {
-          gte: 5,
-        },
-      },
-      include: {
-        users: {
-          select: { id: true, userName: true },
-        },
-      },
-      orderBy: {
-        starRating: "desc",
-      },
-    });
-    console.log("Recommended cafes fetched:", recommendedCafes);  
-
-    return NextResponse.json({ status: "OK", latestCafes, recommendedCafes }, { status: 200 });
+    return NextResponse.json({ status: "OK", cafePostList}, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ status: error.message }, { status: 400 });

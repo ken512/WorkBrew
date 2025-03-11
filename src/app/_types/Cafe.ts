@@ -1,19 +1,21 @@
 import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
 
 export type Cafe = {
-  id: string;
+  id: number;
   cafeName: string;
   area: string;
   storeAddress: string;
-  businessHours: string;
+  openingTime?: string;
+  closingHours?: string;
+  businessHours?: string;
   thumbnailImage: string;
   closingDays: string;
   cafeUrl: string;
   menuOrdered: string;
-  wifiAvailable: boolean;
+  wifiAvailable: boolean | null;
   wifiSpeed: WifiSpeed;
   wifiStability: WifiStability;
-  powerOutlets: boolean;
+  powerOutlets: boolean | null;
   seatAvailability: SeatAvailability;
   starRating: number | null;
   comment: string; 
@@ -21,4 +23,13 @@ export type Cafe = {
   createdAt: Date;
   updatedAt: Date;
   userId: number;
+  favorites: {
+    id: number;
+    userId: number;
+  }
+  users: {
+    id: number;
+    userName: string;
+    profileIcon: string;
+  }
 }

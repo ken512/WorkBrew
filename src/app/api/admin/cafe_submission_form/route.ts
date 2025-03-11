@@ -13,7 +13,6 @@ export const GET = async (request: NextRequest) => {
   }
 
   try {
-  
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id }, // Int型に変換したuserIdを使う
       include: {
@@ -22,7 +21,9 @@ export const GET = async (request: NextRequest) => {
             id: true,
             cafeName: true,
             thumbnailImage: true,
-            createdAt: true,  // 新しいカフェ順に並べる
+            openingTime: true,
+            closingHours: true,
+            createdAt: true, // 新しいカフェ順に並べる
           },
           orderBy: {
             createdAt: "desc",
@@ -57,14 +58,12 @@ export const GET = async (request: NextRequest) => {
       );
     }
     return NextResponse.json({ status: "OK", user }, { status: 200 });
-
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ status: error.message }, { status: 400 });
     }
   }
 };
-
 
 export const POST = async (request: NextRequest) => {
   const { currentUser, error } = await getCurrentUser(request);
@@ -76,7 +75,7 @@ export const POST = async (request: NextRequest) => {
     // supabaseUserIdに基づいてユーザーを検索
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id },
-      select: { id: true }
+      select: { id: true },
     });
 
     if (!user) {
@@ -107,25 +106,23 @@ export const POST = async (request: NextRequest) => {
       !storeAddress ||
       starRating === null ||
       wifiAvailable === null ||
+      powerOutlets === null ||
       seatAvailability === null
     ) {
       throw new Error("Invalid input data");
-
     }
     //バックエンドでは、受け取った businessHours を開店時間と閉店時間に分割して保存
     let openingTime = "";
     let closingHours = "";
 
     if (businessHours && businessHours.includes("-")) {
-      const [open, close] = businessHours.split("-").map(time => time.trim());
+      const [open, close] = businessHours.split("-").map((time) => time.trim());
       openingTime = open;
       closingHours = close;
-    } 
-
+    }
 
     // カフェデータを作成
     const newCafe = await prisma.cafe.create({
-      
       data: {
         cafeName,
         area,
@@ -138,7 +135,7 @@ export const POST = async (request: NextRequest) => {
         menuOrdered,
         wifiAvailable,
         wifiSpeed,
-        wifiStability,  
+        wifiStability,
         powerOutlets,
         seatAvailability,
         starRating,
@@ -147,7 +144,6 @@ export const POST = async (request: NextRequest) => {
         userId: user.id,
       },
     });
-
 
     return NextResponse.json({ status: "OK", cafe: newCafe }, { status: 200 });
   } catch (error) {
