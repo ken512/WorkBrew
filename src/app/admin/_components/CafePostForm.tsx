@@ -8,7 +8,7 @@ import { ButtonFields } from "../_data/buttonFields";
 import { PostClearButton } from "./postClearButton";
 import { TextArea } from "@/app/_components/textArea";
 import { FormErrorsType } from "@/app/_types/formErrorsType";
-import { UseCafeFormStateReturn } from "../_types/cafeFormStateReturn";
+import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import useSWR, { mutate } from "swr";
 import "../../globals.css";
@@ -35,7 +35,7 @@ const fetchGeocode = async (url: string) => {
   return `${lat}, ${lng}`;
 };
 
-export const CafePostForm: React.FC<UseCafeFormStateReturn> = ({
+export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   formState,
   setFormState,
   onChange,
