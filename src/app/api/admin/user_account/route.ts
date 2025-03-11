@@ -152,6 +152,8 @@ export const PUT = async (request: NextRequest) => {
       },
     });
 
+    console.log("User updated:", updateUser);
+
     return NextResponse.json({
       status: "SUCCESS",
       message: "ユーザー情報を更新しました",
