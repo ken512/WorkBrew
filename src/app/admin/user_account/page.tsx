@@ -33,7 +33,7 @@ const UserAccount: React.FC = () => {
       setIsSubmitting(false);
       return;
     }
-
+    
     try {
       const response = await fetch("/api/admin/user_account", {
         method: "POST",

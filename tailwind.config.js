@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       fontFamily: {
         pacifico: ['Pacifico', 'cursive'], // Pacificoフォントを追加
+
       },
       colors: {
         'tan-300': '#D2B48C',
