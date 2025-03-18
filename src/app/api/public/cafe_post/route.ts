@@ -1,42 +1,59 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-
+import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
+  // クエリパラメータを取得
+  const searchParams = req.nextUrl.searchParams;
+  const area = searchParams.get("area") || "";
+  const keyword = searchParams.get("keyword") || "";
+  const wifiAvailable = searchParams.get("wifiAvailable") || "";
+  const powerOutlets = searchParams.get("powerOutlets") || "";
+
   try {
-    // 最新カフェ情報を取得
-    const latestCafes = await prisma.cafe.findMany({
+    //カフェ情報をフィルタリングするためのwhere条件を定義(.pushを使ってフィルター条件をひとつずつ追加)
+    const whereCondition: any = {AND: []}; // `AND` は配列として使用
+
+    // キーワード検索（カフェ名 or エリア）
+    if (keyword) {
+      whereCondition.AND.push({
+        OR: [
+          { cafeName: { contains: keyword } },
+          { area: { contains: keyword } },
+        ],
+      });
+    }
+    // エリア検索
+    if (area) {
+      whereCondition.AND.push({ area: { constants: area } });
+    }
+    // Wi-Fiの有無
+    if (wifiAvailable) {
+      whereCondition.AND.push({ wifiAvailable: wifiAvailable === "true" });
+    }
+    // 電源の有無
+    if (powerOutlets) {
+      whereCondition.AND.push({ powerOutlets: powerOutlets === "true" });
+    }
+
+    // カフェ投稿一覧を取得する
+    const cafePostList = await prisma.cafe.findMany({
       include: {
         users: {
-          select: { id: true, userName: true },
+          select: { id: true, userName: true, profileIcon: true }, // ユーザー情報を取得
+        },
+        favorites: {
+          // お気に入り情報も取得
+          select: { id: true, userId: true },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      where: whereCondition,
+      orderBy: [{ createdAt: "desc" }, { updatedAt: "desc" }],
     });
-    console.log("Latest cafes fetched:", latestCafes);
+    console.log("検索条件:", whereCondition);
+    console.log("カフェ投稿一覧:", cafePostList);
 
-    // おすすめカフェ情報を取得（評価が高いカフェ）
-    const recommendedCafes = await prisma.cafe.findMany({
-      where: {
-        starRating: {
-          gte: 5,
-        },
-      },
-      include: {
-        users: {
-          select: { id: true, userName: true },
-        },
-      },
-      orderBy: {
-        starRating: "desc",
-      },
-    });
-    console.log("Recommended cafes fetched:", recommendedCafes);  
-
-    return NextResponse.json({ status: "OK", latestCafes, recommendedCafes }, { status: 200 });
+    return NextResponse.json({ status: "OK", cafePostList }, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ status: error.message }, { status: 400 });

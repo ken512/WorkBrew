@@ -47,6 +47,9 @@ export const ThumbnailHandle: React.FC<{
             className="rounded-lg object-cover"
             fill
             sizes="(max-width: 768px) 100vw, 800px"
+            onError={(e) => {
+              e.currentTarget.src = "/default-thumbnail.jpg"; // 画像エラー時もデフォルト画像にする
+            }}
           />
         ) : (
           <div className="flex items-center justify-center w-full h-full bg-gray-200 rounded-lg relative">
