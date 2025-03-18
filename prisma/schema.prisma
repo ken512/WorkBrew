@@ -64,9 +64,6 @@ enum SeatAvailability {
   FULL
 }
 
-
-
-
 model Cafe {
   id                     Int               @id @default(autoincrement())
   createdAt              DateTime          @default(now())
@@ -93,7 +90,6 @@ model Cafe {
   favorites              Favorite[]
   users                  Users             @relation(fields: [userId], references: [id])
 }
-
 
 model Favorite {
   id                     Int               @id @default(autoincrement())

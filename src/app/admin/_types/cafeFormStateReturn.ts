@@ -5,7 +5,7 @@ export type CafeFormStateReturn = {
   setFormState: React.Dispatch<React.SetStateAction<CafeFormStateProps>>;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   clearForm: () => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit?: (e: React.FormEvent) => void;
   isSubmitting: boolean;
   setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
 }
