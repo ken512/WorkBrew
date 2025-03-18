@@ -1,28 +1,51 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-
+import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
+  // クエリパラメータを取得
+  const searchParams = req.nextUrl.searchParams;
+  const area = searchParams.get("area") || "";
+  const keyword = searchParams.get("keyword") || "";
+  const wifiAvailable = searchParams.get("wifiAvailable") || "";
+  const powerOutlets = searchParams.get("powerOutlets") || "";
+
   try {
+    //カフェ情報をフィルタリングするためのwhere条件を定義
+    const whereCondition = {
+      AND: [
+        keyword
+          ? {
+              OR: [
+                { cafeName: { contains: keyword } },
+                { area: { contains: keyword } },
+              ],
+            }
+          : {},
+        area ? { area: { contains: area } } : {},
+        wifiAvailable ? { wifiAvailable: wifiAvailable === "true" } : {},
+        powerOutlets ? { powerOutlets: powerOutlets === "true" } : {},
+      ],
+    };
+
     // カフェ投稿一覧を取得する
     const cafePostList = await prisma.cafe.findMany({
       include: {
         users: {
-          select: { id: true, userName: true, profileIcon: true },// ユーザー情報を取得
+          select: { id: true, userName: true, profileIcon: true }, // ユーザー情報を取得
         },
-        favorites: { // お気に入り情報も取得
-          select: {id: true, userId: true},
-        }
+        favorites: {
+          // お気に入り情報も取得
+          select: { id: true, userId: true },
+        },
       },
-      orderBy: [
-        { createdAt: "desc"},
-        { updatedAt: 'desc' },
-      ],
+      where: whereCondition,
+      orderBy: [{ createdAt: "desc" }, { updatedAt: "desc" }],
     });
-    console.log("カフェ投稿一覧:", cafePostList );
+    console.log("検索条件:", whereCondition);
+    console.log("カフェ投稿一覧:", cafePostList);
 
-    return NextResponse.json({ status: "OK", cafePostList}, { status: 200 });
+    return NextResponse.json({ status: "OK", cafePostList }, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ status: error.message }, { status: 400 });

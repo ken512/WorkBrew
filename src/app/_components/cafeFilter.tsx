@@ -1,69 +1,52 @@
 "use client";
 import React, { useState } from "react";
+import { useSearchParams,useRouter  } from "next/navigation";
 import { Input } from "./Input";
-import { Cafe } from "../_types/Cafe";
+
+type Filters = {
+  area: string;
+  keyword: string;
+  wifiAvailable: string;
+  powerOutlets: string;
+};
 
 type Props = {
-  filters: {
-    area: string;
-    wifiAvailable: boolean | null;
-    powerOutlets: boolean | null;
-    businessHours: string;
-    keyword: string;
-  };
-  onFilterChange: (filters: Props["filters"]) => void;
-  cafeList: Cafe[]; //取得済みのカフェデータを受け取る
+  filters: Filters;
+  onFilterChange: (filters: Filters) => void;
 };
 
 export const CafeFilter: React.FC<Props> = ({
-  filters,
   onFilterChange,
-  cafeList,
+  filters,
 }) => {
-  const [searchText, setSearchText] = useState(filters.keyword);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [searchText, setSearchText] = useState(filters.keyword || "");
 
-  // 取得済みのカフェデータからエリア名とカフェ名一覧を取得
-  const areaNames = Array.from(new Set(cafeList.map((cafe) => cafe.area)));
-  const cafeNames = Array.from(new Set(cafeList.map((cafe) => cafe.cafeName)));
+   // クエリパラメータを取得
+  const [filter, setFilter] = useState({
+    area: searchParams.get("area"),
+    keyword: searchParams.get("keyword"),
+    wifiAvailable: searchParams.get("wifiAvailable"),
+    powerOutlets: searchParams.get("powerOutlets"),
+  });
+  
+  //クエリパラメータの更新
+  const updateQueryParams = (updatedFilters: typeof filters) => {
+    const queryParams = new URLSearchParams(updatedFilters).toString();
+    router.replace(`?${queryParams}`);// URLを更新（ページのスクロールは維持）
+  }
 
-  // 入力された文字列を `filters` の適切なプロパティに分割
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //フィルター変更時の処理
+  const handleFilterChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const {name, value} = e.target;
     const inputValue = e.target.value;
     setSearchText(inputValue);
-    const words = inputValue.split("  "); // スペースで分割
-
-    let newFilters = { ...filters, area: "", keyword: "" };
-    
-    words.forEach((word) => {
-      // エリアの部分一致検索
-      const matchedArea = areaNames.filter((area) => area.includes(word));
-      if (matchedArea.length > 0) {
-        newFilters.area = word;
-        return;//最初のマッチしたエリアだけが適用されるようにする 例: "東京"を含むカフェのみが表示されるようになる
-      }
-
-      // カフェ名の部分一致検索
-      const matchingCafeName = cafeNames.filter((cafeName) =>
-        cafeName.includes(word)
-      );
-      if (matchingCafeName.length > 0) {
-        newFilters.keyword = word;
-        return;
-      }
-    });
-    
-    //`onFilterChange()` でフィルタリングされたカフェリストを更新
+    const newFilters = {...filters, [name]: value};
+    setFilter(newFilters);
+    updateQueryParams(newFilters);
     onFilterChange(newFilters);
-  };
-
-  //Wi-Fi・電源の有無の変更処理
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    onFilterChange({
-      ...filters,
-      [name]: value === "" ? null : value === "true",
-    });
-  };
+  }
 
   return (
     <div className="bg-beige-200 p-4 rounded-lg shadow-md mb-4 w-full max-w-2xl mt-[50px]">
@@ -73,12 +56,12 @@ export const CafeFilter: React.FC<Props> = ({
         {/* エリア・カフェ名をまとめて検索 */}
         <Input
           type="search"
-          id="search"
-          name="search"
+          id="keyword"
+          name="keyword"
           placeholder="エリア・カフェ名を入力"
           className="border p-2 rounded-lg w-full"
           value={searchText}
-          onChange={handleChange}
+          onChange={handleFilterChange}
         />
 
         {/* Wi-Fi & 電源の有無 */}
@@ -87,11 +70,11 @@ export const CafeFilter: React.FC<Props> = ({
             name="wifiAvailable"
             className="border p-2 rounded-lg w-full"
             value={
-              filters.wifiAvailable === null
+              filter.wifiAvailable === null
                 ? ""
-                : String(filters.wifiAvailable)
+                : String(filter.wifiAvailable)
             }
-            onChange={handleSelectChange}
+            onChange={handleFilterChange}
           >
             <option value="">Wi-Fiの有無</option>
             <option value="true">あり</option>
@@ -102,9 +85,9 @@ export const CafeFilter: React.FC<Props> = ({
             name="powerOutlets"
             className="border p-2 rounded-lg w-full"
             value={
-              filters.powerOutlets === null ? "" : String(filters.powerOutlets)
+              filter.powerOutlets === null ? "" : String(filter.powerOutlets)
             }
-            onChange={handleSelectChange}
+            onChange={handleFilterChange}
           >
             <option value="">電源の有無</option>
             <option value="true">あり</option>
@@ -114,4 +97,4 @@ export const CafeFilter: React.FC<Props> = ({
       </div>
     </div>
   );
-};
+}

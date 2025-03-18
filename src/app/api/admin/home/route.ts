@@ -25,6 +25,7 @@ export const GET = async (request: NextRequest) => {
       ],
       take: 10, // 取得する件数を指定
     });
+    
     //最新カフェ情報を一意で表示させる(カフェ名、店舗住所)
     const uniqueCafesMap = new Map<string, typeof cafesRaw[0]>();
     for(const cafe of cafesRaw) {
