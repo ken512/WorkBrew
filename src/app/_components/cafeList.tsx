@@ -5,10 +5,10 @@ import { VirtuosoGrid } from "react-virtuoso";
 import { Cafe } from "../_types/Cafe";
 
 type Props = {
-  cafes: Cafe[];
+  cafes?: Cafe[];
 };
 
-export const CafeList: React.FC<Props> = ({ cafes }) => {
+export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
   const [selectedCafeId, setSelectedCafeId] = useState<number | null>(null);
 
   // お気に入りボタンをクリックすると、選択されたカフェIDを更新
@@ -18,25 +18,24 @@ export const CafeList: React.FC<Props> = ({ cafes }) => {
 
   return (
     <div className="mb-[200px] font-bold">
-      <h1 className="text-[min(13vw,30px)] text-center mt-[100px]">
-        投稿一覧
-      </h1>
+      <h1 className="text-[min(13vw,30px)] text-center mt-[100px]">投稿一覧</h1>
 
       {/* `map関数の代わりにVirtuosoで繰り返し` */}
       <div className="mt-[100px] mx-auto bg-beige-200 rounded-xl p-10">
         <VirtuosoGrid
-          style={{ height: "100vw", width: "700px" }} 
-          totalCount={cafes.length}
-          overscan={10} 
-          components={{List: React.forwardRef((props, ref) => (
-            <div ref={ref} {...props} className="grid grid-cols-2 gap-10"/>
-          ))}}
+          style={{
+            height: "700px",
+            width: "700px",
+          }}
+          totalCount={cafes.length ?? 0}
+          overscan={10}
+          listClassName="grid grid-cols-2 gap-10 px-4"/* リストの形式をグリットに指定 */
           itemContent={(index) => {
             const cafe = cafes[index];
-            if(!cafes[index]) return null;
+            if (index >= cafes.length) return null;
             return (
               <div key={cafe.id} className="w-[300px] h-[400px]">
-                <div className="flex flex-col  bg-white p-4 rounded-lg shadow-md w-[300px] h-[400px]">
+                <div className="flex flex-col  bg-white p-5 rounded-lg shadow-md w-[300px] h-[400px]">
                   {/* ユーザー情報 */}
                   <div className="flex justify-between w-full">
                     <div className="flex items-center">
@@ -44,8 +43,8 @@ export const CafeList: React.FC<Props> = ({ cafes }) => {
                         src={cafe.users.profileIcon}
                         alt="Profile Image"
                         className="rounded-full object-cover"
-                        width={40}
-                        height={40}
+                        width={50}
+                        height={50}
                       />
                       <p className="text-sm ml-2 truncate max-w-[150px]">
                         {cafe.users.userName}
