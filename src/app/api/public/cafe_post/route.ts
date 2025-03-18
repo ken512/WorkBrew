@@ -11,22 +11,30 @@ export const GET = async (req: NextRequest) => {
   const powerOutlets = searchParams.get("powerOutlets") || "";
 
   try {
-    //カフェ情報をフィルタリングするためのwhere条件を定義
-    const whereCondition = {
-      AND: [
-        keyword
-          ? {
-              OR: [
-                { cafeName: { contains: keyword } },
-                { area: { contains: keyword } },
-              ],
-            }
-          : {},
-        area ? { area: { contains: area } } : {},
-        wifiAvailable ? { wifiAvailable: wifiAvailable === "true" } : {},
-        powerOutlets ? { powerOutlets: powerOutlets === "true" } : {},
-      ],
-    };
+    //カフェ情報をフィルタリングするためのwhere条件を定義(.pushを使ってフィルター条件をひとつずつ追加)
+    const whereCondition: any = {AND: []}; // `AND` は配列として使用
+
+    // キーワード検索（カフェ名 or エリア）
+    if (keyword) {
+      whereCondition.AND.push({
+        OR: [
+          { cafeName: { contains: keyword } },
+          { area: { contains: keyword } },
+        ],
+      });
+    }
+    // エリア検索
+    if (area) {
+      whereCondition.AND.push({ area: { constants: area } });
+    }
+    // Wi-Fiの有無
+    if (wifiAvailable) {
+      whereCondition.AND.push({ wifiAvailable: wifiAvailable === "true" });
+    }
+    // 電源の有無
+    if (powerOutlets) {
+      whereCondition.AND.push({ powerOutlets: powerOutlets === "true" });
+    }
 
     // カフェ投稿一覧を取得する
     const cafePostList = await prisma.cafe.findMany({
