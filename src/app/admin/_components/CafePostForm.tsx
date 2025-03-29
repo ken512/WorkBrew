@@ -240,16 +240,6 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
     setTimeout(() => setClearSignal(false), 0);
   };
 
-  // URLのバリデーションと生成
-  const isValidUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   return (
     <div className="flex flex-col items-center py-40">
       <form onSubmit={handleSubmit}>
@@ -271,22 +261,6 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
               required={required}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
             />
-            {/* URLフィールドの場合、プレビューリンクを表示 */}
-            {name === "cafeUrl" &&
-              formState.cafeUrl &&
-              isValidUrl(formState.cafeUrl) && (
-                <div className="mt-2">
-                  <a
-                    href={formState.cafeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:text-blue-700 underline flex items-center"
-                  >
-                    <i className="bi bi-link-45deg mr-1"></i>
-                    お店のウェブサイトを開く
-                  </a>
-                </div>
-              )}
           </div>
         ))}
 
