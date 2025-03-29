@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { VirtuosoGrid } from "react-virtuoso";
 import { Cafe } from "../_types/Cafe";
+import Link from "next/link";
 
 type Props = {
   cafes?: Cafe[];
@@ -24,7 +25,7 @@ export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
       <div className="mt-[100px] mx-auto bg-beige-200 rounded-xl p-10">
         <VirtuosoGrid
           style={{
-            height: "700px",
+            height: "100vw",
             width: "700px",
           }}
           totalCount={cafes.length ?? 0}
@@ -35,14 +36,15 @@ export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
             if (index >= cafes.length) return null;
             return (
               <div key={cafe.id} className="w-[300px] h-[400px]">
-                <div className="flex flex-col  bg-white p-5 rounded-lg shadow-md w-[300px] h-[400px]">
+                <Link href={`/cafe_post/${cafe.id}`}>
+                <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-[300px] h-[400px]">
                   {/* ユーザー情報 */}
                   <div className="flex justify-between w-full">
                     <div className="flex items-center">
                       <Image
                         src={cafe.users.profileIcon}
                         alt="Profile Image"
-                        className="rounded-full object-cover"
+                        className="rounded-full aspect-square"
                         width={50}
                         height={50}
                       />
@@ -91,6 +93,7 @@ export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
                     {cafe.comment}
                   </p>
                 </div>
+                </Link>
               </div>
             );
           }}

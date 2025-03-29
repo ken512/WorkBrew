@@ -34,7 +34,7 @@ const Home: React.FC<Cafe[]> = () => {
   // SWR で API からデータを取得
   const { data, error, isLoading } = useSWR(
     token ? ["/api/admin/home", token] : null,
-    ([url, token]) => fetcher(url, token)
+    ([url, token]) => fetcher(url, token),
   );
 
   // ローディング中の表示

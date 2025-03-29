@@ -73,7 +73,7 @@ export const LatestCafeList: React.FC<Props> = ({ cafes, onClick }) => {
               <div className="p-5 h-[200px]">
                 <h3 className="text-sm font-bold pt-2 truncate max-w-[250px] whitespace-nowrap overflow-hidden">{cafe.cafeName}</h3>
                 <p className="text-sm font-bold pt-28">
-                  {timeAgo(cafe.createdAt || cafe.updatedAt)}
+                  {timeAgo(cafe.createdAt && cafe.updatedAt)}
                 </p>
               </div>
             </div>

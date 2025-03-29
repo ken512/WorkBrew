@@ -61,8 +61,8 @@ const CafePost: React.FC<Cafe[]> = () => {
       <div className="bg-tan-300 min-h-screen flex flex-col grid-flow-row items-center justify-center">
         <CafeFilter filters={filters} onFilterChange={handleFilterChange} />
         {/* フィルタリングされたカフェリストを表示 */}
-        {data.cafePostList.length > 0 ? (
-          <CafeList cafes={data?.cafePostList ?? []} />
+        {data?.cafePostList.length > 0 ? (
+          <CafeList cafes={data?.cafePostList} />
         ) : (
           <p className="text-lg font-semibold">
             ☕️ 該当するカフェが見つかりませんでした。
