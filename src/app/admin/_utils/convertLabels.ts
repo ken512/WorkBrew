@@ -1,4 +1,4 @@
-//マッピングオブジェクトを使用して、空き状況とWi-Fi速度を日本語に変換
+//マッピングオブジェクトを使用して、日本語に変換
 {/*空席状況*/}
 export const convertSeatAvailability = (status: string) => {
   const seatStatusMap: {[key: string]: string} = {
