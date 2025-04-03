@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 import { UpdateStatus } from "@/app/_types/updateStatus";
+import { getCurrentUser } from "@/_utils/supabase";
 
 const prisma = new PrismaClient();
 
@@ -51,35 +52,78 @@ export const PUT = async (
   request: NextRequest,
   { params }: { params: { id: string } }
 ) => {
+  const { currentUser, error } = await getCurrentUser(request);
+  if (error || !currentUser) {
+    return NextResponse.json({ status: 400 });
+  }
+
   const { id } = params;
 
   try {
     const { seatAvailability, wifiSpeed }: UpdateStatus = await request.json();
+
     const updateWiFiAndSeatStatus = await prisma.cafe.update({
-      where: { id: parseInt(id) },
+      where: {
+        id: parseInt(id),
+        users: {
+          supabaseUserId: currentUser.user.id,
+        },
+      },
       data: {
         seatAvailability: seatAvailability || null,
         wifiSpeed: wifiSpeed || null,
       },
     });
-    console.log("Wi-Fi、空席状況:", updateWiFiAndSeatStatus);
 
-    return NextResponse.json(
-      {
-        status: "SUCCESS",
-        message: "更新しました",
-        update: updateWiFiAndSeatStatus,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      status: "SUCCESS",
+      message: "更新しました",
+      update: updateWiFiAndSeatStatus,
+    }, { status: 200 });
+
   } catch (error) {
     console.error("Update error", error);
-    return NextResponse.json(
-      {
+
+    // エラーメッセージの内容で分岐（Prismaのエラー）
+    if (error instanceof Error && error.message.includes("Record to update not found")) {
+      return NextResponse.json({
         status: "ERROR",
-        message: error instanceof Error ? error.message : "更新に失敗しました",
+        message: "他のユーザーの投稿を更新する権限はありません!!"
+      }, { status: 400 });
+    }
+  }
+};
+
+
+export const DELETE = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const { currentUser, error } = await getCurrentUser(request);
+  if (error || !currentUser) {
+    return NextResponse.json({ status: 400 });
+  }
+  const { id } = params;
+
+  try {
+
+    await prisma.cafe.delete({
+      where: {
+        id: parseInt(id),
+        users: {
+          supabaseUserId: currentUser.user.id,
+        },//他のユーザーが投稿したカフェ情報を勝手に削除できないようにする。
       },
-      { status: 400 }
-    );
+    });
+    return NextResponse.json({ status: "OK" }, { status: 200 });
+  } catch (error) {
+    
+// エラーメッセージの内容で分岐（Prismaのエラー）
+if (error instanceof Error && error.message.includes("Record to update not found")) {
+  return NextResponse.json({
+    status: "ERROR",
+    message: "他のユーザーの投稿を削除する権限はありません!!"
+  }, { status: 400 });
+}
   }
 };

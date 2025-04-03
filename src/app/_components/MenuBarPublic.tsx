@@ -1,10 +1,8 @@
 "use client";
 import { NavLink } from "./navLink";
-import { useRouteGuard } from "../admin/_hooks/useRouteGuard";
 import "../globals.css";
 
-export const MenuBar = () => {
-  useRouteGuard();
+export const MenuBarPublic = () => {
 
   return (
     <div className="mx-auto">

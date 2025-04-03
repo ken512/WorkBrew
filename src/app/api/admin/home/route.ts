@@ -12,13 +12,8 @@ export const GET = async (request: NextRequest) => {
   }
   
   try {
-    // 最新カフェ情報を取得
+    // 最新カフェ情報を取得(ユーザーIDに関係なくカフェ情報を取得する)
     const cafesRaw = await prisma.cafe.findMany({
-      where: {
-        users: {
-          supabaseUserId: currentUser.user.id
-        },
-      },
       orderBy: [
         { updatedAt: 'desc' },
         { createdAt: 'desc' } // 更新されていない場合は、作成日時（createdAt）がその代わりとして使う

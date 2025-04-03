@@ -15,7 +15,7 @@ export const HeaderBase: React.FC<HeaderProps> = ({
   return (
     <Link 
       href={href}
-      className="py-4 px-6 text-black-500 hover:text-customOrange"
+      className="font-pacifico text-3xl py-4 px-6 text-black-500 hover:text-customOrange"
     >
       {children}
     </Link>

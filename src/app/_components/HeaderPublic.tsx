@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { HeaderBase } from "./headerBase";
-import { MenuBar } from "./menuBar";
+import { MenuBarPublic } from "./MenuBarPublic";
 import "../globals.css"
 export const HeaderPublic: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ export const HeaderPublic: React.FC = () => {
         WorkBrew
       </HeaderBase>
       <div className="px-[200px]">
-      <MenuBar />
+      <MenuBarPublic />
       </div>
     </div>
   );
