@@ -4,12 +4,10 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useSupabaseSession } from "../../_hooks/useSupabaseSession";
 import { supabase } from "@/_utils/supabase";
-import { MenuBar } from "../../_components/menuBar";
+import { MenuBarAdmin } from "./menuBarAdmin";
 import { HeaderProps } from "../_types/headerProps";
 import "../../globals.css";
 import Link from "next/link";
-
-
 
 export const HeaderAdminBase = ({ href }: HeaderProps) => {
   const { session, isLoading } = useSupabaseSession();
@@ -35,7 +33,7 @@ export const HeaderAdminBase = ({ href }: HeaderProps) => {
     WorkBrew
   </Link>
   <div className="flex items-center space-x-40">
-    <MenuBar />
+    <MenuBarAdmin />
     <div>
       {session ? (
         <button

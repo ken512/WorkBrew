@@ -11,6 +11,7 @@ import { FormErrorsType } from "@/app/_types/formErrorsType";
 import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import useSWR, { mutate } from "swr";
+import api from "@/_utils/api";
 import "../../globals.css";
 
 //カフェ投稿フォーム API用のfetcherを定義
@@ -94,28 +95,19 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       // 画像がない場合、デフォルト画像をセット
       const defaultImage = "https://placehold.jp/600x350/?text=デフォルト";
       const finalThumbnail = formState.thumbnailImage || defaultImage;
-      
-      const response = await fetch("/api/admin/cafe_submission_form", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ ...formState, thumbnailImage: finalThumbnail }),
-      });
-      const data = await response.json();
-      console.log("API Response:", data);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error response:", errorData);
-        alert("投稿に失敗しました");
-      } else {
-        alert("カフェ投稿しました！");
-        mutate(["/api/admin/cafe_submission_form", token]); // mutate で最新データを取得
-      }
+      // post関数を使用してデータを送信
+      const response = await api.post("/api/admin/cafe_submission_form", {
+        ...formState,
+        thumbnailImage: finalThumbnail,
+      }, token);
+      console.log("API Response:", response);
+      alert("カフェ投稿しました！");
+      mutate(["/api/admin/cafe_submission_form", token]); // mutate で最新データを取得
+
     } catch (error) {
       console.error("投稿に失敗しました:", error);
+      alert("投稿に失敗しました");
     } finally {
       setIsSubmitting(false);
     }

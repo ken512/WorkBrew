@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import Image from "next/image";
 import { RenderStars } from "../admin/_utils/renderStars";
@@ -23,6 +23,9 @@ import { convertJapaneseToEnglish } from "@/_utils/convertJapaneseToEnglish";
 import { PieChartData } from "../_types/pieChartProps";
 import { CafeStatusPieChart } from "./cafeStatusPieChart";
 import "../globals.css";
+import { Cafe } from "../_types/Cafe";
+import { supabase } from "@/_utils/supabase";
+import api from "@/_utils/api";
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
 
@@ -53,6 +56,9 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 }) => {
   const [_map, setMap] = useState<google.maps.Map | null>(null);
   const { id } = useParams();
+  const [cafes] = useState<Cafe>();
+  const router = useRouter();
+  const [wifiAvailable, setWifiAvailable] = useState<boolean | null>(null);
 
   //onImageUploadを使わない前提で、エラー回避用のダミー関数
   const handleUpload = (url: string) => {
@@ -69,6 +75,46 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   // cafeオブジェクトを取得
   const cafe = data.cafes;
 
+  // cafeオブジェクトのwifiAvailableを取得する
+  useEffect(() => {
+    if (cafe && cafe.wifiAvailable !== undefined) {
+      setWifiAvailable(cafe.wifiAvailable);
+    }
+  }, [cafe]);
+
+  const handleDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log("変換後に送信する値", cafes);
+    // Supabase からtoken保存する
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    // トークンが保存されていない場合
+    if (!token) {
+      console.error("トークンが保存されていません");
+      alert("ログインしていないため、削除できません。");
+      return; // トークンがない場合は処理を停止
+    } else {
+      console.log("保存されたトークン:", token);
+    }
+
+    if (id) {
+      try {
+        const data = await api.delete(
+          `/api/public/cafe_post/${id}`,
+          cafes,
+          token
+        );
+        alert(data.message || "削除しました!!");
+        router.push("/cafe_post");
+      } catch (error) {
+        console.error("削除に失敗しました!!", error);
+        alert("他のユーザーの投稿を削除する権限はありません!!");
+        return;
+      }
+    }
+  };
+
   //クライアント側で使える状態になったら描画させる
   useEffect(() => {
     if (
@@ -79,7 +125,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
     ) {
       initMap(setMap, [cafe]); // 1件だけでも配列に
     }
-  }, [cafe.locationCoordinates]);
+  }, [cafe.locationCoordinates, cafe]);
 
   const cafesArray = data?.relatedCafes || []; // グラフ集計用
 
@@ -300,16 +346,22 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         />
         {/*空席状況・Wi-Fi速度報告*/}
         <div className="pt-10">
-          {fieldsToShow.map(({ label, options, key }) => (
-            <CafePostButtons
-              key={label}
-              label={label}
-              options={options}
-              onSelect={(selected) => {
-                updateState(key, selected);
-              }}
-            />
-          ))}
+          {fieldsToShow.map(({ label, options, key }) => {
+            //Availableがfalseの場合のみ、Wi-Fi速度の選択肢ボタンを非表示
+            if (key === "wifiSpeed" && wifiAvailable === false) {
+              return null; // Wi-Fi速度が表示されないようにする
+            }
+            return (
+              <CafePostButtons
+                key={label}
+                label={label}
+                options={options}
+                onSelect={(selected) => {
+                  updateState(key, selected);
+                }}
+              />
+            );
+          })}
         </div>
         <div className="p-4  rounded-lg">
           <button
@@ -327,10 +379,17 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         <div className="mt-10">
           <CafeStatusPieChart chartData={generateChartData(cafesArray)} />
         </div>
-        <div className="my-10">
+        <div className="flex">
+          <div className="px-5">
           <Button type="button" variant="secondary" onClick={onUpdate}>
             更新
           </Button>
+          </div>
+          <div className="px-5">
+          <Button type="button" variant="danger" onClick={handleDelete}>
+            削除
+          </Button>
+          </div>
         </div>
         <div className="text-center py-[100px]">
           <button

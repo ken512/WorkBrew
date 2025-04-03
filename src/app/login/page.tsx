@@ -4,7 +4,7 @@ import React,{ useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
-import { HeaderAdminBase } from "../admin/_components/headerAdminBase";
+import { HeaderPublic } from "../_components/headerPublic";
 import { Button } from "../admin/_components/Button";
 
 const Login: React.FC = () => {
@@ -24,16 +24,25 @@ const Login: React.FC = () => {
       alert("ログイン失敗しました。詳細: " + error.message);
     } else {
       console.log("Login successful, session data:", data);
-      alert("ログインに成功しました");
-      router.replace("/admin/home");
+
+      // セッションが取得できているか確認
+      const sessionCheck = await supabase.auth.getSession();
+      if (sessionCheck.data.session) {
+        alert("ログインに成功しました");
+        router.replace("/admin/home");
+      } else {
+        console.error("セッションが取得できませんでした");
+        alert("セッションが取得できませんでした。");
+      }
+      ;
     }
   };
 
   return (
     <div>
-      <HeaderAdminBase href="/" />
+      <HeaderPublic />
       <div className="min-h-screen bg-tan-300 flex flex-col items-center justify-center">
-        <h1 className="text-5xl">ログイン</h1>
+        <h1 className="text-3xl">ログイン</h1>
         <form onSubmit={handleSubmit} className="w-full max-w-[500px]">
           <div className="py-5">
             <Label htmlFor="email">
@@ -68,7 +77,7 @@ const Login: React.FC = () => {
             />
           </div>
           <div className="py-5 flex justify-center">
-            <Button
+          <Button
               type="submit"
             >
               ログイン

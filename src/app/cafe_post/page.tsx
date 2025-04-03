@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { HeaderAdminBase } from "../admin/_components/headerAdminBase";
+import { HeaderPublic } from "../_components/headerPublic";
 import { CafeList } from "../_components/cafeList";
 import { CafeFilter } from "../_components/cafeFilter";
 import useSWR from "swr";
@@ -57,7 +57,7 @@ const CafePost: React.FC<Cafe[]> = () => {
   if (error) return <div>データの取得に失敗しました</div>;
   return (
     <div>
-      <HeaderAdminBase href="/" />
+      <HeaderPublic />
       <div className="bg-tan-300 min-h-screen flex flex-col grid-flow-row items-center justify-center">
         <CafeFilter filters={filters} onFilterChange={handleFilterChange} />
         {/* フィルタリングされたカフェリストを表示 */}
