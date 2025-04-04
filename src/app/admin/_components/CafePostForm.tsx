@@ -1,6 +1,5 @@
 "use client";
 import React, { FormEvent, useState } from "react";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Input } from "@/app/_components/Input";
 import { CafeFormFields } from "../_data/cafeFormFields";
 import { CafePostButtons } from "./cafePostButtons";
@@ -14,15 +13,8 @@ import useSWR, { mutate } from "swr";
 import api from "@/_utils/api";
 import "../../globals.css";
 
-//カフェ投稿フォーム API用のfetcherを定義
-const fetcher = (url: string, token: string) =>
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((response) => response.json());
+//共通リクエストを使用する
+const fetcher = (url: string) => api.get(url);
 
 //Geocoding API用のfetcherを定義
 const fetchGeocode = async (url: string) => {
@@ -47,19 +39,14 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   const [rating, setRating] = useState(3); // 星評価の状態
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // エラーメッセージ用の状態
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { token } = useSupabaseSession();
 
   //  SWRを使ったデータ取得
-  useSWR(
-    token ? ["/api/admin/cafe_submission_form", token] : null,
-    ([url, token]) => fetcher(url, token),
-    {
-      shouldRetryOnError: false, // エラーが発生しても再試行しない
-      onSuccess: (data) => {
-        if (data?.cafe) setFormState(data.cafe);
-      },
-    }
-  );
+  useSWR("/api/admin/cafe_submission_form", ([url]) => fetcher(url), {
+    shouldRetryOnError: false, // エラーが発生しても再試行しない
+    onSuccess: (data) => {
+      if (data?.cafe) setFormState(data.cafe);
+    },
+  });
 
   // Geocoding APIをSWRで管理
   useSWR(
@@ -100,11 +87,10 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       const response = await api.post("/api/admin/cafe_submission_form", {
         ...formState,
         thumbnailImage: finalThumbnail,
-      }, token);
+      });
       console.log("API Response:", response);
       alert("カフェ投稿しました！");
-      mutate(["/api/admin/cafe_submission_form", token]); // mutate で最新データを取得
-
+      mutate(["/api/admin/cafe_submission_form"]); // mutate で最新データを取得
     } catch (error) {
       console.error("投稿に失敗しました:", error);
       alert("投稿に失敗しました");

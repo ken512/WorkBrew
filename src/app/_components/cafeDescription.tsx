@@ -54,7 +54,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   updateWiFiAndSeatStatus,
   setUpdateWiFiAndSeatStatus,
 }) => {
-  const [_map, setMap] = useState<google.maps.Map | null>(null);
+  const [, setMap] = useState<google.maps.Map | null>(null);
   const { id } = useParams();
   const [cafes] = useState<Cafe>();
   const router = useRouter();
@@ -67,7 +67,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
   const { downloadJudgment, measureDownloadSpeed } =
     useImageHandler(handleUpload);
-  const { data = { cafes: {} }, error } = useSWR(
+  const { data = { cafes: {} }, error, isLoading } = useSWR(
     `/api/public/cafe_post/${id}`,
     fetcher
   );
@@ -84,9 +84,9 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
-
     console.log("変換後に送信する値", cafes);
-    // Supabase からtoken保存する
+
+    //tokenを保存して、削除制限を設ける(投稿主のみ削除可)
     const { data } = await supabase.auth.getSession();
     const token = data.session?.access_token;
     // トークンが保存されていない場合
@@ -103,7 +103,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         const data = await api.delete(
           `/api/public/cafe_post/${id}`,
           cafes,
-          token
         );
         alert(data.message || "削除しました!!");
         router.push("/cafe_post");
@@ -114,18 +113,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
       }
     }
   };
-
-  //クライアント側で使える状態になったら描画させる
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.google &&
-      window.google.maps &&
-      cafe.locationCoordinates
-    ) {
-      initMap(setMap, [cafe]); // 1件だけでも配列に
-    }
-  }, [cafe.locationCoordinates, cafe]);
 
   const cafesArray = data?.relatedCafes || []; // グラフ集計用
 
@@ -171,8 +158,16 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
     return result;
   };
 
-  // usersプロパティが存在するか確認
-  if (!cafe.users) return <div>ユーザー情報が見つかりませんでした</div>;
+  // ローディング中の表示
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">
+          ☕️ コーヒーを淹れています... お待ちください
+        </p>
+      </div>
+    );
+  }
 
   // console.log("取得データ: ", data);
   if (error) return <div>データの取得に失敗しました</div>;
@@ -381,14 +376,14 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         </div>
         <div className="flex">
           <div className="px-5">
-          <Button type="button" variant="secondary" onClick={onUpdate}>
-            更新
-          </Button>
+            <Button type="button" variant="secondary" onClick={onUpdate}>
+              更新
+            </Button>
           </div>
           <div className="px-5">
-          <Button type="button" variant="danger" onClick={handleDelete}>
-            削除
-          </Button>
+            <Button type="button" variant="danger" onClick={handleDelete}>
+              削除
+            </Button>
           </div>
         </div>
         <div className="text-center py-[100px]">

@@ -18,7 +18,7 @@ const CafePostDetail: React.FC = () => {
     e.preventDefault();
     console.log("変換後に送信する値", updateWiFiAndSeatStatus);
     
-   // Supabase からtoken保存
+   //tokenを保存して、更新制限を設ける(投稿主の更新可)
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
     // トークンが保存されていない場合
@@ -34,7 +34,7 @@ const CafePostDetail: React.FC = () => {
     if (id) {
       try {
         // トークンをヘッダーに設定して送信
-        const data = await api.put(`/api/public/cafe_post/${id}`, updateWiFiAndSeatStatus, token);
+        const data = await api.put(`/api/public/cafe_post/${id}`, updateWiFiAndSeatStatus);
         alert(data.message || "更新しました！！");
       } catch(error) {
         console.error("更新失敗しました。", error);
