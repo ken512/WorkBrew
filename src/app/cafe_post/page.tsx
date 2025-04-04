@@ -10,7 +10,6 @@ import "../globals.css";
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
 const CafePost: React.FC<Cafe[]> = () => {
-  
   const [filters, setFilters] = useState({
     area: "",
     keyword: "",
@@ -43,16 +42,28 @@ const CafePost: React.FC<Cafe[]> = () => {
   console.log("APIに送るクエリパラメータ:", queryParams);
 
   // SWR で API からデータを取得
-  const { data = { cafePostList: [] }, error } = useSWR(
-    `/api/public/cafe_post?${queryParams}`,
-    fetcher
-  );
+  const {
+    data = { cafePostList: [] },
+    error,
+    isLoading,
+  } = useSWR(`/api/public/cafe_post?${queryParams}`, fetcher);
   console.log("取得データ:", data.cafePostList);
 
   //フィルターを変更したときに実行
   const handleFilterChange = (newFilters: typeof filters) => {
     setFilters(newFilters);
   };
+
+  // ローディング中の表示
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">
+          ☕️ コーヒーを淹れています... お待ちください
+        </p>
+      </div>
+    );
+  }
 
   if (error) return <div>データの取得に失敗しました</div>;
   return (
