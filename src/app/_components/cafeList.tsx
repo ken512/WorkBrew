@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { VirtuosoGrid } from "react-virtuoso";
 import { Cafe } from "../_types/Cafe";
 import Link from "next/link";
+import "../globals.css";
 
 type Props = {
   cafes?: Cafe[];
@@ -11,28 +12,60 @@ type Props = {
 
 export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
   const [selectedCafeId, setSelectedCafeId] = useState<number | null>(null);
+  const [gridWidth, setGridWidth] = useState<string>("");
+  const [gridHeight, setGridHeight] = useState<string>("");
+
+  // ✅ 初回+リサイズで更新
+  useEffect(() => {
+    const updateGridSize = () => {
+      const width = window.innerWidth;
+
+      
+    if (width < 480) {
+      // sm: スマホサイズ
+      setGridWidth("300px");
+      setGridHeight("1700px");
+    } else if (width >= 480 && width < 699) {
+      // md: タブレットサイズ
+      setGridWidth("300px");  // ← タブレットに合わせたサイズに調整
+      setGridHeight("1700px");
+    } else {
+      // PCサイズ
+      setGridWidth("700px");
+      setGridHeight("1700px");
+    }
+  };
+
+    updateGridSize(); // 初回呼び出し
+    window.addEventListener("resize", updateGridSize);
+    return () => window.removeEventListener("resize", updateGridSize);
+  }, []);
+
 
   return (
-    <div className="mb-[200px] font-bold">
-      <h1 className="text-[min(13vw,30px)] text-center mt-[100px]">投稿一覧</h1>
+    <div className="mb-[200px] font-bold sm:text-sm md:text-lg">
+      <h1 className="text-[min(13vw,30px)] text-center mt-[100px] sm:text-xl">
+        投稿一覧
+      </h1>
 
       {/* `map関数の代わりにVirtuosoで繰り返し` */}
-      <div className="mt-[100px] mx-auto bg-beige-200 rounded-xl p-10">
+      <div className="mt-[100px] mx-auto bg-beige-200 rounded-xl p-10 md:p-8 sm:max-w-[350px] sm:h-[1800px] sm:px-10">
+      {gridWidth && gridHeight && (
         <VirtuosoGrid
           style={{
-            height: "100vw",
-            width: "700px",
+            height: gridHeight,
+            width: gridWidth,
           }}
           totalCount={cafes.length ?? 0}
           overscan={10}
-          listClassName="grid grid-cols-2 gap-10 px-4" /* リストの形式をグリットに指定 */
+          listClassName="grid grid-cols-2 sm:grid-cols-1 gap-10 px-4" /* リストの形式をグリットに指定 */
           itemContent={(index) => {
             const cafe = cafes[index];
             if (index >= cafes.length) return null;
             return (
               <div key={cafe.id} className="w-[300px] h-[400px]">
                 <Link href={`/cafe_post/${cafe.id}`}>
-                  <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-[300px] h-[400px]">
+                  <div className="flex flex-col bg-white p-5 rounded-lg shadow-md w-[300px] h-[400px] sm:w-[250px] ">
                     {/* ユーザー情報 */}
                     <div className="flex justify-between w-full">
                       <div className="flex items-center">
@@ -99,6 +132,7 @@ export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
             );
           }}
         />
+      )}
       </div>
     </div>
   );

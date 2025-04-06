@@ -69,11 +69,11 @@ export const CafePostButtons = ({
 
   return (
     <div className="mb-6">
-      <label className="block text-lg font-bold mb-2 ">
+      <label className="block text-lg font-bold mb-2 sm:text-sm">
         {label}
-        {error && <span className="text-red-500 ml-2">{error}</span>}
+        {error && <span className="text-red-500 ml-2 sm:pb-5">{error}</span>}
       </label>
-      <div className="flex gap-3 font-bold">
+      <div className="flex gap-3 font-bold sm:text-sm">
         {isStarRating ? (
           <ButtonColorSwitching
             isStarRating={true}
