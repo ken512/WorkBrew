@@ -34,7 +34,7 @@ export const LatestDetailDialog: React.FC<Props> = ({
     >
       <div className="bg-beige-200 rounded-lg shadow-lg">
         {/* 画像 */}
-        <div className="relative w-[500px] h-[250px]">
+        <div className="relative w-[500px] h-[250px] sm:max-w-[390px]">
         <Image
           src={cafe.thumbnailImage}
           alt="thumbnailImage"
@@ -115,7 +115,7 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
       >
         <div className="bg-beige-200 rounded-lg shadow-lg">
           {/* 画像 */}
-          <div className="relative w-[500px] h-[250px]">
+          <div className="relative w-[500px] h-[250px] sm:max-w-[390px]">
             <Image
               src={cafe.thumbnailImage}
               alt="thumbnailImage"

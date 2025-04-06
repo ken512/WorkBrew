@@ -219,10 +219,10 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   };
 
   return (
-    <div className="flex flex-col items-center py-40">
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center py-40 sm:px-4 sm:text-sm">
+      <form onSubmit={handleSubmit} className="sm:w-full sm:max-w-[350px]">
         {CafeFormFields.map(({ name, label, placeholder, required }) => (
-          <div key={name} className="py-2 font-bold w-[700px]">
+          <div key={name} className="py-2 font-bold w-[700px] sm:w-full">
             <div className="flex items-center mb-2">
               <label className="text-gray-700 mr-2">{label}</label>
               {errors[name] && (
@@ -242,7 +242,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
           </div>
         ))}
 
-        <div className="mt-10">
+        <div className="mt-10 sm:mt-6">
           {ButtonFields.map(({ label, options, fieldName }) => (
             <CafePostButtons
               key={fieldName}
@@ -273,7 +273,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
         {errorMessage && (
           <div className="mt-4 text-red-500">{errorMessage}</div>
         )}
-        <div className="mt-10">
+        <div className="mt-10 sm:text-sm sm:p-5 sm:max-w-[350px] ">
           <TextArea
             label="コメント欄（カフェの感想やおすすめポイントを記入してください）"
             placeholder="500文字以内"

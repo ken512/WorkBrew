@@ -25,10 +25,10 @@ export const LatestCafeList: React.FC<Props> = ({ cafes, onClick }) => {
   }
   return (
     <div className="mt-[100px]">
-      <h1 className="font-bold text-[min(13vw,30px)] text-center">最新情報</h1>
+      <h1 className="font-bold text-[min(13vw,30px)] sm:text-lg text-center">最新情報</h1>
         <Swiper
         className={`mx-auto py-10 mt-[100px]  rounded-lg shadow-md overflow-hidden ${
-          cafes.length === 1 ? "max-w-[400px] h-[400px]" : "max-w-[800px] h-[400px]"
+          cafes.length === 1 ? "max-w-[400px] h-[400px]" : "max-w-[800px] h-[400px] sm:max-w-[300px] sm:h-[400px] md:max-w-[600px] md:max-h-[500px]"
         }`}
         modules={[Autoplay, Navigation, Pagination]}
         spaceBetween={10}
@@ -42,7 +42,7 @@ export const LatestCafeList: React.FC<Props> = ({ cafes, onClick }) => {
         pagination={cafes.length > 1 ? { clickable: true } : false} // 2つ以上のスライドがある場合のみページネーションを有効化
         watchOverflow={true} // スライドが1枚のときSwiperのレイアウト崩れを防ぐ
         breakpoints={{
-          480: {
+          360: {
             slidesPerView: 1,
             spaceBetween: 10,
           },
@@ -91,12 +91,12 @@ export const RecommendationCafeList: React.FC<Props> = ({ cafes, onClick }) => {
   }
   return (
     <div className="mt-[200px] mb-[130px]">
-      <h1 className="font-bold text-[min(13vw,30px)] text-center">
+      <h1 className="font-bold text-[min(13vw,30px)] sm:text-lg text-center">
         おすすめのカフェ情報
       </h1>
         <Swiper
             className={`mx-auto py-10 mt-[100px] rounded-lg shadow-md overflow-hidden ${
-              cafes.length === 1 ? "max-w-[400px] h-[400px]" : "max-w-[800px] h-[400px]"
+              cafes.length === 1 ? "max-w-[400px] h-[400px]" : "max-w-[800px] h-[400px] sm:max-w-[300px] sm:h-[400px] md:max-w-[600px] md:max-h-[500px]"
             }`}
           modules={[Autoplay, Navigation, Pagination]}
           spaceBetween={10}
@@ -110,7 +110,7 @@ export const RecommendationCafeList: React.FC<Props> = ({ cafes, onClick }) => {
           pagination={cafes.length > 1 ? { clickable: true } : false} // 2つ以上のスライドがある場合のみページネーションを有効化
           watchOverflow={true} // スライドが1枚のときSwiperのレイアウト崩れを防ぐ
           breakpoints={{
-            480: {
+            360: {
               slidesPerView: 1,
               spaceBetween: 10,
             },
