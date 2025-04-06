@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/app/admin/_components/Button";
 import "../../globals.css";
@@ -15,6 +15,20 @@ export const UserIcon: React.FC<{
     handleAddClick,
     handleRemove
   } = useImageHandler(onImageUpload, initialImage, "user-icon-input");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  //画像がセットされたら、isSubmittingをfalseにする(ボタン表示処理)
+  useEffect(() => {
+    if(thumbnailImage){
+      setIsSubmitting(false);// 画像が表示されたら「追加中...」→「追加」に戻す
+    }
+  }, [thumbnailImage]);// thumbnailImage が変わったときに実行される
+
+  const handleAddClickWithSubmitFlag = () => {
+    if(isSubmitting) return // 送信中であれば追加しない
+    setIsSubmitting(true) // 送信中フラグを設定
+    handleAddClick(); // 実際の画像追加処理
+  }
 
   return (
     <div className="flex justify-center items-center w-full sm:w-1/2 space-y-4">
@@ -44,9 +58,9 @@ export const UserIcon: React.FC<{
         <Button
           type="button"
           variant="primary"
-          onClick={handleAddClick}
+          onClick={handleAddClickWithSubmitFlag}
         >
-          追加
+          {isSubmitting ? "追加中..." : "追加"}
         </Button>
         <Button
           type="button"

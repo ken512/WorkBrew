@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Cafe } from "@/app/_types/Cafe";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { HeaderAdminBase } from "../_components/headerAdminBase";
 import {
   LatestCafeList,
@@ -12,16 +11,11 @@ import {
   RecommendationDetailDialog,
 } from "../_components/cafeDetailInfo";
 import useSWR from "swr";
+import api from "@/_utils/api";
 import "../../globals.css";
 
-const fetcher = (url: string, token: string) =>
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((response) => response.json());
+//共通リクエストを使用する
+const fetcher = (url: string) => api.get(url);
 
 const Home: React.FC<Cafe[]> = () => {
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
@@ -29,12 +23,11 @@ const Home: React.FC<Cafe[]> = () => {
     "latest" | "recommendation" | null
   >(null); //最新情報かおすすめカフェの判別状態管理
   const [isOpen, setIsOpen] = useState(false);
-  const { token } = useSupabaseSession();
 
   // SWR で API からデータを取得
   const { data, error, isLoading } = useSWR(
-    token ? ["/api/admin/home", token] : null,
-    ([url, token]) => fetcher(url, token)
+    ["/api/admin/home",fetcher],
+    ([url]) => fetcher(url)
   );
 
   // ローディング中の表示

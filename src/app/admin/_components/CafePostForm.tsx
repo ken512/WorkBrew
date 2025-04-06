@@ -1,6 +1,5 @@
 "use client";
 import React, { FormEvent, useState } from "react";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Input } from "@/app/_components/Input";
 import { CafeFormFields } from "../_data/cafeFormFields";
 import { CafePostButtons } from "./cafePostButtons";
@@ -11,17 +10,11 @@ import { FormErrorsType } from "@/app/_types/formErrorsType";
 import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import useSWR, { mutate } from "swr";
+import api from "@/_utils/api";
 import "../../globals.css";
 
-//カフェ投稿フォーム API用のfetcherを定義
-const fetcher = (url: string, token: string) =>
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((response) => response.json());
+//共通リクエストを使用する
+const fetcher = (url: string) => api.get(url);
 
 //Geocoding API用のfetcherを定義
 const fetchGeocode = async (url: string) => {
@@ -46,19 +39,14 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   const [rating, setRating] = useState(3); // 星評価の状態
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // エラーメッセージ用の状態
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { token } = useSupabaseSession();
 
   //  SWRを使ったデータ取得
-  useSWR(
-    token ? ["/api/admin/cafe_submission_form", token] : null,
-    ([url, token]) => fetcher(url, token),
-    {
-      shouldRetryOnError: false, // エラーが発生しても再試行しない
-      onSuccess: (data) => {
-        if (data?.cafe) setFormState(data.cafe);
-      },
-    }
-  );
+  useSWR("/api/admin/cafe_submission_form", ([url]) => fetcher(url), {
+    shouldRetryOnError: false, // エラーが発生しても再試行しない
+    onSuccess: (data) => {
+      if (data?.cafe) setFormState(data.cafe);
+    },
+  });
 
   // Geocoding APIをSWRで管理
   useSWR(
@@ -94,28 +82,18 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       // 画像がない場合、デフォルト画像をセット
       const defaultImage = "https://placehold.jp/600x350/?text=デフォルト";
       const finalThumbnail = formState.thumbnailImage || defaultImage;
-      
-      const response = await fetch("/api/admin/cafe_submission_form", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ ...formState, thumbnailImage: finalThumbnail }),
-      });
-      const data = await response.json();
-      console.log("API Response:", data);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error response:", errorData);
-        alert("投稿に失敗しました");
-      } else {
-        alert("カフェ投稿しました！");
-        mutate(["/api/admin/cafe_submission_form", token]); // mutate で最新データを取得
-      }
+      // post関数を使用してデータを送信
+      const response = await api.post("/api/admin/cafe_submission_form", {
+        ...formState,
+        thumbnailImage: finalThumbnail,
+      });
+      console.log("API Response:", response);
+      alert("カフェ投稿しました！");
+      mutate(["/api/admin/cafe_submission_form"]); // mutate で最新データを取得
     } catch (error) {
       console.error("投稿に失敗しました:", error);
+      alert("投稿に失敗しました");
     } finally {
       setIsSubmitting(false);
     }
@@ -240,21 +218,11 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
     setTimeout(() => setClearSignal(false), 0);
   };
 
-  // URLのバリデーションと生成
-  const isValidUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   return (
-    <div className="flex flex-col items-center py-40">
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center py-40 sm:px-4 sm:text-sm">
+      <form onSubmit={handleSubmit} className="sm:w-full sm:max-w-[350px]">
         {CafeFormFields.map(({ name, label, placeholder, required }) => (
-          <div key={name} className="py-2 font-bold w-[700px]">
+          <div key={name} className="py-2 font-bold w-[700px] sm:w-full">
             <div className="flex items-center mb-2">
               <label className="text-gray-700 mr-2">{label}</label>
               {errors[name] && (
@@ -271,26 +239,10 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
               required={required}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
             />
-            {/* URLフィールドの場合、プレビューリンクを表示 */}
-            {name === "cafeUrl" &&
-              formState.cafeUrl &&
-              isValidUrl(formState.cafeUrl) && (
-                <div className="mt-2">
-                  <a
-                    href={formState.cafeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:text-blue-700 underline flex items-center"
-                  >
-                    <i className="bi bi-link-45deg mr-1"></i>
-                    お店のウェブサイトを開く
-                  </a>
-                </div>
-              )}
           </div>
         ))}
 
-        <div className="mt-10">
+        <div className="mt-10 sm:mt-6">
           {ButtonFields.map(({ label, options, fieldName }) => (
             <CafePostButtons
               key={fieldName}
@@ -321,7 +273,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
         {errorMessage && (
           <div className="mt-4 text-red-500">{errorMessage}</div>
         )}
-        <div className="mt-10">
+        <div className="mt-10 sm:text-sm sm:p-5 sm:max-w-[350px] ">
           <TextArea
             label="コメント欄（カフェの感想やおすすめポイントを記入してください）"
             placeholder="500文字以内"

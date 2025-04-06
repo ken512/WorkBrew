@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { ButtonColorSwitching } from "./buttonColorSwitching";
 import "../../globals.css";
 
+
 type CafePostButtonsProps = {
   label: string; //フィールド名（例: Wi-Fiの有無）
   options: string[]; //ボタンの選択肢
   onSelect: (selected: string) => void; // 選択変更時のコールバック
   error?: string; // エラーメッセージ
-  clearSignal?: boolean;  // クリアのシグナルを受け取るプロパティ
+  clearSignal?: boolean; // クリアのシグナルを受け取るプロパティ
   disabled?: boolean;
 };
 
@@ -18,11 +19,9 @@ export const CafePostButtons = ({
   onSelect,
   error,
   clearSignal = false,
-  disabled = false, 
-
+  disabled = false,
 }: CafePostButtonsProps) => {
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({});
-
   useEffect(() => {
     if (clearSignal) {
       setSelected({}); // clearSignalがtrueの場合、選択状態をリセット
@@ -30,7 +29,7 @@ export const CafePostButtons = ({
   }, [clearSignal]); // クリアシグナルが来たら選択状態をリセット
 
   const handleClick = (option: string | number) => {
-    if(typeof option === "string") {
+    if (typeof option === "string") {
       setSelected((prevSelected) => ({
         ...prevSelected,
         [option]: !prevSelected[option],
@@ -40,9 +39,10 @@ export const CafePostButtons = ({
       onSelect(option.toString());
     }
   };
-
+  
   const getButtonClass = (option: string) => {
-    const defaultClass = "px-4 py-2 rounded-2xl border bg-beige-200"; // 初期値のクラス
+    const defaultClass =
+      "px-4 py-2 rounded-2xl border border-black bg-beige-200"; // 初期値のクラス
     const selectedClass = "text-black";
 
     const colorClass =
@@ -69,10 +69,11 @@ export const CafePostButtons = ({
 
   return (
     <div className="mb-6">
-      <label className="block text-lg font-bold mb-2 ">
-        {label}{error && <span className="text-red-500 ml-2">{error}</span>}
+      <label className="block text-lg font-bold mb-2 sm:text-sm">
+        {label}
+        {error && <span className="text-red-500 ml-2 sm:pb-5">{error}</span>}
       </label>
-      <div className="flex gap-3 font-bold">
+      <div className="flex gap-3 font-bold sm:text-sm">
         {isStarRating ? (
           <ButtonColorSwitching
             isStarRating={true}
@@ -86,9 +87,9 @@ export const CafePostButtons = ({
               type="button"
               className={getButtonClass(option)}
               onClick={() => handleClick(option)}
-              disabled={disabled} 
+              disabled={disabled}
             >
-              {option}
+              { option}
             </ButtonColorSwitching>
           ))
         )}
