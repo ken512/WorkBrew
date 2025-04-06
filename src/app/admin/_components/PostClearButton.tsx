@@ -20,7 +20,7 @@ export const PostClearButton: React.FC<PostClearButtonProps> = ({
   return (
     <div className="py-10 my-[100px] font-bold flex justify-center text-black">
       {/* 投稿ボタン */}
-      <div className="cursor-pointer mx-16">
+      <div className="cursor-pointer mx-16 sm:mx-5 sm:text-sm">
         <Button 
           type="submit"
           onClick={onSubmit}
@@ -30,7 +30,7 @@ export const PostClearButton: React.FC<PostClearButtonProps> = ({
         </Button>
       </div>
       {/* クリアボタン */}
-      <div className="cursor-pointer mx-16">
+      <div className="cursor-pointer mx-16 sm:mx-5 sm:text-sm">
         <Button 
           type="button"
           onClick={onClear}

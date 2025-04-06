@@ -98,10 +98,10 @@ export const PUT = async (request: NextRequest) => {
         thumbnailImage,
         closingDays,
         cafeUrl,
-        wifiAvailable,
+        wifiAvailable: wifiAvailable ?? undefined,
         wifiSpeed,
         wifiStability,
-        powerOutlets,
+        powerOutlets: powerOutlets ?? undefined,
         seatAvailability,
         starRating,
         comment,
@@ -122,12 +122,3 @@ export const PUT = async (request: NextRequest) => {
     }
   }
 };
-
-// export const DELETE = async (request: NextRequest) => {
-//   const { currentUser, error } = await getCurrentUser(request);
-
-//   if (error || !currentUser) {
-//     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
-//   }
-  
-// };

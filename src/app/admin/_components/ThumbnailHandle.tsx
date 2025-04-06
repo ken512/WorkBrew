@@ -37,7 +37,7 @@ export const ThumbnailHandle: React.FC<{
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <div className="relative w-[600px] h-[350px] mt-[300px]">
+      <div className="relative w-[600px] h-[350px] mt-[300px] sm:max-w-[350px]">
         {" "}
         {/* サムネイルのサイズ調整 */}
         {thumbnailImage ? (
@@ -66,17 +66,17 @@ export const ThumbnailHandle: React.FC<{
         className="hidden"
         onChange={handleFileChange}
       />
-      <div className="flex flex-col items-center space-y-4">
+      <div className="flex flex-col items-center space-y-4 sm:text-sm">
         {/*アップロード測定*/}
         {uploadJudgment !== null && (
-          <p className="text-custom-blue font-bold text-lg">
-            Wi-Fi速度(アップロード): {uploadJudgment.toFixed(2)}Mbps
+          <p className="text-custom-blue font-bold text-lg sm:text-sm">
+            アップロード速度: {uploadJudgment.toFixed(2)}Mbps
           </p>
         )}
         {/*ダウンロード測定*/}
         {downloadJudgment !== null && (
-          <p className="text-custom-red font-bold text-lg">
-            Wi-Fi速度(ダウンロード):{downloadJudgment.toFixed(2)} Mbps
+          <p className="text-custom-red font-bold text-lg sm:text-sm">
+            ダウンロード速度:{downloadJudgment.toFixed(2)} Mbps
           </p>
         )}
         <button
@@ -86,7 +86,7 @@ export const ThumbnailHandle: React.FC<{
           ダウンロード速度測定
         </button>
       </div>
-      <div className="flex ml-[400px] space-x-4 mt-3">
+      <div className="flex ml-[400px] space-x-4 mt-3 sm:text-sm sm:ml-[0px] sm:pt-5">
         <div className="px-3">
           <Button
             type="button"

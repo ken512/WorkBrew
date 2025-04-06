@@ -34,7 +34,7 @@ export const LatestDetailDialog: React.FC<Props> = ({
     >
       <div className="bg-beige-200 rounded-lg shadow-lg">
         {/* 画像 */}
-        <div className="relative w-[500px] h-[250px]">
+        <div className="relative w-[500px] h-[250px] sm:max-w-[390px]">
         <Image
           src={cafe.thumbnailImage}
           alt="thumbnailImage"
@@ -45,7 +45,7 @@ export const LatestDetailDialog: React.FC<Props> = ({
         {/* 店舗情報 */}
         <div className="font-bold p-5 flex flex-col justify-between h-full">
         <h3 className="py-3 overflow-auto max-w-md whitespace-pre-wrap break-words">{cafe.cafeName}</h3>
-        <p className="py-3">{timeAgo(cafe.createdAt || cafe.updatedAt)}</p>
+        <p className="py-3">{timeAgo(cafe.createdAt && cafe.updatedAt)}</p>
         <p className="py-3">エリア {cafe.area}</p>
         {/* 現在の空き状況 (ボタン形式) */}
         <p className="mt-2 font-bold">現在の空き状況</p>
@@ -115,7 +115,7 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
       >
         <div className="bg-beige-200 rounded-lg shadow-lg">
           {/* 画像 */}
-          <div className="relative w-[500px] h-[250px]">
+          <div className="relative w-[500px] h-[250px] sm:max-w-[390px]">
             <Image
               src={cafe.thumbnailImage}
               alt="thumbnailImage"

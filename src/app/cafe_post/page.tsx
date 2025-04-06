@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { HeaderAdminBase } from "../admin/_components/headerAdminBase";
+import { HeaderPublic } from "../_components/headerPublic";
 import { CafeList } from "../_components/cafeList";
 import { CafeFilter } from "../_components/cafeFilter";
 import useSWR from "swr";
@@ -10,7 +10,6 @@ import "../globals.css";
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
 const CafePost: React.FC<Cafe[]> = () => {
-  
   const [filters, setFilters] = useState({
     area: "",
     keyword: "",
@@ -43,10 +42,11 @@ const CafePost: React.FC<Cafe[]> = () => {
   console.log("APIに送るクエリパラメータ:", queryParams);
 
   // SWR で API からデータを取得
-  const { data = { cafePostList: [] }, error } = useSWR(
-    `/api/public/cafe_post?${queryParams}`,
-    fetcher
-  );
+  const {
+    data = { cafePostList: [] },
+    error,
+    isLoading,
+  } = useSWR(`/api/public/cafe_post?${queryParams}`, fetcher);
   console.log("取得データ:", data.cafePostList);
 
   //フィルターを変更したときに実行
@@ -54,15 +54,26 @@ const CafePost: React.FC<Cafe[]> = () => {
     setFilters(newFilters);
   };
 
+  // ローディング中の表示
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">
+          ☕️ コーヒーを淹れています... お待ちください
+        </p>
+      </div>
+    );
+  }
+
   if (error) return <div>データの取得に失敗しました</div>;
   return (
     <div>
-      <HeaderAdminBase href="/" />
+      <HeaderPublic />
       <div className="bg-tan-300 min-h-screen flex flex-col grid-flow-row items-center justify-center">
         <CafeFilter filters={filters} onFilterChange={handleFilterChange} />
         {/* フィルタリングされたカフェリストを表示 */}
-        {data.cafePostList.length > 0 ? (
-          <CafeList cafes={data?.cafePostList ?? []} />
+        {data?.cafePostList.length > 0 ? (
+          <CafeList cafes={data?.cafePostList} />
         ) : (
           <p className="text-lg font-semibold">
             ☕️ 該当するカフェが見つかりませんでした。

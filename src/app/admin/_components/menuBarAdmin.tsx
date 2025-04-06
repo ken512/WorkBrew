@@ -1,22 +1,22 @@
 "use client";
-import { NavLink } from "./navLink";
-import { useRouteGuard } from "../admin/_hooks/useRouteGuard";
-import "../globals.css";
+import { NavLink } from "../../_components/navLink";
+import { useRouteGuard } from "../_hooks/useRouteGuard";
+import "../../globals.css";
 
-export const MenuBar = () => {
+export const MenuBarAdmin = () => {
   useRouteGuard();
 
   return (
     <div className="mx-auto">
       <ul className="flex">
-        <li className="relative  h-10  transition-colors duration-300 group">
+        <li className="relative h-[60px] transition-colors duration-300 group">
           <a
             href="#"
-            className="flex text-2xl justify-center items-center w-full h-full text-center text-blue-900 hover:text-customOrange transition-colors duration-300"
+            className="flex text-2xl sm:text-sm md:px-10 justify-center items-center w-full  h-full text-center text-blue-900 hover:text-customOrange transition-colors duration-300"
           > 
             Menu
           </a>
-          <ul className="absolute left-0 hidden bg-white border border-gray-200 rounded-md shadow-md group-hover:block group-hover:z-10">
+          <ul className="absolute left-0 hidden sm:text-sm  bg-white border border-gray-200 rounded-md shadow-md group-hover:block group-hover:z-10">
             {/* ドロップダウンメニュー */}
             <NavLink href="/admin/home">ホーム</NavLink>
             <NavLink href="/admin/cafe_submission_form">投稿</NavLink>
