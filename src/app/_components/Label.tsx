@@ -12,10 +12,10 @@ export const Label: React.FC<LabelProps> = ({
   children,
   variant = "default",
 }) => {
-  const baseStyles = "block text-lg font-bold mb-2";
+  const baseStyles = "block text-xl font-bold mb-2 sm:text-sm";
   
   const variantStyles = {
-    default: "text-gray-700",
+    default: "text-black",
     required: "text-gray-700 after:content-['*'] after:text-red-500 after:ml-1",
     error: "text-red-500",
   };

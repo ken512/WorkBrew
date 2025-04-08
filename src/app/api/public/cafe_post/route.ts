@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUser } from "@/_utils/supabase";
+
 const prisma = new PrismaClient();
 
 export const GET = async (req: NextRequest) => {
@@ -10,9 +12,12 @@ export const GET = async (req: NextRequest) => {
   const wifiAvailable = searchParams.get("wifiAvailable") || "";
   const powerOutlets = searchParams.get("powerOutlets") || "";
 
+  const { currentUser } = await getCurrentUser(req);
+  const supabaseUserId = currentUser?.user.id || null;
+
   try {
     //カフェ情報をフィルタリングするためのwhere条件を定義(.pushを使ってフィルター条件をひとつずつ追加)
-    const whereCondition: any = {AND: []}; // `AND` は配列として使用
+    const whereCondition: any = { AND: [] }; // `AND` は配列として使用
 
     // キーワード検索（カフェ名 or エリア）
     if (keyword) {
@@ -38,16 +43,18 @@ export const GET = async (req: NextRequest) => {
 
     // カフェ投稿一覧を取得する
     const cafePostList = await prisma.cafe.findMany({
+      where: whereCondition,
       include: {
         users: {
-          select: { id: true, userName: true, profileIcon: true }, // ユーザー情報を取得
+          select: { id: true, userName: true, profileIcon: true },
         },
-        favorites: {
-          // お気に入り情報も取得
-          select: { id: true, userId: true },
-        },
+        favorites: supabaseUserId
+          ? {
+              where: { supabaseUserId }, 
+              select: { id: true, cafeId: true },
+            }
+          : false, // 非ログイン者は `favorites` 無視
       },
-      where: whereCondition,
       orderBy: [{ createdAt: "desc" }, { updatedAt: "desc" }],
     });
     console.log("検索条件:", whereCondition);

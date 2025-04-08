@@ -1,13 +1,17 @@
 "use client";
 import React, { useEffect } from "react";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { UserIcon } from "./userIcon";
 import { UserAccountFormProps } from "../_types/userAccountForm";
 import { Label } from "@/app/_components/Label";
 import { TextArea } from "@/app/_components/textArea";
 import { UserAccountErrorType } from "../_types/userAccountErrorType";
-import "./../../globals.css";
 import { Button } from "@/app/admin/_components/Button";
+import useSWR from "swr";
+import api from "@/_utils/api";
+import "./../../globals.css";
+
+//共通リクエストを使用する
+const fetcher = (url: string) => api.get(url);
 
 type UserAccountFormPropsWithHandler = {
   formState: UserAccountFormProps;
@@ -24,42 +28,30 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
   onSubmit,
   onUpdate,
 }) => {
-  const { token } = useSupabaseSession();
+  // 画像がない場合、デフォルト画像をセット
+  const defaultIcon = "https://placehold.jp/600x350/?text=デフォルト";
+  const { data, error, isLoading } = useSWR("/api/admin/user_account", fetcher);
 
   useEffect(() => {
-    if (!token) return;
+    if (data?.user) {
+      setFormState({
+        userName: data.user.userName || "",
+        profileIcon: data.user.profileIcon || defaultIcon,
+        biography: data.user.biography || "",
+      });
+    }
+  }, [data, setFormState]);
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/admin/user_account", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Error response:", errorData);
-          throw new Error(errorData.message || "Failed to fetch user");
-        }
-        const data = await response.json();
-        console.log("Fetched user data:", data);
-
-        if (data.user) {
-          console.log("Setting form state with:", data.user);
-          setFormState({
-            userName: data.user.userName || "",
-            profileIcon: data.user.profileIcon || "",
-            biography: data.user.biography || "",
-          });
-        }
-      } catch (error) {
-        console.log("Failed to fetch user", error);
-      }
-    };
-    fetchData();
-  }, [token, setFormState]);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">
+          ☕️ コーヒーを淹れています... お待ちください
+        </p>
+      </div>
+    );
+  }
+  if (error) return <p>ユーザー情報の取得に失敗しました</p>;
 
   // 状態を更新するための関数
   const updateFormState = (key: keyof UserAccountFormProps, value: string) => {
@@ -79,15 +71,19 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
   };
 
   return (
-    <div className="flex flex-col font-bold items-center py-60">
-      <div className="self-start pl-[310px]">
+    <div className="flex flex-col font-bold mx-[350px] items-center py-10 sm:mx-5 md:mx-16">
+      <h1 className="flex justify-center font-bold text-2xl my-10">
+        ユーザーアカウント
+      </h1>
+      <div className="w-full flex flex-col items-center my-16 sm:my-10">
         <Label htmlFor="profileIcon">ユーザーアイコン</Label>
         <UserIcon
           onImageUpload={handleImageUpload}
           initialImage={formState.profileIcon}
         />
       </div>
-      <div className="my-10 w-[800px] py-5">
+
+      <div className="py-10 w-[700px] sm:max-w-[350px] md:max-w-[650px]">
         <Label htmlFor="userName">ユーザー名</Label>
         {errors && <p className="text-red-500 text-sm">{errors.userName}</p>}
         <input
@@ -114,12 +110,12 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
         />
       </div>
       <div className="flex justify-center items-center pt-20">
-        <div className="px-16">
+        <div className="px-16 sm:px-3">
           <Button type="button" variant="primary" onClick={onSubmit}>
             保存
           </Button>
         </div>
-        <div className="px-16">
+        <div className="px-16 sm:px-3">
           <Button type="button" variant="secondary" onClick={onUpdate}>
             更新
           </Button>

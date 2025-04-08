@@ -48,11 +48,11 @@ export const CafeFilter: React.FC<Props> = ({ onFilterChange, filters }) => {
   };
 
   return (
-    <div className="bg-beige-200 p-4 rounded-lg shadow-md mb-4 w-full max-w-2xl sm:w-[350px] mt-[50px]">
+    <div className="bg-beige-200 p-4 rounded-lg shadow-md mb-4 w-full max-w-2xl mt-[50px] sm:w-[350px]">
       <h3 className="text-lg font-bold mb-3 sm:text-sm">🔍 フィルター検索</h3>
 
-      {/* デフォルトは縦 → mdから横 */}
-      <div className="flex flex-col md:flex-row md:items-center md:space-x-2 space-y-2 md:space-y-0 w-full">
+      {/* エリア・カフェ名をまとめて検索 */}
+      <div className="sm:flex sm:flex-col grid grid-cols-2 gap-5 md:flex-row md:items-center md:space-x-2 space-y-2 md:space-y-0 w-full">
         <Input
           type="search"
           id="keyword"
@@ -62,7 +62,8 @@ export const CafeFilter: React.FC<Props> = ({ onFilterChange, filters }) => {
           value={searchText}
           onChange={handleFilterChange}
         />
-
+        {/* Wi-Fi & 電源の有無 */}
+        <div className="flex justify-between">
         <select
           name="wifiAvailable"
           className="border p-2 rounded-lg w-full"
@@ -88,6 +89,7 @@ export const CafeFilter: React.FC<Props> = ({ onFilterChange, filters }) => {
           <option value="true">あり</option>
           <option value="false">なし</option>
         </select>
+        </div>
       </div>
     </div>
   );
