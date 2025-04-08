@@ -28,14 +28,14 @@ const loginSafeFetcher = async (url: string) => {
   return await api.get(url);
 };
 
-  // ログインユーザーのお気に入り一覧を取得（/api/favorite）
+  // ログインユーザーのお気に入り一覧を取得
   const { data: favoriteData } = useSWR("/api/admin/cafe_favorites", loginSafeFetcher);
 
   // 初回取得後にお気に入りのcafeIdをSet化してstateに保存
   useEffect(() => {
-    if (favoriteData?.data?.favoriteCafes) {
+    if (favoriteData?.data?.favorites) {
       const ids = new Set<number>(
-        favoriteData.data.favoriteCafes.map((fav: { cafeId: number }) => fav.cafeId)
+        favoriteData.data.favorites.map((fav: { cafeId: number }) => fav.cafeId)
       );
       setFavoriteCafeIds(ids);
     }
