@@ -14,7 +14,7 @@ export const GET = async (request: NextRequest) => {
 
   try {
     const user = await prisma.users.findUnique({
-      where: { supabaseUserId: currentUser.user.id }, // Int型に変換したuserIdを使う
+      where: { supabaseUserId: currentUser.user.id }, 
       include: {
         cafes: {
           select: {

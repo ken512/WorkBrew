@@ -25,7 +25,7 @@ export const TextArea: React.FC<TextareaProps> = ({
 }) => {
   return (
     <div>
-      <label className="block mb-5 font-bold text-black sm:text-sm">{label}</label>
+      <label className="block mb-5 font-bold text-black text-xl sm:text-sm">{label}</label>
       <textarea
         name={name}
         value={value}

@@ -24,6 +24,7 @@ module.exports = {
       screens: {
         sm: {'min': '360px', 'max': '600px'},  // スマホの範囲
         md: {'min': '601px', 'max': '1024px'}, // タブレットの範囲
+        lg: {'min':'1024px', 'max':'1440px'}, //ノートPC
       },
     },
   },

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import Image from "next/image";
 import { RenderStars } from "../admin/_utils/renderStars";
@@ -27,7 +27,8 @@ import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";
 import api from "@/_utils/api";
 
-const fetcher = (url: string) => fetch(url).then((response) => response.json());
+//共通リクエストを使用する
+const fetcher = (url: string) => api.get(url);
 
 type UpdateHandlers = {
   updateWiFiAndSeatStatus: UpdateStatus;
@@ -56,6 +57,8 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 }) => {
   const [, setMap] = useState<google.maps.Map | null>(null);
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");//詳細ページでuseSearchParamsを使ってfrom を取得
   const [cafes] = useState<Cafe>();
   const router = useRouter();
   const [wifiAvailable, setWifiAvailable] = useState<boolean | null>(null);
@@ -67,10 +70,11 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
   const { downloadJudgment, measureDownloadSpeed } =
     useImageHandler(handleUpload);
-  const { data = { cafes: {} }, error, isLoading } = useSWR(
-    `/api/public/cafe_post/${id}`,
-    fetcher
-  );
+  const {
+    data = { cafes: {} },
+    error,
+    isLoading,
+  } = useSWR(`/api/public/cafe_post/${id}`, fetcher);
   console.log("取得データ:", data);
   // cafeオブジェクトを取得
   const cafe = data.cafes;
@@ -100,10 +104,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
     if (id) {
       try {
-        const data = await api.delete(
-          `/api/public/cafe_post/${id}`,
-          cafes,
-        );
+        const data = await api.delete(`/api/public/cafe_post/${id}`, cafes);
         alert(data.message || "削除しました!!");
         router.push("/cafe_post");
       } catch (error) {
@@ -157,6 +158,14 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
     return result;
   };
+    //戻るボタン処理で from を使い分ける関数
+  const handleBack = () => {
+    if (from === "favorites") {
+      router.push("/admin/cafe_favorite"); // お気に入り一覧へ
+    } else {
+      router.push("/cafe_post"); // 通常の投稿一覧へ
+    }
+  };
 
   // ローディング中の表示
   if (isLoading) {
@@ -169,7 +178,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
     );
   }
 
-  // console.log("取得データ: ", data);
   if (error) return <div>データの取得に失敗しました</div>;
 
   const updateState = (key: keyof UpdateStatus, value: string) => {
@@ -182,16 +190,16 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   };
 
   return (
-    <div className="font-bold mx-[400px]">
+    <div className="font-bold max-w-[600px] w-full mx-auto sm:text-sm md:text-xl px-4">
       <div className="relative py-6">
-        <h1 className="text-[min(13vw,30px)] mb-[100px] pt-[100px] text-center">
+        <h1 className="text-[min(13vw,30px)] mb-[100px] pt-[100px] text-center sm:text-sm md:text-xl">
           カフェ詳細
         </h1>
-        <div className="absolute right-4">
+        <div >
           <button>
             <a
-              href="/cafe_post"
-              className="px-5 py-2 rounded-full text-black bg-custom-red hover:bg-custom-green "
+              className="absolute right-4  px-5 py-2 rounded-full text-black bg-custom-red hover:bg-custom-green "
+              onClick={handleBack}
             >
               戻る
             </a>
@@ -200,23 +208,25 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
       </div>
       <div className="max-w-[600px] mt-10">
         {/* ユーザー情報 */}
-        <div className="flex items-center">
-          <Image
-            src={cafe.users.profileIcon}
-            alt="Profile Image"
-            className="rounded-full aspect-square mr-3"
-            width={50}
-            height={50}
-          />
-          <div className="flex justify-between items-center w-full">
-            <p className="text-sm">{cafe.users.userName}</p>
-            <p className="text-sm font-bold text-right w-full max-w-[260px]">
-              {cafe.cafeName}
-            </p>
+        <div className="flex items-star justify-between gap-12 sm:flex-col sm:items-start">
+          <div className="flex items-center gap-2">
+            <Image
+              src={cafe.users.profileIcon}
+              alt="Profile Image"
+              className="rounded-full aspect-square"
+              width={50}
+              height={50}
+            />
+            <p className="text-sm font-bold">{cafe.users.userName}</p>
           </div>
+
+          {/* カフェ名 */}
+          <p className="text-sm font-semibold break-words sm:text-base mt-4">
+            {cafe.cafeName}
+          </p>
         </div>
         {/*  サムネイル画像 */}
-        <div className="relative w-full max-w-[600px] h-[400px] mt-2">
+        <div className="relative w-full max-w-[600px] h-[400px] sm:h-[300px] mt-2">
           <Image
             src={cafe.thumbnailImage}
             alt="Cafe Thumbnail"
@@ -225,7 +235,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
           />
         </div>
         {/* カフェ情報詳細 */}
-        <div className="font-bold flex flex-col gap-12 text-lg">
+        <div className="font-bold flex flex-col gap-12 text-lg sm:text-sm">
           <p className=" mt-[100px]">星評価: {RenderStars(cafe.starRating)}</p>
           <p>エリア: {cafe.area}</p>
           <p>
@@ -235,13 +245,13 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
               : "情報なし"}
           </p>
           {isValidUrl(cafe.cafeUrl) && (
-            <div className="flex">
+            <div className="flex flex-col sm:flex-row">
               お店のURL:
               <a
                 href={cafe.cafeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700 underline flex items-center px-2"
+                className="text-blue-500 hover:text-blue-700 underline flex items-center px-2 break-normal sm:break-all"
               >
                 {cafe.cafeUrl}
               </a>
@@ -358,7 +368,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
             );
           })}
         </div>
-        <div className="p-4  rounded-lg">
+        <div className="p-4 rounded-lg">
           <button
             onClick={measureDownloadSpeed}
             className="px-4 py-2 bg-blue-500 text-white rounded-md"
@@ -371,16 +381,17 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
             </p>
           )}
         </div>
-        <div className="mt-10">
+        {/*Wi-Fi速度・空席状況 グラフ*/}
+        <div className="mt-16">
           <CafeStatusPieChart chartData={generateChartData(cafesArray)} />
         </div>
-        <div className="flex">
-          <div className="px-5">
+        <div className="flex pt-10 justify-center">
+          <div className="px-10">
             <Button type="button" variant="secondary" onClick={onUpdate}>
               更新
             </Button>
           </div>
-          <div className="px-5">
+          <div className="px-10">
             <Button type="button" variant="danger" onClick={handleDelete}>
               削除
             </Button>
