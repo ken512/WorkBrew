@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { HeaderBase } from "./headerBase";
-import { MenuBarPublic } from "./MenuBarPublic";
+import { MenuBarPublic } from "./menuBarPublic";
 import "../globals.css"
 export const HeaderPublic: React.FC = () => {
   return (
-    <div className="min-h-36 sm:min-h-20 flex justify-between items-center px-[100px] sm:px-[50px]  font-bold bg-beige-200">
+    <div className="min-h-36 sm:min-h-20 flex justify-between items-center px-[100px] sm:px-[10px]  font-bold bg-beige-200">
       <HeaderBase
         href="/"
       >
