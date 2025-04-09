@@ -12,8 +12,10 @@ export const GET = async (req: NextRequest) => {
   const wifiAvailable = searchParams.get("wifiAvailable") || "";
   const powerOutlets = searchParams.get("powerOutlets") || "";
 
-  const { currentUser } = await getCurrentUser(req);
-  const supabaseUserId = currentUser?.user.id || null;
+  const { currentUser, error } = await getCurrentUser(req);
+  if (error || !currentUser) {
+    return NextResponse.json({ status: 401 });
+  }
 
   try {
     //カフェ情報をフィルタリングするためのwhere条件を定義(.pushを使ってフィルター条件をひとつずつ追加)
@@ -40,6 +42,12 @@ export const GET = async (req: NextRequest) => {
     if (powerOutlets) {
       whereCondition.AND.push({ powerOutlets: powerOutlets === "true" });
     }
+    
+    // supabaseUserIdからuserIdを取得
+    const user = await prisma.users.findUnique({
+      where: { supabaseUserId: currentUser.user.id},
+    });
+    const userId = user?.id;
 
     // カフェ投稿一覧を取得する
     const cafePostList = await prisma.cafe.findMany({
@@ -48,9 +56,9 @@ export const GET = async (req: NextRequest) => {
         users: {
           select: { id: true, userName: true, profileIcon: true },
         },
-        favorites: supabaseUserId
+        favorites: userId
           ? {
-              where: { supabaseUserId }, 
+              where: { userId }, 
               select: { id: true, cafeId: true },
             }
           : false, // 非ログイン者は `favorites` 無視

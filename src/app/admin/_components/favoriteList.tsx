@@ -5,6 +5,7 @@ import { VirtuosoGrid } from "react-virtuoso";
 import { Cafe } from "@/app/_types/Cafe";
 import Link from "next/link";
 import api from "@/_utils/api";
+import { useResize } from "@/app/_hooks/useResize";
 import "../../globals.css";
 
 type Props = {
@@ -16,8 +17,7 @@ export const FavoriteList: React.FC<Props> = ({ cafes = [] }) => {
   const [favoriteCafeIds, setFavoriteCafeIds] = useState<Set<number>>(
     new Set()
   );
-  const [gridWidth, setGridWidth] = useState<string>("");
-  const [gridHeight, setGridHeight] = useState<string>("");
+  const { gridWidth, gridHeight } = useResize();//リサイズ
 
   // 初回取得後にお気に入りのcafeIdをSet化してstateに保存
   useEffect(() => {
@@ -39,31 +39,6 @@ export const FavoriteList: React.FC<Props> = ({ cafes = [] }) => {
       return newSet;
     });
   };
-
-  //初回+リサイズで更新
-  useEffect(() => {
-    const updateGridSize = () => {
-      const width = window.innerWidth;
-
-      if (width < 480) {
-        // sm: スマホサイズ
-        setGridWidth("300px");
-        setGridHeight("1700px");
-      } else if (width >= 480 && width < 699) {
-        // md: タブレットサイズ
-        setGridWidth("300px"); // ← タブレットに合わせたサイズに調整
-        setGridHeight("1700px");
-      } else {
-        // PCサイズ
-        setGridWidth("700px");
-        setGridHeight("1700px");
-      }
-    };
-
-    updateGridSize(); // 初回呼び出し
-    window.addEventListener("resize", updateGridSize);
-    return () => window.removeEventListener("resize", updateGridSize);
-  }, []);
 
   //お気に入り情報が一件もない場合に表示
   if (cafes.length === 0)
