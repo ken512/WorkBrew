@@ -4,9 +4,9 @@ import Image from "next/image";
 import { VirtuosoGrid } from "react-virtuoso";
 import { Cafe } from "../_types/Cafe";
 import Link from "next/link";
-import useSWR from "swr";
 import api from "@/_utils/api";
-import { supabase } from "@/_utils/supabase";
+import { useLoginSafeFetcher } from "../_hooks/useFetch";
+import { useResize } from "../_hooks/useResize";
 import "../globals.css";
 
 type Props = {
@@ -14,34 +14,29 @@ type Props = {
 };
 
 export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
-  const [favoriteCafeIds, setFavoriteCafeIds] = useState<Set<number>>(new Set());
-  const [gridWidth, setGridWidth] = useState<string>("");
-  const [gridHeight, setGridHeight] = useState<string>("");
-
-  // カスタムfetcher関数：ログイン済みのときだけfetch、未ログインならnull返す
-const loginSafeFetcher = async (url: string) => {
-  const session = await supabase.auth.getSession();
-  const token = session.data.session?.access_token;
-
-  if (!token) return null; // 未ログインなら取得しない
-
-  return await api.get(url);
-};
+  const [favoriteCafeIds, setFavoriteCafeIds] = useState<Set<number>>(
+    new Set()
+  );
+  const { gridWidth, gridHeight } = useResize();
 
   // ログインユーザーのお気に入り一覧を取得
-  const { data: favoriteData } = useSWR("/api/admin/cafe_favorites", loginSafeFetcher);
+  const { data: favoriteData } = useLoginSafeFetcher(
+    "/api/admin/cafe_favorites"
+  );
 
   // 初回取得後にお気に入りのcafeIdをSet化してstateに保存
   useEffect(() => {
     if (favoriteData?.data?.favorites) {
       const ids = new Set<number>(
-        favoriteData.data.favorites.map((fav: { cafeId: number }) => fav.cafeId)
+        favoriteData.data.favorites.map(
+          (fav: { cafeId: number }) => fav.cafeId
+        )
       );
       setFavoriteCafeIds(ids);
     }
   }, [favoriteData]);
 
-  console.log("favoriteData",favoriteData);
+  console.log("favoriteData", favoriteData);
 
   const isFavorited = (cafeId: number) => favoriteCafeIds.has(cafeId);
 
@@ -62,29 +57,11 @@ const loginSafeFetcher = async (url: string) => {
     });
   };
 
-  // 初回+リサイズで Virtuoso Grid のサイズ調整
-  useEffect(() => {
-    const updateGridSize = () => {
-      const width = window.innerWidth;
-      if (width < 480) {
-        setGridWidth("300px");
-        setGridHeight("1700px");
-      } else if (width >= 480 && width < 699) {
-        setGridWidth("300px");
-        setGridHeight("1700px");
-      } else {
-        setGridWidth("700px");
-        setGridHeight("1700px");
-      }
-    };
-    updateGridSize();
-    window.addEventListener("resize", updateGridSize);
-    return () => window.removeEventListener("resize", updateGridSize);
-  }, []);
-
   return (
     <div className="mb-[200px] font-bold sm:text-sm md:text-lg">
-      <h1 className="text-[min(13vw,30px)] text-center mt-[100px] sm:text-xl">投稿一覧</h1>
+      <h1 className="text-[min(13vw,30px)] text-center mt-[100px] sm:text-xl">
+        投稿一覧
+      </h1>
 
       <div className="mt-[100px] mx-auto bg-beige-200 rounded-xl p-10 md:p-8 sm:max-w-[350px] sm:h-[1800px] sm:px-10">
         {gridWidth && gridHeight && (
@@ -105,13 +82,15 @@ const loginSafeFetcher = async (url: string) => {
                       <div className="flex justify-between w-full">
                         <div className="flex items-center">
                           <Image
-                            src={cafe.users.profileIcon}
+                            src={cafe?.users?.profileIcon}
                             alt="Profile Image"
                             className="rounded-full aspect-square"
                             width={50}
                             height={50}
                           />
-                          <p className="text-sm ml-2 truncate max-w-[150px]">{cafe.users.userName}</p>
+                          <p className="text-sm ml-2 truncate max-w-[150px]">
+                            {cafe.users.userName}
+                          </p>
                         </div>
 
                         {/* お気に入りボタン */}
@@ -137,14 +116,22 @@ const loginSafeFetcher = async (url: string) => {
                         />
                       </div>
 
-                      <h3 className="text-sm py-2 text-center font-bold truncate w-full">{cafe.cafeName}</h3>
+                      <h3 className="text-sm py-2 text-center font-bold truncate w-full">
+                        {cafe.cafeName}
+                      </h3>
 
                       <div className="py-1 flex space-x-2">
-                        {cafe.wifiAvailable && <i className="bi bi-wifi text-lg"></i>}
-                        {cafe.powerOutlets && <i className="bi bi-plug text-lg"></i>}
+                        {cafe.wifiAvailable && (
+                          <i className="bi bi-wifi text-lg"></i>
+                        )}
+                        {cafe.powerOutlets && (
+                          <i className="bi bi-plug text-lg"></i>
+                        )}
                       </div>
 
-                      <p className="text-xs text-gray-500">エリア {cafe.area}</p>
+                      <p className="text-xs text-gray-500">
+                        エリア {cafe.area}
+                      </p>
                       <p className="text-xs py-2 line-clamp-3 overflow-hidden text-gray-700 w-full">
                         {cafe.comment}
                       </p>

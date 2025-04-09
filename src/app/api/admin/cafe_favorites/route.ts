@@ -4,37 +4,60 @@ import { getCurrentUser } from "@/_utils/supabase";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-
   const { currentUser, error } = await getCurrentUser(request);
   if (error || !currentUser) {
     return NextResponse.json({ status: 401 });
   }
 
   try {
+    // SupabaseのユーザーIDから、アプリ内のuserId（int）を取得
+    const user = await prisma.users.findUnique({
+      where: { supabaseUserId: currentUser.user.id },
+    });
 
-   // userId に紐づくお気に入りを取得
-const favorites = await prisma.favorite.findMany({
-  where: { supabaseUserId: currentUser.user.id },
-  select: { cafeId: true },
-});
+    if (!user) {
+      return NextResponse.json({
+        status: 404,
+        message: "ユーザーが見つかりません",
+      });
+    }
+    // まとめて、お気に入りとそのカフェ情報を取得
+    const favorites = await prisma.favorite.findMany({
+      where: { userId: user.id },
+      select: {
+        cafeId: true,
+        cafe: {
+          include: {
+            users: {
+              select: {
+                id: true,
+                userName: true,
+                profileIcon: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    console.log("お気に入りカフェ:", favorites);
 
-// それに対応するカフェ投稿データを取得
-const favoriteCafes = await prisma.cafe.findMany({
-  where: { id: { in: favorites.map((fav) => fav.cafeId) } },
-  include: {
-    users: { select: { id: true, userName: true, profileIcon: true } },
-  },
-});
-console.log("お気に入りカフェ:", favoriteCafes);
-
-    return NextResponse.json({ status: "OK", data: {
-      favorites: favorites,
-      favoriteCafes: favoriteCafes,
-    }, }, { status: 200 });
+    return NextResponse.json(
+      {
+        status: "OK",
+        data: {
+          favorites: favorites.map((f) => ({ cafeId: f.cafeId })), // ❤️ 保持用
+          favoriteCafes: favorites.map((f) => f.cafe), // 一覧表示用
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching favorite cafes:", error);
     if (error instanceof Error) {
-      return NextResponse.json({ status: "ERROR", message: error.message }, { status: 400 });
+      return NextResponse.json(
+        { status: "ERROR", message: error.message },
+        { status: 400 }
+      );
     }
   }
 };
@@ -54,11 +77,13 @@ export const POST = async (request: NextRequest) => {
     });
 
     if (!user) {
-      return NextResponse.json({ status: "User Not Found" }, { status: 404 });
+      return NextResponse.json(
+        { status: "ユーザーが見つかりません" },
+        { status: 404 }
+      );
     }
     const newFavorite = await prisma.favorite.create({
       data: {
-        supabaseUserId: currentUser.user.id,
         userId: user.id,
         cafeId,
       },
@@ -67,7 +92,7 @@ export const POST = async (request: NextRequest) => {
   } catch (err) {
     return NextResponse.json(
       { status: "ERROR", message: String(err) },
-      { status: 400}
+      { status: 400 }
     );
   }
 };
@@ -82,16 +107,29 @@ export const DELETE = async (req: NextRequest) => {
   const cafeId = body.cafeId;
 
   try {
+    const user = await prisma.users.findUnique({
+      where: { supabaseUserId: currentUser.user.id },
+    });
+
+    if (!user) {
+      return NextResponse.json({
+        status: 404,
+        message: "ユーザーが見つかりません",
+      });
+    }
+
     await prisma.favorite.deleteMany({
       where: {
-        supabaseUserId: currentUser.user.id,
+        userId: user.id,
         cafeId,
       },
     });
 
     return NextResponse.json({ status: "OK" });
   } catch (err) {
-    return NextResponse.json({ status: "ERROR", message: String(err) }, { status: 400});
+    return NextResponse.json(
+      { status: "ERROR", message: String(err) },
+      { status: 400 }
+    );
   }
 };
-
