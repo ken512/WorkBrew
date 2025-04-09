@@ -82,7 +82,7 @@ export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
                       <div className="flex justify-between w-full">
                         <div className="flex items-center">
                           <Image
-                            src={cafe?.users?.profileIcon}
+                            src={cafe.users.profileIcon}
                             alt="Profile Image"
                             className="rounded-full aspect-square"
                             width={50}
