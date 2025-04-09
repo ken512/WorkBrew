@@ -4,12 +4,12 @@ import { HeaderPublic } from "../_components/headerPublic";
 import { CafeList } from "../_components/cafeList";
 import { CafeFilter } from "../_components/cafeFilter";
 import useSWR from "swr";
-import { Cafe } from "../_types/Cafe";
+import api from "@/_utils/api";
 import { useSearchParams } from "next/navigation";
 import "../globals.css";
 
-const fetcher = (url: string) => fetch(url).then((response) => response.json());
-const CafePost: React.FC<Cafe[]> = () => {
+const fetcher = (url: string) => api.get(url);
+const CafePost: React.FC = () => {
   const [filters, setFilters] = useState({
     area: "",
     keyword: "",

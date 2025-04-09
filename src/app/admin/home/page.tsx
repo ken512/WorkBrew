@@ -17,8 +17,8 @@ import "../../globals.css";
 //共通リクエストを使用する
 const fetcher = (url: string) => api.get(url);
 
-const Home: React.FC<Cafe[]> = () => {
-  const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
+const Home: React.FC = () => {
+  const [selectedCafe, setSelectedCafe] = useState<Cafe  | null>(null);
   const [dialogType, setDialogType] = useState<
     "latest" | "recommendation" | null
   >(null); //最新情報かおすすめカフェの判別状態管理

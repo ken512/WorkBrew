@@ -16,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   disabled = false,
 }) => {
-  const baseStyles = "px-5 py-2 rounded-3xl font-bold transition-colors duration-200";
+  const baseStyles = "px-6 py-2 min-w-[80px] sm:text-sm rounded-3xl font-bold transition-colors duration-200";
   
   const variantStyles = {
     primary: "bg-beige-200 hover:bg-custom-green",
