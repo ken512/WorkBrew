@@ -38,6 +38,7 @@ export const FavoriteList: React.FC<Props> = ({ cafes = [] }) => {
       }
       return newSet;
     });
+    console.log("カフェID", cafeId);
   };
 
   //お気に入り情報が一件もない場合に表示

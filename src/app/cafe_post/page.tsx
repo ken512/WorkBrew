@@ -6,6 +6,7 @@ import { CafeFilter } from "../_components/cafeFilter";
 import useSWR from "swr";
 import api from "@/_utils/api";
 import { useSearchParams } from "next/navigation";
+import { Footer } from "../_components/footer";
 import "../globals.css";
 
 const fetcher = (url: string) => api.get(url);
@@ -79,6 +80,7 @@ const CafePost: React.FC = () => {
             ☕️ 該当するカフェが見つかりませんでした。
           </p>
         )}
+        <Footer />
       </div>
     </div>
   );
