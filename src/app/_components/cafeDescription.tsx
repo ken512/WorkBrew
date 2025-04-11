@@ -58,7 +58,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   const [, setMap] = useState<google.maps.Map | null>(null);
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const from = searchParams.get("from");//詳細ページでuseSearchParamsを使ってfrom を取得
+  const from = searchParams.get("from"); //詳細ページでuseSearchParamsを使ってfrom を取得
   const [cafes] = useState<Cafe>();
   const router = useRouter();
   const [wifiAvailable, setWifiAvailable] = useState<boolean | null>(null);
@@ -85,6 +85,21 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
       setWifiAvailable(cafe.wifiAvailable);
     }
   }, [cafe]);
+
+  //クライアント側で使える状態になったら描画させる
+  useEffect(() => {
+      console.log("📍 locationCoordinates:", cafe?.locationCoordinates);
+      console.log("🌍 window.google:", !!window.google);
+    if (
+      typeof window !== "undefined" &&
+      window.google &&
+      window.google.maps &&
+      cafe.locationCoordinates
+    ) {
+      initMap(setMap, [cafe]); // 1件だけでも配列に
+    }
+  }, [cafe.locationCoordinates]);
+  console.log("地図", cafe.locationCoordinates);
 
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,7 +173,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
     return result;
   };
-    //戻るボタン処理で from を使い分ける関数
+  //戻るボタン処理で from を使い分ける関数
   const handleBack = () => {
     if (from === "favorites") {
       router.push("/admin/cafe_favorite"); // お気に入り一覧へ
@@ -195,16 +210,14 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         <h1 className="text-[min(13vw,30px)] mb-[100px] pt-[100px] text-center sm:text-sm md:text-xl">
           カフェ詳細
         </h1>
-        <div >
-          <button>
-            <a
-              className="absolute right-4  px-5 py-2 rounded-full text-black bg-custom-red hover:bg-custom-green "
-              onClick={handleBack}
-            >
-              戻る
-            </a>
-          </button>
-        </div>
+        <button>
+          <a
+            className="absolute right-4  px-5 py-2 sm:mt-[70px] rounded-full text-black bg-custom-red hover:bg-custom-green "
+            onClick={handleBack}
+          >
+            戻る
+          </a>
+        </button>
       </div>
       <div className="max-w-[600px] mt-10">
         {/* ユーザー情報 */}
@@ -391,7 +404,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
               更新
             </Button>
           </div>
-          <div className="px-10">
+          <div className="px-16">
             <Button type="button" variant="danger" onClick={handleDelete}>
               削除
             </Button>
