@@ -12,6 +12,7 @@ import {
 } from "../_components/cafeDetailInfo";
 import useSWR from "swr";
 import api from "@/_utils/api";
+import { Footer } from "@/app/_components/footer";
 import "../../globals.css";
 
 //共通リクエストを使用する
@@ -84,6 +85,7 @@ const Home: React.FC = () => {
             onClose={closeDialog}
           />
         )}
+        <Footer/>
       </div>
     </div>
   );

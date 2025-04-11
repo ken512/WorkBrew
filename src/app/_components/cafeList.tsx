@@ -35,30 +35,32 @@ export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
       setFavoriteCafeIds(ids);
     }
   }, [favoriteData]);
-
   console.log("favoriteData", favoriteData);
 
   const isFavorited = (cafeId: number) => favoriteCafeIds.has(cafeId);
 
   //「お気に入りの「追加 or 削除」を切り替える関数
-  const toggleFavorite = (cafeId: number) => {
-    setFavoriteCafeIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(cafeId)) {
+  const toggleFavorite = async (cafeId: number) => {
+    if (favoriteCafeIds.has(cafeId)) {
+      setFavoriteCafeIds((prev) => {
+        const newSet = new Set(prev);
         newSet.delete(cafeId);
-        // お気に入り削除APIを叩く
-        api.delete("/api/admin/cafe_favorites", { cafeId });
-      } else {
+        return newSet;
+      });
+      await api.delete("/api/admin/cafe_favorites", { cafeId }); // ← ちゃんと待つ
+    } else {
+      setFavoriteCafeIds((prev) => {
+        const newSet = new Set(prev);
         newSet.add(cafeId);
-        // お気に入り追加APIを叩く
-        api.post("/api/admin/cafe_favorites", { cafeId });
-      }
-      return newSet;
-    });
+        return newSet;
+      });
+      await api.post("/api/admin/cafe_favorites", { cafeId }); // ← ちゃんと待つ
+    }
   };
+  
 
   return (
-    <div className="mb-[200px] font-bold sm:text-sm md:text-lg">
+    <div className="mb-[200px] font-bold sm:text-sm md:text-lg md:mx-5">
       <h1 className="text-[min(13vw,30px)] text-center mt-[100px] sm:text-xl">
         投稿一覧
       </h1>

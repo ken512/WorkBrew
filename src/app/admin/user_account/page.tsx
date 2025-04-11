@@ -5,6 +5,7 @@ import { UserAccountFormProps } from "../_types/userAccountForm";
 import { UserAccountForm } from "../_components/userAccountForm";
 import { UserAccountErrorType } from "../_types/userAccountErrorType";
 import api from "@/_utils/api";
+import { Footer } from "@/app/_components/footer";
 import "./../../globals.css";
 
 const UserAccount: React.FC = () => {
@@ -70,7 +71,7 @@ const UserAccount: React.FC = () => {
   return (
     <div>
       <HeaderAdminBase href="/admin/home" />
-      <div className="bg-tan-300">
+      <div className="bg-tan-300 min-h-screen flex flex-col grid-flow-row items-center justify-center mx-0">
         <form>
           <UserAccountForm
             formState={formState}
@@ -80,6 +81,7 @@ const UserAccount: React.FC = () => {
             onUpdate={handleUpdate}
           />
         </form>
+        <Footer/>
       </div>
     </div>
   );

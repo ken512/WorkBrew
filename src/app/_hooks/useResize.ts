@@ -12,11 +12,17 @@ export const useResize = () => {
         if (width < 480) {
           setGridWidth("300px");
           setGridHeight("1700px");
-        } else if (width >= 480 && width < 699) {
+        } else if (width >= 480 && width < 600) {
           setGridWidth("300px");
           setGridHeight("1700px");
+        } else if(width >= 601 && width < 650) {
+          setGridWidth("500px");
+          setGridHeight("1700px");
+        } else if (width >= 651 && width < 713) {
+          setGridWidth("650px");
+          setGridHeight("1700px");
         } else {
-          setGridWidth("700px");
+          setGridWidth("800px");
           setGridHeight("1700px");
         }
       };

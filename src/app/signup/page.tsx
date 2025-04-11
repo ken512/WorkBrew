@@ -3,7 +3,8 @@ import { supabase } from "@/_utils/supabase";
 import React,{ useState } from "react";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
-import { HeaderBase } from "../_components/headerBase";
+import { HeaderPublic } from "../_components/headerPublic";
+import { Footer } from "../_components/footer";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -32,13 +33,9 @@ const SignUp: React.FC = () => {
 
   return (
     <div>
-      <div className="w-full min-h-36 flex justify-between  px-10 h-15 bg-beige-200">
-        <HeaderBase href="/">
-          WorkBrew
-        </HeaderBase>
-      </div>
-      <div className=" min-h-screen bg-tan-300 flex flex-col items-center justify-center">
-      <h1 className="text-5xl">ユーザー登録</h1>
+        <HeaderPublic />
+      <div className="bg-tan-300 min-h-screen flex flex-col items-center justify-center sm:px-5">
+      <h1 className="text-3xl font-bold">ユーザー登録</h1>
         <form onSubmit={handleSubmit} className="w-full max-w-[500px] ">
           <div className="py-5">
             <Label htmlFor="email">
@@ -58,13 +55,15 @@ const SignUp: React.FC = () => {
             <Label htmlFor="password">
               パスワード
             </Label>
-            <Input
+            <input
               type="password"
               name="password"
               id="password"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
-              placeholder="••••••••"
+              placeholder="6文字以上8文字以内"
               required
+              minLength={6}         // 🔽 最小6文字
+              maxLength={8}        // 🔽 最大30文字（任意）
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
@@ -79,6 +78,7 @@ const SignUp: React.FC = () => {
           </div>
         </form>
       </div>
+      <Footer />
     </div>
   );
 };
