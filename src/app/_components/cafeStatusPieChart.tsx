@@ -34,7 +34,7 @@ export const CafeStatusPieChart: React.FC<{ chartData: PieChartData }> = ({
               <Pie
                 dataKey="count"
                 data={data}
-                cx="50%"
+                cx="35%"
                 cy="50%"
                 outerRadius={80}
                 fill="#8884d8"

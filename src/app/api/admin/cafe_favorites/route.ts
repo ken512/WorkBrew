@@ -21,6 +21,8 @@ export const GET = async (request: NextRequest) => {
         message: "ユーザーが見つかりません",
       });
     }
+
+    
     // まとめて、お気に入りとそのカフェ情報を取得
     const favorites = await prisma.favorite.findMany({
       where: { userId: user.id },
@@ -82,12 +84,23 @@ export const POST = async (request: NextRequest) => {
         { status: 404 }
       );
     }
+
+    // POST の前に既に登録されているかチェック
+    const exists = await prisma.favorite.findFirst({
+      where: { userId: user.id, cafeId },
+    });
+    if (exists) {
+      return NextResponse.json({ status: "OK", favorite: exists });
+    }
+
+    console.log("カフェ", exists);
     const newFavorite = await prisma.favorite.create({
       data: {
         userId: user.id,
         cafeId,
       },
     });
+
     return NextResponse.json({ status: "OK", favorite: newFavorite });
   } catch (err) {
     return NextResponse.json(

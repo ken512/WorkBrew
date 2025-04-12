@@ -30,8 +30,8 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
 }) => {
   // 画像がない場合、デフォルト画像をセット
   const defaultIcon = "https://placehold.jp/600x350/?text=デフォルト";
-  const { data, error, isLoading } = useSWR("/api/admin/user_account", fetcher);
-
+  const { data, error } = useSWR("/api/admin/user_account", fetcher);
+  
   useEffect(() => {
     if (data?.user) {
       setFormState({
@@ -42,15 +42,6 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
     }
   }, [data, setFormState]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg font-semibold">
-          ☕️ コーヒーを淹れています... お待ちください
-        </p>
-      </div>
-    );
-  }
   if (error) return <p>ユーザー情報の取得に失敗しました</p>;
 
   // 状態を更新するための関数
@@ -71,8 +62,8 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
   };
 
   return (
-    <div className="flex flex-col font-bold mx-[350px] items-center py-10 sm:mx-5 md:mx-16">
-      <h1 className="flex justify-center font-bold text-2xl my-10">
+    <div className="bg-tan-300 min-h-screen flex flex-col grid-flow-row items-center justify-center sm:mx-5 md:mx-16">
+      <h1 className="flex justify-center font-bold text-3xl mt-[200px]">
         ユーザーアカウント
       </h1>
       <div className="w-full flex flex-col items-center my-16 sm:my-10">
@@ -83,7 +74,7 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
         />
       </div>
 
-      <div className="py-10 w-[700px] sm:max-w-[350px] md:max-w-[650px]">
+      <div className="py-10 w-full max-w-[700px] sm:max-w-[350px] md:max-w-[650px] px-4">
         <Label htmlFor="userName">ユーザー名</Label>
         {errors && <p className="text-red-500 text-sm">{errors.userName}</p>}
         <input
@@ -109,7 +100,7 @@ export const UserAccountForm: React.FC<UserAccountFormPropsWithHandler> = ({
           col={80}
         />
       </div>
-      <div className="flex justify-center items-center pt-20">
+      <div className="flex justify-center items-center pt-20 mb-16">
         <div className="px-16 sm:px-3">
           <Button type="button" variant="primary" onClick={onSubmit}>
             保存
