@@ -3,7 +3,7 @@ import { HeaderPublic } from "../_components/headerPublic";
 import { Footer } from "../_components/footer";
 import CafePostClient from "./cafePostClient";
 
-const CafePost = () => {
+const CafePost: React.FC = () => {
   return (
     <div>
       <HeaderPublic />
