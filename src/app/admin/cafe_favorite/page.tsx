@@ -4,6 +4,7 @@ import { HeaderAdminBase } from "../_components/headerAdminBase";
 import { FavoriteList } from "../_components/favoriteList";
 import useSWR from "swr";
 import api from "@/_utils/api";
+import { Footer } from "@/app/_components/footer";
 import "../../globals.css";
 
 //共通リクエストを使用する
@@ -36,6 +37,7 @@ const CafeFavoriteList: React.FC = () => {
       <HeaderAdminBase href="#" />
       <div className="bg-tan-300 min-h-screen flex flex-col grid-flow-row items-center justify-center">
           < FavoriteList cafes={cafes} />
+          <Footer />
       </div>
     </div>
   );

@@ -5,12 +5,12 @@ import "../globals.css";
 export const MenuBarPublic = () => {
 
   return (
-    <div className="mr-[150px] sm:mx-[30px]">
+    <div className="mr-[150px] sm:ml-[70px] sm:mx-[30px]">
       <ul className="flex">
         <li className="relative h-[60px] transition-colors duration-300 group">
           <a
             href="#"
-            className="flex text-2xl sm:text-sm sm:px-10 justify-center items-center w-full h-full text-center text-blue-900 hover:text-customOrange transition-colors duration-30"
+            className="flex text-2xl sm:text-sm font-bold sm:px-10 justify-center items-center w-full h-full text-center text-blue-900 hover:text-customOrange transition-colors duration-30"
           > 
             Menu
           </a>
