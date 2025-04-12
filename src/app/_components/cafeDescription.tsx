@@ -98,7 +98,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
     ) {
       initMap(setMap, [cafe]); // 1件だけでも配列に
     }
-  }, [cafe.locationCoordinates]);
+  }, [cafe.locationCoordinates, cafe]);
   console.log("地図", cafe.locationCoordinates);
 
   const handleDelete = async (e: React.FormEvent) => {
