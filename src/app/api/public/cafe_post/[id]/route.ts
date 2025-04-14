@@ -130,7 +130,10 @@ export const DELETE = async (
     }
 
     const cafe = await prisma.cafe.findUnique({
-      where: { id: cafeId },
+      where: {
+        id: cafeId,
+        userId: user.id, // 自分の投稿だけ対象にする
+      },
     });
 
     if (!cafe) {
