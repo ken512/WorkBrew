@@ -137,11 +137,8 @@ export const DELETE = async (
     });
 
     if (!cafe) {
-      return NextResponse.json({ status: "ERROR", message: "カフェが見つかりません" }, { status: 404 });
+      return NextResponse.json({ status: "ERROR", message: "他のユーザーの投稿を削除する権限はありません!!" }, { status: 403 });
     }
-
-    // 自分の投稿かどうかを確認
-    const isOwner = cafe.userId === user.id;
 
     // お気に入りに登録しているかを確認
     const isFavorited = await prisma.favorite.findFirst({
@@ -152,18 +149,10 @@ export const DELETE = async (
     });
     
     // 自分の投稿 & 自分がお気に入りしている場合
-    if (isOwner && isFavorited) {
+    if (isFavorited) {
       return NextResponse.json({
         status: "ERROR",
         message: "お気に入りに登録しているカフェは削除できません。まずお気に入りから解除してください。",
-      }, { status: 400 });
-    }
-
-    // 他人の投稿なら削除させない
-    if (!isOwner) {
-      return NextResponse.json({
-        status: "ERROR",
-        message: "他のユーザーの投稿を削除する権限はありません!!",
       }, { status: 400 });
     }
 
