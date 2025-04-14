@@ -3,6 +3,7 @@ import React from "react";
 import { TopPageHeader } from "./_components/topPageHeader";
 import { Sections } from "@/_data/Sections";
 import "./globals.css";
+import { GuestLoginButton } from "./_components/guestLoginButton";
 const TopPage: React.FC = () => {
   return (
     <div>
@@ -13,7 +14,10 @@ const TopPage: React.FC = () => {
         <p>カフェ作業のための最適なプラットフォーム</p>
       </div>
       {Sections.map((section, index) => (
-        <div key={index} className="bg-tan-300 min-h-screen flex flex-col items-center justify-center">
+        <div
+          key={index}
+          className="bg-tan-300 min-h-screen flex flex-col items-center justify-center"
+        >
           <h1>{section.title}</h1>
           {/* <img src={section.image} alt={section.title} /> */}
           <h2>{section.description.heading}</h2>
@@ -22,6 +26,7 @@ const TopPage: React.FC = () => {
           )}
         </div>
       ))}
+      <GuestLoginButton />
     </div>
   );
 };

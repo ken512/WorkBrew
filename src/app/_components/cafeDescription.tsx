@@ -75,7 +75,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
     error,
     isLoading,
   } = useSWR(`/api/public/cafe_post/${id}`, fetcher);
-  console.log("取得データ:", data);
   // cafeオブジェクトを取得
   const cafe = data.cafes;
 
@@ -88,8 +87,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
   //クライアント側で使える状態になったら描画させる
   useEffect(() => {
-      console.log("📍 locationCoordinates:", cafe?.locationCoordinates);
-      console.log("🌍 window.google:", !!window.google);
     if (
       typeof window !== "undefined" &&
       window.google &&
@@ -101,13 +98,14 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   }, [cafe.locationCoordinates, cafe]);
   console.log("地図", cafe.locationCoordinates);
 
+
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("変換後に送信する値", cafes);
 
-    //tokenを保存して、削除制限を設ける(投稿主のみ削除可)
+    //tokenを保存して、削除制限 を設ける(投稿主のみ削除可)
     const { data } = await supabase.auth.getSession();
     const token = data.session?.access_token;
+
     // トークンが保存されていない場合
     if (!token) {
       console.error("トークンが保存されていません");
@@ -119,12 +117,19 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
     if (id) {
       try {
-        const data = await api.delete(`/api/public/cafe_post/${id}`, cafes);
-        alert(data.message || "削除しました!!");
+        const res = await api.delete(`/api/public/cafe_post/${id}`, cafes);
+        alert(res.message || "削除しました!!");
         router.push("/cafe_post");
-      } catch (error) {
-        console.error("削除に失敗しました!!", error);
-        alert("他のユーザーの投稿を削除する権限はありません!!");
+      } catch (error: any) {
+        const message = error?.message;
+      
+        if (message === "お気に入りに登録しているカフェは削除できません。まずお気に入りから解除してください。") {
+          alert(message);
+        } else if (message === "他のユーザーの投稿を削除する権限はありません!!") {
+          alert(message);
+        } else {
+          alert("予期せぬエラーが発生しました");
+        }
         return;
       }
     }
