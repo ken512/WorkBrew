@@ -4,7 +4,7 @@ import { HeaderPublic } from "../_components/headerPublic";
 import { Footer } from "../_components/footer";
 import Image from "next/image";
 import { faqData } from "@/_data/faqData";
-import { FaqItem } from "../_components/FaqItem";
+import { FaqItem } from "../_components/faqItem";
 const faq: React.FC = () => {
   return (
     <div>
