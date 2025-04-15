@@ -5,7 +5,7 @@ import { UserAccountFormProps } from "../_types/userAccountForm";
 import { UserAccountForm } from "../_components/userAccountForm";
 import { UserAccountErrorType } from "../_types/userAccountErrorType";
 import api from "@/_utils/api";
-import { Footer } from "@/app/_components/footer";
+import { Footer } from "@/app/_components/Footer/footerLanding";
 import "./../../globals.css";
 
 const UserAccount: React.FC = () => {

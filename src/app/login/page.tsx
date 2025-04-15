@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
 import { HeaderPublic } from "../_components/headerPublic";
-import { Footer } from "../_components/footer";
+import { Footer } from "../_components/Footer/footerLanding";
 import { Button } from "../admin/_components/Button";
 
 const Login: React.FC = () => {

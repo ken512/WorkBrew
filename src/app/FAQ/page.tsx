@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { HeaderPublic } from "../_components/headerPublic";
-import { Footer } from "../_components/footer";
+import { FooterDefault } from "../_components/Footer/footerDefault";
 import Image from "next/image";
 import { faqData } from "@/_data/faqData";
 import { FaqItem } from "../_components/faqItem";
@@ -24,8 +24,22 @@ const faq: React.FC = () => {
         {faqData.map((item, index) => (
           <FaqItem key={index} question={item.question} answer={item.answer} />
         ))}
+        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+        <p className="text-lg sm:text-sm font-bold text-black">
+          その他ご不明点は、{" "}
+          <a
+            href="https://www.instagram.com/workbrew"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 sm:px-2 sm:py-1 bg-gradient-to-r from-[#E1306C] to-[#C13584] text-white rounded-full hover:from-[#C13584] hover:to-[#833AB4] transition-all transform hover:scale-105 text-sm sm:text-base"
+          >
+            <i className="bi bi-instagram text-2xl sm:text-sm">InstagramのDM</i>
+          </a>
+          よりお気軽にお問い合わせください！
+        </p>
+        </div>
       </div>
-      <Footer />
+      <FooterDefault />
     </div>
   );
 };
