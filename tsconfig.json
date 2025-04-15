@@ -5,7 +5,10 @@
       "dom.iterable",
       "esnext"
     ],
-    "types": ["google.maps"],
+    "types": [
+      "google.maps",
+      "jest"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,

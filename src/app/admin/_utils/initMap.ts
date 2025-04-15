@@ -12,6 +12,7 @@ export const initMap = async (
   const [latStr, lngStr] = cafeList[0].locationCoordinates.split(",");
   const lat = parseFloat(latStr.trim());
   const lng = parseFloat(lngStr.trim());
+  
   /*googleマップの初期化(Google マップを画面に描画する)*/
   if (mapElement) {
     const map = new google.maps.Map(mapElement, {

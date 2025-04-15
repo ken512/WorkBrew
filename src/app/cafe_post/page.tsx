@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { HeaderPublic } from "../_components/headerPublic";
-import { Footer } from "../_components/footer";
+import { FooterDefault } from "../_components/Footer/footerDefault";
 import CafePostClient from "./cafePostClient";
 
 const CafePost: React.FC = () => {
@@ -17,7 +17,7 @@ const CafePost: React.FC = () => {
         >
           <CafePostClient />
         </Suspense>
-        <Footer />
+        <FooterDefault />
       </div>
     </div>
   );

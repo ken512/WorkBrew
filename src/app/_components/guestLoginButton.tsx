@@ -34,7 +34,7 @@ export const GuestLoginButton: React.FC = () => {
   };
 
   return (
-    <Button type="button" variant="primary" onClick={handleGuestLogin}>
+    <Button type="button" variant="secondary" onClick={handleGuestLogin}>
       ゲストログイン
     </Button>
   );
