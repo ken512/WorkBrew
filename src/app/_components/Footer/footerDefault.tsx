@@ -16,7 +16,7 @@ export const FooterDefault: React.FC = () => {
           <div className="flex flex-col items-start space-y-1 text-xl font-bold sm:text-sm md:text-base">
             <a href="/faq" className="hover:text-black">FAQ</a>
             <a href="/login" className="hover:text-black">ログイン</a>
-            <a href="/signup" className="hover:text-black">サインアップ</a>
+            <a href="/signup" className="hover:text-black">新規登録</a>
             <a
               href="https://www.instagram.com/workbrew"
               target="_blank"
