@@ -1,5 +1,5 @@
 "use client";
-import React, {} from "react";
+import React from "react";
 import { HeaderAdminBase } from "../_components/headerAdminBase";
 import { FavoriteList } from "../_components/favoriteList";
 import useSWR from "swr";
