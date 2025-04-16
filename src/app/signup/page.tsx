@@ -35,7 +35,7 @@ const SignUp: React.FC = () => {
     <div>
         <HeaderPublic />
       <div className="bg-tan-300 min-h-screen flex flex-col items-center justify-center sm:px-5">
-      <h1 className="text-3xl font-bold">ユーザー登録</h1>
+      <h1 className="text-3xl font-bold">新規登録</h1>
         <form onSubmit={handleSubmit} className="w-full max-w-[500px] ">
           <div className="py-5">
             <Label htmlFor="email">

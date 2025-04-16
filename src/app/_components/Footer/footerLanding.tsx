@@ -46,7 +46,7 @@ export const FooterLanding: React.FC = () => {
               </li>
               <li>
                 <a href="/signup" className="text-white/90 hover:text-black transition-colors">
-                  サインアップ
+                  新規登録
                 </a>
               </li>
             </ul>
