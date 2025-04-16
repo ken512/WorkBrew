@@ -19,9 +19,9 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = "px-6 py-2 min-w-[80px] sm:text-sm rounded-3xl font-bold transition-colors duration-200";
   
   const variantStyles = {
-    primary: "bg-beige-200 hover:bg-custom-green",
-    secondary: "bg-custom-blue hover:bg-custom-green",
-    danger: "bg-custom-red hover:bg-custom-green"
+    primary: "bg-beige-200 hover:bg-custom-green transform transition hover:scale-105",
+    secondary: "bg-custom-blue text-white hover:bg-custom-green hover:text-black transform transition hover:scale-105",
+    danger: "bg-custom-red hover:bg-custom-green transform transition hover:scale-105"
   };
 
   const handleClick = (e: React.FormEvent) => {

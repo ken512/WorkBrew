@@ -1,49 +1,24 @@
 "use client";
-import React from "react";
-import { LinkButton } from "./linkButton";
-import { HeaderBase } from "./headerBase";
-
+import React from 'react';
+import { Button } from '../admin/_components/Button';
 export const TopPageHeader: React.FC = () => {
-  const containerStyles = "min-h-36 flex font-bold justify-between py-6 h-15 bg-beige-200";
-  const navStyles = "my-6 flex flex-row items-center";
-  const buttonContainerStyles = "flex justify-between my-5";
-
   return (
-    <header className={containerStyles}>
-      <div className={navStyles}>
-        <HeaderBase href="WorkBrewとは？">
-          WorkBrewとは？
-        </HeaderBase>
-        <HeaderBase href="WorkBrewの特徴">
-          WorkBrewの特徴
-        </HeaderBase>
-        <HeaderBase href="WorkBrewの使い方">
-          WorkBrewの使い方
-        </HeaderBase>
-      </div>
-      <div className={buttonContainerStyles}>
-        <LinkButton
-          href="/cafe_post"
-          type="button"
-          variant="primary"
-        >
-          カフェ一覧
-        </LinkButton>
-        <LinkButton
-          href="/login"
-          type="button"
-          variant="primary"
-        >
-          ログイン
-        </LinkButton>
-        <LinkButton
-          href="/signup"
-          type="button"
-          variant="primary"
-        >
-          ユーザー登録
-        </LinkButton>
-      </div>
+    <header className="fixed top-0 w-full bg-white/90 backdrop-blur-sm shadow-sm z-50">
+      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="text-2xl font-bold text-[#d6b288]">WorkBrew</div>
+        <div className="hidden md:flex items-center space-x-6">
+          <a href="#about" className="text-gray-700 hover:text-[#d6b288]">WorkBrew</a>
+          <a href="#features" className="text-gray-700 hover:text-[#d6b288]">特徴</a>
+          <a href="#usage" className="text-gray-700 hover:text-[#d6b288]">使い方</a>
+          <a href="/cafe_post" className="text-gray-700 hover:text-[#d6b288]">カフェ一覧</a>
+          <Button type="button">
+            ログイン
+          </Button>
+          <Button type="button">
+            新規登録
+          </Button>
+        </div>
+      </nav>
     </header>
   );
 };
