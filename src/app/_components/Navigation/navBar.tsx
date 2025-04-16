@@ -7,6 +7,21 @@ import "../../globals.css";
 export const NavBar:React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
+  };
+
+  const handleDesktopNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <nav className="fixed w-full bg-white/90 backdrop-blur-sm shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,16 +46,31 @@ export const NavBar:React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center">
             <div className="flex space-x-1 sm:space-x-2 lg:space-x-8 items-center">
-              <a href="#about" className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium whitespace-nowrap">
+              <a 
+                href="#about" 
+                onClick={handleDesktopNavClick}
+                className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium whitespace-nowrap"
+              >
                 WorkBrewとは？
               </a>
-              <a href="#features" className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium">
+              <a 
+                href="#features" 
+                onClick={handleDesktopNavClick}
+                className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium"
+              >
                 特徴
               </a>
-              <a href="#usage" className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium">
+              <a 
+                href="#usage" 
+                onClick={handleDesktopNavClick}
+                className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium"
+              >
                 使い方
               </a>
-              <a href="#cafes" className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium">
+              <a 
+                href="#cafes" 
+                className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium"
+              >
                 カフェ一覧
               </a>
             </div>
@@ -48,7 +78,7 @@ export const NavBar:React.FC = () => {
         </div>
       </div>
 
-      <MobileMenu isOpen={isMenuOpen} />
+      <MobileMenu isOpen={isMenuOpen} onClose={handleMenuClose} />
     </nav>
   );
 };
