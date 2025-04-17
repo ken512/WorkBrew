@@ -1,6 +1,6 @@
 "use client";
 import React, {useState} from "react";
-import { CafeDescription } from "@/app/_components/cafeDescription";
+import { CafeDescription } from "@/app/_components/CafeDescription";
 import { useParams } from "next/navigation";
 import { UpdateStatus } from "@/app/_types/updateStatus";
 import api from "@/_utils/api";

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { HeaderAdminBase } from "../_components/headerAdminBase";
-import { CafePostForm } from "../_components/cafePostForm";
-import { ThumbnailHandle } from "../_components/thumbnailHandle";
+import { HeaderAdminBase } from "../_components/HeaderAdminBase";
+import { CafePostForm } from "../_components/CafePostForm";
+import { ThumbnailHandle } from "../_components/ThumbnailHandle";
 import { UseCafeFormState } from "../_hooks/useCafeFormState";
 import "../../globals.css";
 

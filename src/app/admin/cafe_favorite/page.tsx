@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { HeaderAdminBase } from "../_components/headerAdminBase";
-import { FavoriteList } from "../_components/favoriteList";
+import { HeaderAdminBase } from "../_components/HeaderAdminBase";
+import { FavoriteList } from "../_components/FavoriteList";
 import useSWR from "swr";
 import api from "@/_utils/api";
-import { FooterDefault } from "@/app/_components/Footer/footerDefault";
+import { FooterDefault } from "@/app/_components/Footer/FooterDefault";
 import "../../globals.css";
 
 //共通リクエストを使用する

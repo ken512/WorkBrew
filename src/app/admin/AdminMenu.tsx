@@ -1,5 +1,5 @@
 "use client";
-import { NavLink } from "../_components/navLink";
+import { NavLink } from "../_components/NavLink";
 import { useRouteGuard } from "./_hooks/useRouteGuard";
 
 const AdminMenu = () => {

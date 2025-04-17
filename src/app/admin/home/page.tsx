@@ -1,18 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import { Cafe } from "@/app/_types/Cafe";
-import { HeaderAdminBase } from "../_components/headerAdminBase";
+import { HeaderAdminBase } from "../_components/HeaderAdminBase";
 import {
   LatestCafeList,
   RecommendationCafeList,
-} from "../_components/cafeInfo";
+} from "../_components/CafeInfo";
 import {
   LatestDetailDialog,
   RecommendationDetailDialog,
-} from "../_components/cafeDetailInfo";
+} from "../_components/CafeDetailInfo";
 import useSWR from "swr";
 import api from "@/_utils/api";
-import { FooterDefault } from "@/app/_components/Footer/footerDefault";
+import { FooterDefault } from "@/app/_components/Footer/FooterDefault";
 import "../../globals.css";
 
 //共通リクエストを使用する

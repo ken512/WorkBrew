@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ButtonColorSwitching } from "./buttonColorSwitching";
+import { ButtonColorSwitching } from "./ButtonColorSwitching";
 import "../../globals.css";
 
 

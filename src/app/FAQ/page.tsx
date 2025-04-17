@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { HeaderPublic } from "../_components/headerPublic";
-import { FooterDefault } from "../_components/Footer/footerDefault";
+import { HeaderPublic } from "../_components/HeaderPublic";
+import { FooterDefault } from "../_components/Footer/FooterDefault";
 import Image from "next/image";
 import { faqData } from "@/_data/faqData";
-import { FaqItem } from "../_components/faqItem";
+import { FaqItem } from "../_components/FaqItem";
 const faq: React.FC = () => {
   return (
     <div>
