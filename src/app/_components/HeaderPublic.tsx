@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { HeaderBase } from "./headerBase";
-import { MenuBarPublic } from "./menuBarPublic";
+import { HeaderBase } from "./HeaderBase";
+import { MenuBarPublic } from "./MenuBarPublic";
 import "../globals.css"
 export const HeaderPublic: React.FC = () => {
   return (

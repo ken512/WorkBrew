@@ -1,11 +1,11 @@
 "use client";
 import React, { FormEvent, useState } from "react";
-import { HeaderAdminBase } from "../_components/headerAdminBase";
+import { HeaderAdminBase } from "../_components/HeaderAdminBase";
 import { UserAccountFormProps } from "../_types/userAccountForm";
-import { UserAccountForm } from "../_components/userAccountForm";
+import { UserAccountForm } from "../_components/UserAccountForm";
 import { UserAccountErrorType } from "../_types/userAccountErrorType";
 import api from "@/_utils/api";
-import { FooterDefault } from "@/app/_components/Footer/footerDefault";
+import { FooterDefault } from "@/app/_components/Footer/FooterDefault";
 import "./../../globals.css";
 
 const UserAccount: React.FC = () => {

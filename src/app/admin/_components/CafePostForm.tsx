@@ -2,10 +2,10 @@
 import React, { FormEvent, useState } from "react";
 import { Input } from "@/app/_components/Input";
 import { CafeFormFields } from "../_data/cafeFormFields";
-import { CafePostButtons } from "./cafePostButtons";
+import { CafePostButtons } from "./CafePostButtons";
 import { ButtonFields } from "../_data/buttonFields";
-import { PostClearButton } from "./postClearButton";
-import { TextArea } from "@/app/_components/textArea";
+import { PostClearButton } from "./PostClearButton";
+import { TextArea } from "@/app/_components/TextArea";
 import { FormErrorsType } from "@/app/_types/formErrorsType";
 import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
