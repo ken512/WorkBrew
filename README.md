@@ -25,7 +25,7 @@ npm run dev
 
 # 利用者向け
 
-(![alt text](</docs/img/workbrew.png>))
+![alt text](</docs/img/workbrew.png>)
 
 <br />
 
@@ -52,12 +52,12 @@ npm run dev
 
 | カフェ投稿画面 | 投稿一覧画面 |
 | -------------- | ------------ |
-| <img src="/docs/img/カフェ投稿.png" width="500" height="300"/>| <img src="/docs/img/投稿一覧.png" width="500" height="300"/>|
+| <img src="/docs/img/カフェ投稿.png" width="600" height="300"/>| <img src="/docs/img/投稿一覧.png" width="500" height="300"/>|
 | カフェ投稿するページ画面です。作業場所で最低限知りたい情報のみ必須項目にしています。| 投稿されたカフェを一覧で表示する画面です。フィルター検索で、店名・エリア、Wi-Fi・電源の有無の項目で、知りたい情報を絞ることができます。|
 
 | カフェ詳細画面 | ユーザーアカウント画面 |
 | -------------- | ---------------------- |
-| <img src="/docs/img/カフェ詳細.png" width="600" height="300"/>|<img src="/docs/img/ユーザーアカウント.png" width="600" height="300"/>|
+| <img src="/docs/img/カフェ詳細.png" width="500" height="300"/>|<img src="/docs/img/ユーザーアカウント.png" width="600" height="300"/>|
 | カフェ詳細ページでは、店舗情報とGoogleマップで場所を確認でき、Wi‑Fi速度や空席状況の報告もワンタッチで可能です。投稿はリアルタイムにグラフに反映され、他ユーザーの情報も集約されるため、信頼性の高い最新状況が把握できます。| ユーザーアカウントを作成する画面です。登録することで、カフェ投稿やお気に入り機能など、すべてのサービスを利用できるようになります。|
 
 | お気に入り一覧画面 | ホーム画面 |
@@ -104,7 +104,7 @@ npm run dev
 ## ER図
 
 ![ER図](/docs/img/WorkBrewER図.jpg)
-[ER図](https://miro.com/app/board/uXjVL4Vn3DQ=/?share_link_id=15995754300);
+[ER図](https://miro.com/app/board/uXjVL4Vn3DQ=/?share_link_id=15995754300)
 
 <br />
 
