@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 開発者向けの情報
 
-## Getting Started
+### 前提条件
 
-First, run the development server:
+- Node.js (v20.17 以上)
+- npm (v10.9 以上)
+- Git (v2.46 以上)
+
+## ローカルサーバー起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+サーバー起動後、http://localhost:3000 でアプリにアクセスできます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<br />
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 環境変数設定
+- プロジェクトのルートディレクトリに `.env` ファイルを作成
+- 必要な環境変数の取得については管理者にリクエスト
+- 取得した環境変数を `.env` ファイルに設定
 
-## Learn More
+<br />
 
-To learn more about Next.js, take a look at the following resources:
+# 利用者向け
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+(![alt text](<スクリーンショット 2025-04-16 15.32.52.png>))
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<br />
 
-## Deploy on Vercel
+このWEBアプリは、ユーザーがカフェ情報共有・探索し、作業効率を記録・分析できる便利なプラットフォーム
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## サービスのURL
+ゲストログインから登録無しで、全ての機能が試せます。お気軽にお試しください。(ユーザーアカウント登録必須)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## サービス開発の経緯
+私はカフェが好きで、休日によくカフェで作業や勉強をすることが多く、「空席状況」や「電源・Wi-Fiの有無」「Wi-Fiの速度と安定性」といった情報の重要性を日々感じていました。
+事前に調べてから訪れても、実際に行ってみたら電源が無かったり、空いているかどうかわからなかったりと、現地で困るケースは少なくありませんでした。
+こうした課題をきっかけに、「作業環境に関するリアルな情報を、ユーザー同士で情報を共有できるサービスがあると便利のではないか」と考えました。
+空席状況やWi-Fiの品質など、作業環境に特化した情報を投稿・閲覧できる仕組みにすることで、ノマドワーカーやフリーランスが快適に作業場所を見つけられる体験を提供するサービスを開発しました。
+
+<br />
+
+## 機能一覧
+
+
+| トップ画面                                                                                      | ゲストログイン画面                                                                  |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| ![トップページ](/docs/img/トップ画面.png)                                                           | ![ゲストログイン画面](/docs/img/guestLogin.png)                                            |
+| トップページをLP構成にし、ユーザーにサービス内容を理解してもらいます。                                       | お試し用に、登録過程を省くためゲストログイン機能を実装しました。 |
+
+| カフェ投稿画面                                                                                                                   | 投稿一覧画面面                                                                             |
+| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| ![カフェ投稿画面](/docs/img/カフェ投稿.png)                                                                                         | ![投稿一覧画面](/docs/img/投稿一覧.png)                                              |
+|  | カフェ投稿するページ画面です。作業場所で最低限知りたい情報のみ必須項目にしています。                                                        | 投稿されたカフェを一覧で表示する画面です。フィルター検索で、店名・エリア、Wi-Fi・電源の有無の項目で、知りたい情報を絞ることができます。
+
+| カフェ詳細画面                                                           | ユーザーアカウント画面                                                                                              |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| ![カフェ詳細画面](/docs/img/カフェ詳細.png)                           | ![ユーザーアカウント画面 ](/docs/img/ユーザーアカウント.png)                                                               |
+| カフェ詳細ページでは、特定の店舗情報を確認できるだけでなく、Googleマップを埋め込むことで正確な位置を瞬時に把握できます。さらに、Wi‑Fi速度や空席状況はワンタッチで報告・更新が可能で、投稿されたデータはリアルタイムにグラフへ反映されるため、ユーザーは混雑度や通信環境を一目で確認しながら効率的にカフェを選べます。また、自分の報告に加えて他ユーザーの情報も集計することで、常に信頼性の高い最新状況を提供します。 | ユーザーアカウントを作成する画面です。登録することで、カフェ投稿やお気に入り機能など、すべてのサービスを利用できるようになります。 |
+
+| お気に入り一覧画面                                                                                                                         | ホーム覧画面                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| ![お気に入り一覧画面 ](/docs/img/お気に入り一覧.png)                                                                                              | ![ホーム画面](/docs/img/ホーム画面.png)                                                   |
+| ユーザーが「気になるカフェ」を後で見返せるように、ブックマークのような機能になっています。お気に入りページで一覧として表示されます。 | ホーム画面では、カフェの最新情報やおすすめ情報を閲覧できます。
+最新情報には、投稿や更新されたカフェがリアルタイムで反映されます。
+おすすめ情報では、⭐️⭐️⭐️以上の高評価がついたカフェのみを表示することで、質の高い情報を厳選して届けています。そうすることで、カフェ情報を効率的に探すことができ、より快適な作業場所を見つけられます。 |
+
+
+
+<br />
+
+# 使用技術
+
+## フロントエンド
+- 言語：TypeScript
+- フレームワーク：Next.js 14.2.3(App Router)
+- スタイル：tailwind
+- データfetch：SWR
+
+## バックエンド
+- 言語：TypeScript
+- フレームワーク：Next.js 14.2.3(App Router)
+- データベース: PostgreSQL (Supabase Database)
+- ORM: Prisma
+- 認証: Supabase Auth
+- ストレージ: Supabase Storage
+
+## 開発環境・インフラ
+- IDE: Visual Studio Code
+- ホスティング: Vercel
+- バージョン管理: Git, GitHub
+- デザインカンプ: Figma
+- ER図：Miro
+
+<br />
+
+## システム構成図
+
+![システム構成図](/docs/img/system.png)
+
+<br />
+
+## ER図
+
+![ER図](/docs/img/WorkBrewER図.jpg)
+
+<br />
+
+## 今後の展望
+
+今後の展望アイディアは以下の通りです。
+  
+1. 機能アップデート
+- 最新情報を知らせる通知機能。
+- 作業ログの記録と分析の機能。
+- 
+
+2. パフォーマンスの最適化
+- ユーザーにとって快適なサービスにするため、レスポンスの短縮化、データの読み込み速度や処理速度の向上を今後実施する。
