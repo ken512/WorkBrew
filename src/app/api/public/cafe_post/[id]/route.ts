@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
-import { UpdateStatus } from "@/app/_types/updateStatus";
+import { UpdateStatus } from "@/app/_types/UpdateStatus";
 import { getCurrentUser } from "@/_utils/supabase";
 
 const prisma = new PrismaClient();

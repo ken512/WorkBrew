@@ -3,8 +3,8 @@ import { supabase } from "@/_utils/supabase";
 import React,{ useState } from "react";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
-import { HeaderPublic } from "../_components/headerPublic";
-import { FooterDefault } from "../_components/Footer/footerDefault";
+import { HeaderPublic } from "../_components/HeaderPublic";
+import { FooterDefault } from "../_components/Footer/FooterDefault";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");

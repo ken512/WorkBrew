@@ -8,7 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { PieChartData } from "../_types/pieChartProps";
+import { PieChartData } from "../_types/PieChartProps";
 const COLORS = ["#00C49F", "#FFBB28", "#FF4444"]; // 緑・オレンジ・赤など
 
 export const CafeStatusPieChart: React.FC<{ chartData: PieChartData }> = ({

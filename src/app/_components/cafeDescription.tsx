@@ -14,14 +14,14 @@ import {
 } from "../admin/_utils/convertLabels";
 import { initMap } from "../admin/_utils/initMap";
 import Script from "next/script";
-import { CafePostButtons } from "../admin/_components/cafePostButtons";
+import { CafePostButtons } from "../admin/_components/CafePostButtons";
 import { useImageHandler } from "../admin/_hooks/useImageHandler";
-import { UpdateStatus } from "../_types/updateStatus";
+import { UpdateStatus } from "../_types/UpdateStatus";
 import { ButtonFields } from "../admin/_data/buttonFields";
 import { Button } from "../admin/_components/Button";
 import { convertJapaneseToEnglish } from "@/_utils/convertJapaneseToEnglish";
-import { PieChartData } from "../_types/pieChartProps";
-import { CafeStatusPieChart } from "./cafeStatusPieChart";
+import { PieChartData } from "../_types/PieChartProps";
+import { CafeStatusPieChart } from "./CafeStatusPieChart";
 import "../globals.css";
 import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";

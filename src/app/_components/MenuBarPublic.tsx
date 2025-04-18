@@ -1,5 +1,5 @@
 "use client";
-import { NavLink } from "./navLink";
+import { NavLink } from "./NavLink";
 import "../globals.css";
 
 export const MenuBarPublic = () => {

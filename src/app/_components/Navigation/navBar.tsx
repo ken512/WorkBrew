@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Coffee, Menu, X } from 'lucide-react';
-import { MobileMenu } from './mobileMenu';
+import { MobileMenu } from './MobileMenu';
 import "../../globals.css";
 
 export const NavBar:React.FC = () => {
