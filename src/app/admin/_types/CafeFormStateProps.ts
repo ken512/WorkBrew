@@ -10,10 +10,10 @@ export type CafeFormStateProps = {
   closingDays: string;
   cafeUrl: string;
   menuOrdered: string;
-  wifiAvailable: boolean | null;
+  wifiAvailable?: boolean;
   wifiSpeed?: WifiSpeed | null;
   wifiStability?: WifiStability | null;
-  powerOutlets: boolean | null;
+  powerOutlets: boolean;
   seatAvailability: SeatAvailability | null;
   starRating: number;
   comment: string;

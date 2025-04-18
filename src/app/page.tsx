@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
 import { NavBar } from "./_components/Navigation/NavBar";
-import { HeroSection } from "./_components/Sections/HeroSection";
->>>>>>> docs/readme-update
+import { HeroSection } from "./_components/Sections/heroSection";
 import { FeaturesSection } from "./_components/Sections/FeaturesSection";
 import { UsageSection } from "./_components/Sections/UsageSection";
 import { ScrollToTop } from "./_components/ScrollToTop/ScrollToTop";

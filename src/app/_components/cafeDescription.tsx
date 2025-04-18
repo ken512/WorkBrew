@@ -20,11 +20,10 @@ import { UpdateStatus } from "../_types/UpdateStatus";
 import { ButtonFields } from "../admin/_data/buttonFields";
 import { Button } from "../admin/_components/Button";
 import { convertJapaneseToEnglish } from "@/_utils/convertJapaneseToEnglish";
-import { PieChartData } from "../_types/pieChartProps";
->>>>>>> docs/readme-update
+import { PieChartData } from "../_types/PieChartProps";
 import { CafeStatusPieChart } from "./CafeStatusPieChart";
 import "../globals.css";
-import { Cafe } from "../_types/cafe";
+import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";
 import api from "@/_utils/api";
 

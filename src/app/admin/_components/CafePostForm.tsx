@@ -6,9 +6,8 @@ import { CafePostButtons } from "./CafePostButtons";
 import { ButtonFields } from "../_data/buttonFields";
 import { PostClearButton } from "./PostClearButton";
 import { TextArea } from "@/app/_components/TextArea";
-import { FormErrorsType } from "@/app/_types/formErrorsType";
-import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
->>>>>>> docs/readme-update
+import { FormErrorsType } from "@/app/_types/FormErrorsType";
+import { CafeFormStateReturn } from "../_types/CafeFormStateReturn";
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import useSWR, { mutate } from "swr";
 import api from "@/_utils/api";
@@ -106,24 +105,17 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
     if (!formState.cafeName) tempErrors.cafeName = "※必須";
     if (!formState.storeAddress) tempErrors.storeAddress = "※必須";
 
-    // Wi‑Fi有無の必須チェック（null のみ）
-    if (formState.wifiAvailable === null) {
+    // Wi-Fiが「無」の場合は wifiSpeed と wifiStability をスキップ
+    if (!formState.wifiAvailable === null) {
       tempErrors.wifiAvailable = "※必須";
     } else if (formState.wifiAvailable === true) {
-      // 有 のときだけ速度・安定性を必須
       if (formState.wifiSpeed === null) tempErrors.wifiSpeed = "※必須";
       if (formState.wifiStability === null) tempErrors.wifiStability = "※必須";
     }
 
-    // 電源有無も同様
-    if (formState.powerOutlets === null) {
-      tempErrors.powerOutlets = "※必須";
-    }
-
-    // 空席状況はもともと null チェックなので OK
-    if (formState.seatAvailability === null) {
+    if (formState.powerOutlets === null) tempErrors.powerOutlets = "※必須";
+    if (formState.seatAvailability === null)
       tempErrors.seatAvailability = "※必須";
-    }
 
     // 営業時間のバリデーション
     const timeFormat =

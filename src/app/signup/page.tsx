@@ -5,7 +5,7 @@ import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
 import { HeaderPublic } from "../_components/HeaderPublic";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
->>>>>>> docs/readme-update
+import "../globals.css";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -63,8 +63,8 @@ const SignUp: React.FC = () => {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
               placeholder="6文字以上8文字以内"
               required
-              minLength={6}         //６文字以上
-              maxLength={10}       //10文字以内
+              minLength={6}         // 最小6文字
+              maxLength={8}        // 最大30文字（任意）
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />

@@ -61,6 +61,6 @@ const CafePostClient: React.FC = () => {
       )}
     </>
   );
-}; 
+};
 
 export default CafePostClient;

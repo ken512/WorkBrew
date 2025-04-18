@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import { Cafe } from "@/app/_types/cafe";
+import { Cafe } from "@/app/_types/Cafe";
 import { timeAgo } from "../_utils/timeAgo";
 import { RenderStars } from "../_utils/renderStars";
 import "../../globals.css";

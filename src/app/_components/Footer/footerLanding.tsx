@@ -21,7 +21,7 @@ export const FooterLanding: React.FC = () => {
               もっと生産的に。
             </p>
             <a
-              href="https://www.instagram.com/workbrew_info/"
+              href="https://www.instagram.com/workbrew"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center mt-4 text-white/90 hover:text-black transition-colors"
