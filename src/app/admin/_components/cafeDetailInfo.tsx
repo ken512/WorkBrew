@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Cafe } from "@/app/_types/Cafe";
+import { Cafe } from "@/app/_types/cafe";
 import { RenderStars } from "../_utils/renderStars";
 import { timeAgo } from "../_utils/timeAgo";
 import Image from "next/image";
@@ -116,9 +116,9 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
         className="fixed inset-0 flex items-center justify-center"
         overlayClassName="fixed inset-0 bg-black bg-opacity-70 z-[60]"
       >
-        <div className="bg-beige-200 rounded-lg w-full max-w-sm sm:max-w-md max-h-screen overflow-auto">
+        <div className="bg-beige-200 rounded-lg w-full max-w-sm sm:max-w-md max-h-screen overflow-auto sm:mx-3">
           {/* 画像 */}
-          <div className="relative w-full h-[200px] sm:h-full ">
+          <div className="relative w-[500px] h-[250px] sm:max-w-[390px] ">
             <Image
               src={cafe.thumbnailImage}
               alt="thumbnailImage"
@@ -128,7 +128,7 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
           </div>
 
           {/* 店舗情報 */}
-          <div className="font-bold flex flex-col justify-between h-full">
+          <div className="font-bold p-5 flex flex-col justify-between h-full">
             <h3 className="py-5 overflow-auto whitespace-pre-wrap break-words">
               {cafe.cafeName}
             </h3>

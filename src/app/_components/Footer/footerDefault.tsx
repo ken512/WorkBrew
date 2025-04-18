@@ -8,7 +8,7 @@ export const FooterDefault: React.FC = () => {
       <div className="max-w-screen-lg mx-auto">
         <div className="flex justify-between items-start mb-10">
           <a
-            href="/home"
+            href="/admin/home"
             className="text-5xl sm:text-3xl md:text-4xl mt-9 font-pacifico hover:text-black"
           >
             WorkBrew
@@ -18,7 +18,7 @@ export const FooterDefault: React.FC = () => {
             <a href="/login" className="hover:text-black">ログイン</a>
             <a href="/signup" className="hover:text-black">新規登録</a>
             <a
-              href="https://www.instagram.com/workbrew"
+              href="https://www.instagram.com/workbrew_info/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center mt-4 text-white/90 hover:text-black transition-colors"

@@ -31,7 +31,8 @@ const CafeSubmissionForm: React.FC = () => {
   return (
     <div>
       <HeaderAdminBase href="/admin/home" />
-      <div className="bg-tan-300">
+      <div className="bg-tan-300">      
+      <h1 className="flex justify-center font-bold text-3xl pt-[100px]">カフェ投稿</h1>
         <ThumbnailHandle
           onImageUpload={handleImageUpload}
           initialImage={formState.thumbnailImage}
