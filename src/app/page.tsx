@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import { NavBar } from "./_components/Navigation/navBar";
+import { NavBar } from "./_components/Navigation/NavBar";
 import { HeroSection } from "./_components/Sections/heroSection";
-import { FeaturesSection } from "./_components/Sections/featuresSection";
-import { UsageSection } from "./_components/Sections/usageSection";
-import { ScrollToTop } from "./_components/ScrollToTop/scrollToTop";
-import { FooterLanding } from "./_components/Footer/footerLanding";
-import { NewsSection } from "./_components/NewsSection/newsSection";
+import { FeaturesSection } from "./_components/Sections/FeaturesSection";
+import { UsageSection } from "./_components/Sections/UsageSection";
+import { ScrollToTop } from "./_components/ScrollToTop/ScrollToTop";
+import { FooterLanding } from "./_components/Footer/FooterLanding";
+import { NewsSection } from "./_components/NewsSection/NewsSection";
 import "./globals.css";
 const TopPage: React.FC = () => {
   return (

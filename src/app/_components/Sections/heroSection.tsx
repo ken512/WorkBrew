@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import "../../globals.css";
-import { GuestLoginButton } from '../guestLoginButton';
+import { GuestLoginButton } from '../GuestLoginButton';
 export const HeroSection:React.FC = () => {
   return (
     <section id="about" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">

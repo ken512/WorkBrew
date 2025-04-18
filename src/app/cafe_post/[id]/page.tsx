@@ -1,8 +1,8 @@
 "use client";
 import React, {useState} from "react";
-import { CafeDescription } from "@/app/_components/cafeDescription";
+import { CafeDescription } from "@/app/_components/CafeDescription";
 import { useParams } from "next/navigation";
-import { UpdateStatus } from "@/app/_types/updateStatus";
+import { UpdateStatus } from "@/app/_types/UpdateStatus";
 import api from "@/_utils/api";
 import { supabase } from "@/_utils/supabase";
 import "../../globals.css";

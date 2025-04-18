@@ -1,4 +1,4 @@
-import { CafeFormStateProps } from "./cafeFormStateProps";
+import { CafeFormStateProps } from "./CafeFormStateProps";
 
 export type CafeFormStateReturn = {
   formState: CafeFormStateProps;

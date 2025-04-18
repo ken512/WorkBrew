@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import { HeaderPublic } from "../_components/headerPublic";
-import { FooterDefault } from "../_components/Footer/footerDefault";
+import { HeaderPublic } from "../_components/HeaderPublic";
+import { FooterDefault } from "../_components/Footer/FooterDefault";
 import CafePostClient from "./cafePostClient";
 
 const CafePost: React.FC = () => {

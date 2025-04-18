@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
-import { UserIcon } from "./userIcon";
-import { UserAccountFormProps } from "../_types/userAccountForm";
+import { UserIcon } from "./UserIcon";
+import { UserAccountFormProps } from "../_types/UserAccountForm";
 import { Label } from "@/app/_components/Label";
-import { TextArea } from "@/app/_components/textArea";
-import { UserAccountErrorType } from "../_types/userAccountErrorType";
+import { TextArea } from "@/app/_components/TextArea";
+import { UserAccountErrorType } from "../_types/UserAccountErrorType";
 import { Button } from "@/app/admin/_components/Button";
 import useSWR from "swr";
 import api from "@/_utils/api";

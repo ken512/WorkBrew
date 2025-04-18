@@ -4,8 +4,8 @@ import React,{ useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
-import { HeaderPublic } from "../_components/headerPublic";
-import { FooterDefault } from "../_components/Footer/footerDefault";
+import { HeaderPublic } from "../_components/HeaderPublic";
+import { FooterDefault } from "../_components/Footer/FooterDefault";
 import { Button } from "../admin/_components/Button";
 
 const Login: React.FC = () => {
