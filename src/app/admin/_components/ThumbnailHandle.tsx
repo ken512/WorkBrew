@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/app/admin/_components/Button";
 import { useImageHandler } from "@/app/admin/_hooks/useImageHandler";
+import "../../globals.css";
 
 export const ThumbnailHandle: React.FC<{
   onImageUpload: (imageUrl: string) => void;

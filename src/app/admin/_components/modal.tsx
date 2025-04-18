@@ -1,6 +1,7 @@
 "use client";
 import React,{ReactNode} from "react";
 import ReactModal from "react-modal";
+import "../../globals.css";
 
 type Props = {
   isOpen: boolean;

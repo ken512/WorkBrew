@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Input } from "./Input";
+import "../globals.css";
 
 type Filters = {
   area: string;

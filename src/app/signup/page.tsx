@@ -5,6 +5,7 @@ import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
 import { HeaderPublic } from "../_components/HeaderPublic";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
+import "../globals.css";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
