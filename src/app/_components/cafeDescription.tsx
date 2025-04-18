@@ -23,7 +23,7 @@ import { convertJapaneseToEnglish } from "@/_utils/convertJapaneseToEnglish";
 import { PieChartData } from "../_types/pieChartProps";
 import { CafeStatusPieChart } from "./CafeStatusPieChart";
 import "../globals.css";
-import { Cafe } from "../_types/Cafe";
+import { Cafe } from "../_types/cafe";
 import { supabase } from "@/_utils/supabase";
 import api from "@/_utils/api";
 
