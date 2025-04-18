@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Cafe } from "@/app/_types/Cafe";
+import { Cafe } from "@/app/_types/cafe";
+>>>>>>> docs/readme-update
 import { HeaderAdminBase } from "../_components/HeaderAdminBase";
 import {
   LatestCafeList,

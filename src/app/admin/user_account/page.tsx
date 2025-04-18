@@ -1,9 +1,10 @@
 "use client";
 import React, { FormEvent, useState } from "react";
 import { HeaderAdminBase } from "../_components/HeaderAdminBase";
-import { UserAccountFormProps } from "../_types/UserAccountForm";
+import { UserAccountFormProps } from "../_types/userAccountForm";
 import { UserAccountForm } from "../_components/UserAccountForm";
-import { UserAccountErrorType } from "../_types/UserAccountErrorType";
+import { UserAccountErrorType } from "../_types/userAccountErrorType";
+>>>>>>> docs/readme-update
 import api from "@/_utils/api";
 import { FooterDefault } from "@/app/_components/Footer/FooterDefault";
 import "./../../globals.css";

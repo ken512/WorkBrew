@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { VirtuosoGrid } from "react-virtuoso";
-import { Cafe } from "@/app/_types/Cafe";
+import { Cafe } from "@/app/_types/cafe";
 import Link from "next/link";
 import api from "@/_utils/api";
 import { useResize } from "@/app/_hooks/useResize";

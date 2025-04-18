@@ -5,8 +5,7 @@ import { FooterDefault } from "../_components/Footer/FooterDefault";
 import Image from "next/image";
 import { faqData } from "@/_data/faqData";
 import { FaqItem } from "../_components/FaqItem";
-import "../globals.css";
-
+>>>>>>> docs/readme-update
 const faq: React.FC = () => {
   return (
     <div>
@@ -30,7 +29,7 @@ const faq: React.FC = () => {
         <p className="text-lg sm:text-sm font-bold text-black">
           その他ご不明点は、{" "}
           <a
-            href="https://www.instagram.com/workbrew"
+            href="https://www.instagram.com/workbrew_info/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 sm:px-2 sm:py-1 bg-gradient-to-r from-[#E1306C] to-[#C13584] text-white rounded-full hover:from-[#C13584] hover:to-[#833AB4] transition-all transform hover:scale-105 text-sm sm:text-base"
