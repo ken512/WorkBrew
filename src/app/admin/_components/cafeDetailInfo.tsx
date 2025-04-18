@@ -9,6 +9,7 @@ import {
   convertWifiSpeed,
 } from "../_utils/convertLabels";
 import ReactModal from "react-modal";
+import "../../globals.css";
 
 type Props = {
   cafe: Cafe | null; // クリックされたカフェ1件を受け取る

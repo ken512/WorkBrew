@@ -7,6 +7,7 @@ import { Label } from "../_components/Label";
 import { HeaderPublic } from "../_components/HeaderPublic";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
 import { Button } from "../admin/_components/Button";
+import "../globals.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");

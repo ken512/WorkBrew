@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { FormErrorsType } from "@/app/_types/FormErrorsType";
+import "../globals.css";
 
 type ErrorMessagesProps = {
   errors: FormErrorsType;

@@ -1,6 +1,7 @@
 "use client";
 import { NavLink } from "../_components/NavLink";
 import { useRouteGuard } from "./_hooks/useRouteGuard";
+import "../globals.css";
 
 const AdminMenu = () => {
   useRouteGuard();

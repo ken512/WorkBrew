@@ -1,6 +1,8 @@
 "use client";
 import React from 'react';
 import { Button } from '../admin/_components/Button';
+import "../globals.css";
+
 export const TopPageHeader: React.FC = () => {
   return (
     <header className="fixed top-0 w-full bg-white/90 backdrop-blur-sm shadow-sm z-50">

@@ -5,6 +5,8 @@ import { FooterDefault } from "../_components/Footer/FooterDefault";
 import Image from "next/image";
 import { faqData } from "@/_data/faqData";
 import { FaqItem } from "../_components/FaqItem";
+import "../globals.css";
+
 const faq: React.FC = () => {
   return (
     <div>

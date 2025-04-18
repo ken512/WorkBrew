@@ -5,6 +5,7 @@ import { CafeFilter } from "../_components/CafeFilter";
 import useSWR from "swr";
 import api from "@/_utils/api";
 import { useSearchParams } from "next/navigation";
+import "../globals.css";
 
 const fetcher = (url: string) => api.get(url);
 
