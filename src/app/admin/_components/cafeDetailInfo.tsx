@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Cafe } from "@/app/_types/Cafe";
+import { Cafe } from "@/app/_types/cafe";
 import { RenderStars } from "../_utils/renderStars";
 import { timeAgo } from "../_utils/timeAgo";
 import Image from "next/image";
