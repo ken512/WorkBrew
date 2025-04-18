@@ -1,12 +1,20 @@
 "use client";
+<<<<<<< HEAD
 import { supabase } from "@/_utils/supabase";
 import React,{ useState } from "react";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
 import { HeaderPublic } from "../_components/HeaderPublic";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
+=======
+import { supabase } from "@/utils/supabase";
+import { useState } from "react";
+import { Input } from "../_components/Input";
+import { Label } from "../_components/Label";
+import { HeaderBase } from "../_components/HeaderBase";
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)
 
-const SignUp: React.FC = () => {
+const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

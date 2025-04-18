@@ -1,4 +1,5 @@
 "use client";
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { Cafe } from "@/app/_types/cafe";
 import { HeaderAdminBase } from "../_components/HeaderAdminBase";
@@ -18,6 +19,12 @@ import "../../globals.css";
 //共通リクエストを使用する
 const fetcher = (url: string) => api.get(url);
 
+=======
+import React, { useEffect, useState } from "react";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { HederAdminBase } from "@/app/admin/_components/HeaderAdminBase";
+"../../globals.css"
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)
 const Home: React.FC = () => {
   const [selectedCafe, setSelectedCafe] = useState<Cafe  | null>(null);
   const [dialogType, setDialogType] = useState<
@@ -31,6 +38,7 @@ const Home: React.FC = () => {
     ([url]) => fetcher(url)
   );
 
+<<<<<<< HEAD
   // ローディング中の表示
   if (isLoading) {
     return (
@@ -41,6 +49,11 @@ const Home: React.FC = () => {
       </div>
     );
   }
+=======
+  console.log("Token:", token);
+  useEffect(() => {
+    if (!token) return;
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)
 
   // 最新カフェ情報とおすすめカフェ情報を取得
   const latestCafes = data?.latestCafes || [];
@@ -58,7 +71,13 @@ const Home: React.FC = () => {
 
   return (
     <div>
+<<<<<<< HEAD
       <HeaderAdminBase href="/admin/home" />
+=======
+      <HederAdminBase  href="/admin/home" className="">
+        WorkBrew
+      </HederAdminBase>
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)
       <div className="bg-tan-300 min-h-screen flex flex-col items-center justify-center">
         {/* エラーメッセージの表示 */}
         {error && <p className="text-red-500">データの取得に失敗しました</p>}

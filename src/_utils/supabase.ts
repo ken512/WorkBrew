@@ -8,45 +8,9 @@ export const supabase = createClient(
 
 /** APIリクエストのtokenの検証。検証できればログインユーザー（Supabase）情報を返す */
 export const getCurrentUser = async(request: NextRequest) => {
-  const authHeader = request.headers.get("Authorization");
-  console.log("Authorization Header:", authHeader);
-  
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return { 
-      currentUser: null, 
-      error: { 
-        message: "Invalid authorization header format",
-        status: 401 
-      } 
-    };
-  }
+  const token = request.headers.get('Authorization')!
+  const {data, error} = await supabase.auth.getUser(token)
 
-  // "Bearer "を除去してトークンを取得
-  const token = authHeader.split(' ')[1];
   
-  try {
-    const { data, error } = await supabase.auth.getUser(token);
-    console.log("Supabase getUser Response:", { data, error });
-    
-    if (error) {
-      return { 
-        currentUser: null, 
-        error: { 
-          message: error.message,
-          status: 401 
-        } 
-      };
-    }
-
-    return { currentUser: data, error: null };
-  } catch (error) {
-    console.error("Error in getCurrentUser:", error);
-    return { 
-      currentUser: null, 
-      error: { 
-        message: "Authentication failed",
-        status: 401 
-      } 
-    };
-  }
+  return {currentUser: data, error}
 }

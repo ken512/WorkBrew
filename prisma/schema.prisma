@@ -3,17 +3,16 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-        
+
 model Users {
   id                  Int                @id @default(autoincrement())
-  supabaseUserId      String             @unique
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
-  userName            String             @unique
+  userName            String
   profileIcon         String
   biography           String             @db.Text
   cafes               Cafe[]
@@ -26,7 +25,7 @@ model Contact {
   id                   Int               @id @default(autoincrement())
   createdAt            DateTime          @default(now())
   updatedAt            DateTime          @updatedAt
-  userId               Int               @unique
+  userId               Int                @unique
   contactContent       String            @db.Text
   users                Users             @relation(fields: [userId], references: [id])           
 }
@@ -72,11 +71,10 @@ model Cafe {
   thumbnailImage         String            @db.VarChar(255) 
   area                   String
   storeAddress           String  
-  openingTime            String            @db.VarChar(20)
-  closingHours           String            @db.VarChar(20)
+  openingTime            String            @db.VarChar(5)
+  closingHours           String            @db.VarChar(5)
   closingDays            String
   cafeUrl                String            @db.VarChar(255)
-  menuOrdered            String
   wifiAvailable          Boolean
   wifiSpeed              WifiSpeed?
   wifiStability          WifiStability?

@@ -1,35 +1,26 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React from "react";
-import Link from "next/link";
 
-type LinkButtonProps = {
+type ButtonProps = {
   href: string;
-  type: "button" | "submit" | "reset";
   children: React.ReactNode;
-  variant?: "primary" | "secondary" | "outline";
+  className: string;
 };
 
-export const LinkButton: React.FC<LinkButtonProps> = ({
+export const LinkButton: React.FC<ButtonProps> = ({
   href,
-  type,
   children,
-  variant = "primary"
+  className,
 }) => {
-  const baseStyles = "px-4 py-2 rounded-3xl font-bold transition-colors duration-200 mx-2";
-  
-  const variantStyles = {
-    primary: "bg-beige-200 hover:bg-custom-green text-black",
-    secondary: "bg-gray-200 hover:bg-gray-300 text-black",
-    outline: "border-2 border-beige-200 hover:bg-beige-200 text-black"
-  };
+  const router = useRouter();
 
+  const handleClick = () => {
+    router.push(href);
+  };
   return (
-    <Link 
-      href={href}
-      type={type}
-      className={`${baseStyles} ${variantStyles[variant]}`}
-    >
-      {children}
-    </Link>
+    <button onClick={handleClick} className={className}>
+      <span>{children}</span>
+    </button>
   );
 };

@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useSupabaseSession } from "../../_hooks/useSupabaseSession";
+<<<<<<< HEAD
 import { supabase } from "@/_utils/supabase";
 import { MenuBarAdmin } from "./MenuBarAdmin";
 import { HeaderProps } from "../_types/ueaderProps";
@@ -10,6 +11,20 @@ import "../../globals.css";
 import Link from "next/link";
 
 export const HeaderAdminBase = ({ href }: HeaderProps) => {
+=======
+import { supabase } from "@/utils/supabase";
+import AdminMenu from "../AdminMenu";
+import "../../globals.css";
+import Link from "next/link";
+
+type HeaderProps = {
+  href: string;
+  className: string;
+  children: React.ReactNode;
+};
+
+export const HederAdminBase = ({ href, className, children }: HeaderProps) => {
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)
   const { session, isLoading } = useSupabaseSession();
   const router = useRouter();
 
@@ -18,6 +33,7 @@ export const HeaderAdminBase = ({ href }: HeaderProps) => {
     router.replace("/");
   };
 
+<<<<<<< HEAD
    // ローディング中の表示
     if (isLoading) {
       return (
@@ -50,11 +66,44 @@ export const HeaderAdminBase = ({ href }: HeaderProps) => {
           className="text-white bg-blue-500 px-4 py-2 sm:px-2 sm:py-1 rounded-lg sm:text-sm"
         >
           ログイン
-        </Link>
-      )}
-    </div>
-  </div>
-</header>
+=======
+  if (isLoading) {
+    // セッション情報が取得中の場合
+    return (
+      <header className="flex justify-center items-center p-4 bg-gray-100">
+        <div className="text-gray-500">Loading...</div>
+      </header>
+    );
+  }
 
+  return (
+    <header className="min-h-36 flex justify-between items-center p-4  bg-beige-200">
+      <div>
+        <Link href={href} className={className}>
+          {children}
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)
+        </Link>
+      </div>
+      <div>
+        <AdminMenu />
+        </div>
+      <div>
+        {session ? (
+          <button
+            onClick={handleLogout}
+            className="text-white bg-red-500 px-4 py-2 rounded-lg"
+          >
+            ログアウト
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="text-white bg-blue-500 px-4 py-2 rounded-lg"
+          >
+            ログイン
+          </Link>
+        )}
+      </div>
+    </header>
   );
 };

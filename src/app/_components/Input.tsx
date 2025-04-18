@@ -18,7 +18,7 @@ export const Input: React.FC<InputProps> = ({
   id,
   value,
   placeholder,
-  required = true,
+  required,
   onChange,
   className,
 }) => {

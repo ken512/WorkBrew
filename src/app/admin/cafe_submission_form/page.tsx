@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 import React, { useState } from "react";
 import { HeaderAdminBase } from "../_components/HeaderAdminBase";
@@ -53,3 +54,5 @@ const CafeSubmissionForm: React.FC = () => {
 };
 
 export default CafeSubmissionForm;
+=======
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)

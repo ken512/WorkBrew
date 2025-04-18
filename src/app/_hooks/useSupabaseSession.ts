@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { supabase } from '@/_utils/supabase'
 import { Session } from '@supabase/supabase-js' 
+=======
+import { supabase } from '@/utils/supabase'
+import { Session } from '@supabase/supabase-js'
+>>>>>>> parent of bed149f (Merge pull request #3 from ken512/feature/user_account)
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from 'react'
 
