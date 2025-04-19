@@ -17,11 +17,7 @@ import Script from "next/script";
 import { CafePostButtons } from "../admin/_components/CafePostButtons";
 import { useImageHandler } from "../admin/_hooks/useImageHandler";
 import { UpdateStatus } from "../_types/UpdateStatus";
-<<<<<<< HEAD
-import { ButtonFields } from "../admin/_data/ButtonFields";
-=======
 import { ButtonFields } from "../admin/_data/buttonFields";
->>>>>>> 2750038 (commit)
 import { Button } from "../admin/_components/Button";
 import { convertJapaneseToEnglish } from "@/_utils/convertJapaneseToEnglish";
 import { PieChartData } from "../_types/PieChartProps";
