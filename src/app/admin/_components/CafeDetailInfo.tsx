@@ -1,10 +1,6 @@
 "use client";
 import React from "react";
-<<<<<<< HEAD
 import { Cafe } from "@/app/_types/Cafe";
-=======
-import { Cafe } from "@/app/_types/cafe";
->>>>>>> 087321a (commit)
 import { RenderStars } from "../_utils/renderStars";
 import { timeAgo } from "../_utils/timeAgo";
 import Image from "next/image";

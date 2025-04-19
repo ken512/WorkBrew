@@ -2,11 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { VirtuosoGrid } from "react-virtuoso";
-<<<<<<< HEAD
 import { Cafe } from "../_types/Cafe";
-=======
-import { Cafe } from "../_types/cafe";
->>>>>>> 087321a (commit)
 import Link from "next/link";
 import api from "@/_utils/api";
 import { useLoginSafeFetcher } from "../_hooks/useFetch";

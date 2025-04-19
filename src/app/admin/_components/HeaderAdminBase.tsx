@@ -5,11 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSupabaseSession } from "../../_hooks/useSupabaseSession";
 import { supabase } from "@/_utils/supabase";
 import { MenuBarAdmin } from "./MenuBarAdmin";
-<<<<<<< HEAD
 import { HeaderProps } from "../_types/HeaderProps";
-=======
-import { HeaderProps } from "../_types/ueaderProps";
->>>>>>> 087321a (commit)
 import "../../globals.css";
 import Link from "next/link";
 

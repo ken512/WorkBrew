@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { CafeList } from "../_components/cafeList";
+import { CafeList } from "../_components/CafeList";
 import { CafeFilter } from "../_components/CafeFilter";
 import useSWR from "swr";
 import api from "@/_utils/api";
