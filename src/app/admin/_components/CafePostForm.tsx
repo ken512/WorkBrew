@@ -6,7 +6,7 @@ import { CafePostButtons } from "./CafePostButtons";
 import { ButtonFields } from "../_data/buttonFields";
 import { PostClearButton } from "./PostClearButton";
 import { TextArea } from "@/app/_components/TextArea";
-import { FormErrorsType } from "@/app/_types/formErrorsType";
+import { FormErrorsType } from "@/app/_types/FormErrorsType";
 import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
 >>>>>>> docs/readme-update
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";

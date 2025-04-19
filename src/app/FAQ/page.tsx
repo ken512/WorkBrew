@@ -5,7 +5,6 @@ import { FooterDefault } from "../_components/Footer/FooterDefault";
 import Image from "next/image";
 import { faqData } from "@/_data/faqData";
 import { FaqItem } from "../_components/FaqItem";
->>>>>>> docs/readme-update
 const faq: React.FC = () => {
   return (
     <div>

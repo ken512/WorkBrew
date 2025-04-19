@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import { HeaderPublic } from "../_components/HeaderPublic";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
 import CafePostClient from "./CafePostClient";
->>>>>>> docs/readme-update
 
 const CafePost: React.FC = () => {
   return (
