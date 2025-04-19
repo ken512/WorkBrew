@@ -7,8 +7,12 @@ import { ButtonFields } from "../_data/buttonFields";
 import { PostClearButton } from "./PostClearButton";
 import { TextArea } from "@/app/_components/TextArea";
 import { FormErrorsType } from "@/app/_types/FormErrorsType";
+<<<<<<< HEAD
 import { CafeFormStateReturn } from "../_types/cafeFormStateReturn";
 >>>>>>> docs/readme-update
+=======
+import { CafeFormStateReturn } from "../_types/CafeFormStateReturn";
+>>>>>>> 2750038 (commit)
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import useSWR, { mutate } from "swr";
 import api from "@/_utils/api";
