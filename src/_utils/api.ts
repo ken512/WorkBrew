@@ -1,6 +1,7 @@
 "use client";
 //Supabase対応で、非同期tokenも取得できる共通リクエスト関数
-import { supabase } from "@/_utils/supabase";
+import { createSupabaseClient } from "@/_utils/supabase";
+const supabase = createSupabaseClient();
 //HeadersInit（標準のヘッダー型）と Authorization?: string（追加の認証token用）
 type HeadersWithAuth = HeadersInit & { Authorization?: string };
 
