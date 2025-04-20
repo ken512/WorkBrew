@@ -4,12 +4,13 @@ import { getCurrentUser } from "@/_utils/supabase";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(request);
-  if (error || !currentUser) {
-    return NextResponse.json({ status: 401 });
-  }
 
   try {
+    const { currentUser, error } = await getCurrentUser(request);
+    if (error || !currentUser) {
+      return NextResponse.json({ status: 401 });
+    }
+  
     // SupabaseのユーザーIDから、アプリ内のuserId（int）を取得
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id },

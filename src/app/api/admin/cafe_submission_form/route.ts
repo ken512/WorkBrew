@@ -6,13 +6,14 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(request);
-
-  if (error || !currentUser || !currentUser.user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
-  }
 
   try {
+    const { currentUser, error } = await getCurrentUser(request);
+
+    if (error || !currentUser || !currentUser.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
+    }
+
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id }, 
       include: {

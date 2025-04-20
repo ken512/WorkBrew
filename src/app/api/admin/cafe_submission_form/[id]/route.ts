@@ -6,13 +6,15 @@ import { Cafe } from "@/app/_types/Cafe";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(request);
+  
+
+  try {
+    const { currentUser, error } = await getCurrentUser(request);
 
   if (error || !currentUser) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
-
-  try {
+  
     const cafes = await prisma.cafe.findMany({
       where: {
         users: {
