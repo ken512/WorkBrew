@@ -5,12 +5,13 @@ import { getCurrentUser } from "@/_utils/supabase";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(request);
-  if (error || !currentUser) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
-  }
 
   try {
+    const { currentUser, error } = await getCurrentUser(request);
+    if (error || !currentUser) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
+    }  
+
     // 最新カフェ情報を取得(ユーザーIDに関係なくカフェ情報を取得する)
     const cafesRaw = await prisma.cafe.findMany({
       orderBy: [
