@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useSupabaseSession } from "../../_hooks/useSupabaseSession";
-import { supabase } from "@/_utils/supabase";
+import { createSupabaseClient } from "@/_utils/supabase";
 import { MenuBarAdmin } from "./MenuBarAdmin";
 import { HeaderProps } from "../_types/HeaderProps";
 import "../../globals.css";
@@ -12,7 +12,7 @@ import Link from "next/link";
 export const HeaderAdminBase = ({ href }: HeaderProps) => {
   const { session, isLoading } = useSupabaseSession();
   const router = useRouter();
-
+  const supabase = createSupabaseClient();
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.replace("/");

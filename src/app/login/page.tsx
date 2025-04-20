@@ -1,5 +1,5 @@
 "use client";
-import { supabase } from "@/_utils/supabase";
+import { createSupabaseClient } from "@/_utils/supabase";
 import React,{ useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
@@ -13,7 +13,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-
+  const supabase = createSupabaseClient();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

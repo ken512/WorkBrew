@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/_utils/supabase";
+import { createSupabaseClient } from "@/_utils/supabase";
 import { Button } from "../admin/_components/Button";
 import "../globals.css";
 
 export const GuestLoginButton: React.FC = () => {
   const router = useRouter();
+  const supabase = createSupabaseClient();
   const handleGuestLogin = async () => {
     //ゲスト用アカウントでログイン
     const {error} = await supabase.auth.signInWithPassword({
