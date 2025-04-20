@@ -1,5 +1,5 @@
 "use client";
-import { supabase } from "@/_utils/supabase";
+import { createSupabaseClient } from "@/_utils/supabase";
 import React,{ useState } from "react";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
@@ -9,7 +9,7 @@ import { FooterDefault } from "../_components/Footer/FooterDefault";
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const supabase = createSupabaseClient();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

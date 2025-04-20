@@ -1,6 +1,7 @@
 "use client";
 //Supabase対応で、非同期tokenも取得できる共通リクエスト関数
-import { supabase } from "@/_utils/supabase";
+import { createSupabaseClient } from "@/_utils/supabase";
+
 //HeadersInit（標準のヘッダー型）と Authorization?: string（追加の認証token用）
 type HeadersWithAuth = HeadersInit & { Authorization?: string };
 
@@ -8,7 +9,7 @@ const api = {
   //requestにまとめてメソッドを共通にする
   request: async <T>(method: string, endpoint: string, body?: T) => {
     const baseUrl = 'http://localhost:3000';
-
+    const supabase = createSupabaseClient();
     const headers: HeadersWithAuth = {
       'Content-Type': 'application/json',
     };

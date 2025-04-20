@@ -1,4 +1,4 @@
-import { supabase } from '@/_utils/supabase'
+import { createSupabaseClient } from "@/_utils/supabase";
 import { Session } from '@supabase/supabase-js' 
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from 'react'
@@ -8,7 +8,7 @@ export const useSupabaseSession = () => {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoding] = useState(true);
-
+  const supabase = createSupabaseClient();
   useEffect(() => {
     const fetcher = async() => {
       const {

@@ -66,14 +66,16 @@ export const GET = async (request: NextRequest) => {
 };
 
 export const POST = async (request: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(request);
-  if (error || !currentUser) {
-    return NextResponse.json({ status: 401 });
-  }
-
-  const body = await request.json();
-  const cafeId = body.cafeId;
+ 
   try {
+    const { currentUser, error } = await getCurrentUser(request);
+    if (error || !currentUser) {
+      return NextResponse.json({ status: 401 });
+    }
+  
+    const body = await request.json();
+    const cafeId = body.cafeId;
+
     // supabaseのuser.id（文字列）から、UsersテーブルのuserId（Int）を取得
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id },
@@ -112,15 +114,16 @@ export const POST = async (request: NextRequest) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-  const { currentUser, error } = await getCurrentUser(req);
-  if (!currentUser || error) {
-    return NextResponse.json({ status: 401 });
-  }
-
-  const body = await req.json();
-  const cafeId = body.cafeId;
 
   try {
+    const { currentUser, error } = await getCurrentUser(req);
+    if (!currentUser || error) {
+      return NextResponse.json({ status: 401 });
+    }
+  
+    const body = await req.json();
+    const cafeId = body.cafeId;
+
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id },
     });
