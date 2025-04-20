@@ -6,6 +6,9 @@ export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 )
 
+console.log("Vercel環境 SUPABASE_URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("Vercel環境 SUPABASE_KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
 /** APIリクエストのtokenの検証。検証できればログインユーザー（Supabase）情報を返す */
 export const getCurrentUser = async(request: NextRequest) => {
   const authHeader = request.headers.get("Authorization");
