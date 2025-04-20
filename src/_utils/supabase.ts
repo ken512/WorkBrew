@@ -6,6 +6,7 @@ export const createSupabaseClient = () => {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !anonKey) {
+    console.error("環境変数の読み込み失敗:", { url, anonKey }); 
     throw new Error("Supabase URL または Anon Key が未定義です。Vercelの環境変数を確認してください。");
   }
 
