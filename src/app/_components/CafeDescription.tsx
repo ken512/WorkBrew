@@ -6,11 +6,11 @@ import Image from "next/image";
 import { RenderStars } from "../admin/_utils/renderStars";
 import { isValidUrl } from "../admin/_utils/urlGeneration";
 import {
-convertWifiAvailable,
-convertWifiSpeed,
-convertWifiStability,
-convertSeatAvailability,
-convertPowerOutlets,
+  convertWifiAvailable,
+  convertWifiSpeed,
+  convertWifiStability,
+  convertSeatAvailability,
+  convertPowerOutlets,
 } from "../admin/_utils/convertLabels";
 import { initMap } from "../admin/_utils/initMap";
 import Script from "next/script";
@@ -24,10 +24,9 @@ import { PieChartData } from "../_types/PieChartProps";
 import { CafeStatusPieChart } from "./CafeStatusPieChart";
 import "../globals.css";
 import { Cafe } from "../_types/Cafe";
-import { createSupabaseClient } from "@/_utils/supabase";
+import { supabase } from "@/_utils/supabase";
 import api from "@/_utils/api";
 
-const supabase = createSupabaseClient();
 //共通リクエストを使用する
 const fetcher = (url: string) => api.get(url);
 
