@@ -15,7 +15,10 @@ const CafeFavoriteList: React.FC = () => {
     data,
     error,
     isLoading,
-  } = useSWR("/api/admin/cafe_favorites", fetcher);
+  } = useSWR("/api/admin/cafe_favorites", fetcher, {
+    suspense: false,
+    fallbackData: null,
+  });
   const cafes = data?.data?.favoriteCafes ?? [];
   console.log("取得データ:", cafes);
 
