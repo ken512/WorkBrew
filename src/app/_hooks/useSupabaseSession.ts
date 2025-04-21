@@ -8,8 +8,9 @@ export const useSupabaseSession = () => {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoding] = useState(true);
-  const supabase = createSupabaseClient();
+  
   useEffect(() => {
+    const supabase = createSupabaseClient();
     const fetcher = async() => {
       const {
         data: {session},

@@ -10,7 +10,7 @@ export const GET = async (request: NextRequest) => {
     if (error || !currentUser) {
       return NextResponse.json({ status: 401 });
     }
-  
+    console.log("ここ通った")
     // SupabaseのユーザーIDから、アプリ内のuserId（int）を取得
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id },
@@ -72,7 +72,7 @@ export const POST = async (request: NextRequest) => {
     if (error || !currentUser) {
       return NextResponse.json({ status: 401 });
     }
-  
+    console.log("ここ通った")
     const body = await request.json();
     const cafeId = body.cafeId;
 
@@ -120,7 +120,7 @@ export const DELETE = async (req: NextRequest) => {
     if (!currentUser || error) {
       return NextResponse.json({ status: 401 });
     }
-  
+    console.log("ここ通った")
     const body = await req.json();
     const cafeId = body.cafeId;
 
