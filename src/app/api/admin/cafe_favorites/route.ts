@@ -8,6 +8,7 @@ export const GET = async (request: NextRequest) => {
   try {
     const { currentUser, error } = await getCurrentUser(request);
     if (error || !currentUser) {
+      console.error("API AUTH ERROR", error);
       return NextResponse.json({ status: 401 });
     }
     console.log("ここ通った")
