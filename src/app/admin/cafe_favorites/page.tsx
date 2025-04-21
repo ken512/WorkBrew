@@ -10,12 +10,13 @@ import "../../globals.css";
 //共通リクエストを使用する
 const fetcher = (url: string) => api.get(url);
 const CafeFavoriteList: React.FC = () => {
+  const isClient = typeof window !== "undefined";
   // SWR で API からデータを取得
   const {
     data,
     error,
     isLoading,
-  } = useSWR("/api/admin/cafe_favorites", fetcher);
+  } = useSWR(isClient ? "/api/admin/cafe_favorites" : null, fetcher);
   const cafes = data?.data?.favoriteCafes ?? [];
   console.log("取得データ:", cafes);
 
