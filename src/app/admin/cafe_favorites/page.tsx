@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { HeaderAdminBase } from "../_components/HeaderAdminBase";
 import { FavoriteList } from "../_components/FavoriteList";
 import useSWR from "swr";
@@ -7,16 +7,18 @@ import api from "@/_utils/api";
 import { FooterDefault } from "@/app/_components/Footer/FooterDefault";
 import "../../globals.css";
 
-//共通リクエストを使用する
-const fetcher = (url: string) => api.get(url);
 const CafeFavoriteList: React.FC = () => {
-  const isClient = typeof window !== "undefined";
-  // SWR で API からデータを取得
-  const {
-    data,
-    error,
-    isLoading,
-  } = useSWR(isClient ? "/api/admin/cafe_favorites" : null, fetcher);
+  const [shouldFetch, setShouldFetch] = useState(false);
+
+  useEffect(() => {
+    setShouldFetch(true); // クライアント限定で fetch を許可
+  }, []);
+
+  const { data, error, isLoading } = useSWR(
+    shouldFetch ? "/api/admin/cafe_favorites" : null,
+    (url) => api.get(url)
+  );
+
   const cafes = data?.data?.favoriteCafes ?? [];
   console.log("取得データ:", cafes);
 
