@@ -35,7 +35,7 @@
     "recharts": "^2.15.1",
     "styled-jsx": "^5.1.6",
     "swiper": "^11.2.4",
-    "swr": "^2.3.2",
+    "swr": "^2.3.3",
     "ts-interface-checker": "^1.0.2",
     "uuid": "^11.0.4"
   },
