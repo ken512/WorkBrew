@@ -64,10 +64,15 @@ export const PUT = async (
   }
 
   const { id } = params;
-
   try {
+
     const { seatAvailability, wifiSpeed }: UpdateStatus = await request.json();
 
+    //選択した場合のみ、更新する。
+    const updateData: UpdateStatus = {};
+    if(seatAvailability !== null) updateData.seatAvailability = seatAvailability;
+    if(wifiSpeed !== null) updateData.wifiSpeed = wifiSpeed;
+    
     const updateWiFiAndSeatStatus = await prisma.cafe.update({
       where: {
         id: parseInt(id),
@@ -75,10 +80,7 @@ export const PUT = async (
           supabaseUserId: currentUser.user.id,
         },
       },
-      data: {
-        seatAvailability: seatAvailability || null,
-        wifiSpeed: wifiSpeed || null,
-      },
+      data: updateData,
     });
 
     return NextResponse.json(

@@ -4,10 +4,15 @@ import { supabase } from "@/_utils/supabase";
 //HeadersInit（標準のヘッダー型）と Authorization?: string（追加の認証token用）
 type HeadersWithAuth = HeadersInit & { Authorization?: string };
 
+const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
+
 const api = {
   //requestにまとめてメソッドを共通にする
   request: async <T>(method: string, endpoint: string, body?: T) => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+
+    const baseUrl = isLocalhost
+  ? "http://localhost:3000" // ローカル用APIエンドポイント
+  : process.env.NEXT_PUBLIC_API_BASE_URL || "https://work-brew.vercel.app";//本番環境;
     const headers: HeadersWithAuth = {
       'Content-Type': 'application/json',
     };
