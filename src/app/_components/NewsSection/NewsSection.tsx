@@ -11,8 +11,8 @@ interface NewsItem {
 
 const newsItems: NewsItem[] = [
   {
-    publishDate: '2025/04/16',
-    updateDate: '2025/04/16',
+    publishDate: '2025/04/22',
+    updateDate: '2025/04/22',
     title: 'WorkBrewをリリースしました!!',
     tags: ['Webアプリ関連']
   },
