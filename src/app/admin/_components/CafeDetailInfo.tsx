@@ -116,7 +116,7 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
         className="fixed inset-0 flex items-center justify-center"
         overlayClassName="fixed inset-0 bg-black bg-opacity-70 z-[60]"
       >
-        <div className="bg-beige-200 rounded-lg w-full max-w-sm sm:max-w-md max-h-screen overflow-auto sm:mx-3">
+        <div className="bg-beige-200 rounded-lg shadow-md sm:w-[390px] md:w-[500px] mx-auto">
           {/* 画像 */}
           <div className="relative w-[500px] h-[250px] sm:max-w-[390px] ">
             <Image
@@ -128,19 +128,20 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
           </div>
 
           {/* 店舗情報 */}
-          <div className="font-bold p-5 flex flex-col justify-between h-full">
-            <h3 className="py-5 overflow-auto whitespace-pre-wrap break-words">
-              {cafe.cafeName}
-            </h3>
-            <p className="py-2">星評価 {RenderStars(cafe.starRating)}</p>
-            <p className="py-2">エリア {cafe.area}</p>
-            <p className="font-bold mt-4 mb-5">おすすめ理由</p>
-            <div className="w-full max-w-full max-h-[300px] overflow-auto whitespace-pre-wrap break-words">
+          <div className="font-bold flex flex-col max-h-[80vh] overflow-auto px-4 py-4">
+            <h3 className="mb-3 text-lg">{cafe.cafeName}</h3>
+
+            <p className="mb-2">星評価 {RenderStars(cafe.starRating)}</p>
+            <p className="mb-2">エリア {cafe.area}</p>
+
+            <p className="mt-4 mb-2">おすすめ理由</p>
+            <div className=" p-2 rounded max-h-[100px] overflow-auto whitespace-pre-wrap break-words">
               {cafe.comment}
             </div>
-            <div className="text-center mb-5">
+
+            <div className="text-center mt-6">
               <button
-                className="mt-4 p-2 bg-red-500 text-white rounded"
+                className="mt-4 p-2 bg-red-500  rounded"
                 onClick={(e) => {
                   e.stopPropagation();
                   onClose();

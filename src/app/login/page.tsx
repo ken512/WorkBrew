@@ -1,5 +1,5 @@
 "use client";
-import { createSupabaseClient } from "@/_utils/supabase";
+import { supabase } from "@/_utils/supabase";
 import React,{ useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../_components/Input";
@@ -7,13 +7,12 @@ import { Label } from "../_components/Label";
 import { HeaderPublic } from "../_components/HeaderPublic";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
 import { Button } from "../admin/_components/Button";
-import "../globals.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const supabase = createSupabaseClient();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

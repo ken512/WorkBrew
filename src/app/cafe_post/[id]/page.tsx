@@ -4,7 +4,7 @@ import { CafeDescription } from "@/app/_components/CafeDescription";
 import { useParams } from "next/navigation";
 import { UpdateStatus } from "@/app/_types/UpdateStatus";
 import api from "@/_utils/api";
-import { createSupabaseClient } from "@/_utils/supabase";
+import { supabase } from "@/_utils/supabase";
 import "../../globals.css";
 
 const CafePostDetail: React.FC = () => {
@@ -13,7 +13,7 @@ const CafePostDetail: React.FC = () => {
     wifiSpeed: null,
   });//seatAvailabilityとwifiSpeedの状態管理
   const {id} = useParams();
-  const supabase = createSupabaseClient();
+  
   const handleUpdate = async(e: React.FormEvent) => {
     e.preventDefault();
     console.log("変換後に送信する値", updateWiFiAndSeatStatus);

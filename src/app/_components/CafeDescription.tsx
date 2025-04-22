@@ -24,12 +24,12 @@ import { PieChartData } from "../_types/PieChartProps";
 import { CafeStatusPieChart } from "./CafeStatusPieChart";
 import "../globals.css";
 import { Cafe } from "../_types/Cafe";
-import { createSupabaseClient } from "@/_utils/supabase";
+import { supabase } from "@/_utils/supabase";
 import api from "@/_utils/api";
 
 //共通リクエストを使用する
 const fetcher = (url: string) => api.get(url);
-const supabase = createSupabaseClient();
+
 type UpdateHandlers = {
   updateWiFiAndSeatStatus: UpdateStatus;
   setUpdateWiFiAndSeatStatus: React.Dispatch<
