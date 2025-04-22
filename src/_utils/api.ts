@@ -7,7 +7,7 @@ type HeadersWithAuth = HeadersInit & { Authorization?: string };
 const api = {
   //requestにまとめてメソッドを共通にする
   request: async <T>(method: string, endpoint: string, body?: T) => {
-    const baseUrl = 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
     const headers: HeadersWithAuth = {
       'Content-Type': 'application/json',
