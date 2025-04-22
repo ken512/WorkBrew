@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { createSupabaseClient } from "@/_utils/supabase";
+import { supabase } from "@/_utils/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 // heic2any と browser-image-compression を動的にインポート
 const importHeic2any = () => import("heic2any");
 const importImageCompression = () => import("browser-image-compression");
-const supabase = createSupabaseClient();
+
 type UseImageHandlerReturn = {
   thumbnailImage: string | null;
   isSubmitting: boolean;

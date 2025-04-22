@@ -21,7 +21,7 @@ export const MenuBarAdmin = () => {
             <NavLink href="/admin/home">ホーム</NavLink>
             <NavLink href="/admin/cafe_submission_form">投稿</NavLink>
             <NavLink href="/cafe_post">投稿一覧</NavLink>
-            <NavLink href="/admin/favorites">お気に入り一覧</NavLink>
+            <NavLink href="/admin/cafe_favorites">お気に入り一覧</NavLink>
             <NavLink href="/admin/user_account">ユーザーアカウント</NavLink>
             <NavLink href="/faq">FAQ</NavLink>
             <NavLink href="/">トップ</NavLink>

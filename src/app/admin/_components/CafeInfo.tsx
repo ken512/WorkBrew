@@ -28,7 +28,7 @@ export const LatestCafeList: React.FC<Props> = ({ cafes, onClick }) => {
       <h1 className="font-bold text-[min(13vw,30px)] sm:text-lg text-center">最新情報</h1>
         <Swiper
         className={`mx-auto py-10 mt-[100px]  rounded-lg shadow-md overflow-hidden ${
-          cafes.length === 1 ? "max-w-[400px] h-[400px]" : "max-w-[800px] h-[400px] sm:max-w-[300px] sm:h-[400px] md:max-w-[600px] md:max-h-[500px]"
+          cafes.length === 1 ? "max-w-[300px] h-[400px]" : "max-w-[800px] h-[400px] sm:max-w-[300px] sm:h-[400px] md:max-w-[600px] md:max-h-[500px]"
         }`}
         modules={[Autoplay, Navigation, Pagination]}
         spaceBetween={10}
@@ -96,7 +96,9 @@ export const RecommendationCafeList: React.FC<Props> = ({ cafes, onClick }) => {
       </h1>
         <Swiper
             className={`mx-auto py-10 mt-[100px] rounded-lg shadow-md overflow-hidden ${
-              cafes.length === 1 ? "max-w-[400px] h-[400px]" : "max-w-[800px] h-[400px] sm:max-w-[300px] sm:h-[400px] md:max-w-[600px] md:max-h-[500px]"
+              cafes.length === 1
+                ? "max-w-[300px] h-auto" // ← 修正点
+                : "max-w-[800px] h-[400px] sm:max-w-[300px] sm:h-[400px] md:max-w-[600px] md:max-h-[500px]"
             }`}
           modules={[Autoplay, Navigation, Pagination]}
           spaceBetween={10}
