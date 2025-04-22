@@ -103,7 +103,6 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
     const tempErrors: FormErrorsType = {};
 
     if (!formState.cafeName) tempErrors.cafeName = "※必須";
-    if (!formState.storeAddress) tempErrors.storeAddress = "※必須";
 
     // Wi‑Fi有無の必須チェック（null のみ）
     if (formState.wifiAvailable === null) {
