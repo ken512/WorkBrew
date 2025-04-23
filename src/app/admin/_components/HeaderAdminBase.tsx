@@ -31,7 +31,7 @@ export const HeaderAdminBase = ({ href }: HeaderProps) => {
 
   return (
     <header className="min-h-36 sm:min-h-20 flex justify-between items-center px-[100px] sm:px-[10px] md:px-[20px] font-bold bg-beige-200">
-  <Link href={href} className="font-pacifico text-4xl sm:text-lg hover:text-customOrange transition-colors duration-300">
+  <Link href={href} className="text-2xl sm:text-lg hover:text-customOrange transition-colors duration-300">
     WorkBrew
   </Link>
   <div className="flex items-center space-x-40 sm:space-x-10 md:space-x-10">
