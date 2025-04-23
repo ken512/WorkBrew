@@ -17,7 +17,7 @@ const SignUp: React.FC = () => {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
       },
     });
 
