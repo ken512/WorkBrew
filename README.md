@@ -11,6 +11,15 @@
 ```bash
 npm run dev
 ```
+<br />
+
+## 依存パッケージのインストール
+
+```bash
+npm install
+```
+
+<br />
 
 サーバー起動後、http://localhost:3000 でアプリにアクセスできます。
 
