@@ -128,7 +128,7 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
           </div>
 
           {/* 店舗情報 */}
-          <div className="font-bold flex flex-col max-h-[80vh] overflow-auto px-4 py-4">
+          <div className="font-bold flex flex-col max-h-[80vh] max-w-[500px] overflow-auto  px-4 py-4">
             <h3 className="mb-3 text-lg">{cafe.cafeName}</h3>
 
             <p className="mb-2">星評価 {RenderStars(cafe.starRating)}</p>
