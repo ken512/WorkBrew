@@ -56,7 +56,7 @@ export const FooterLanding: React.FC = () => {
         {/* Copyright section */}
         <div className="mt-12 pt-8 border-t border-white/20">
           <div className="text-center text-white/90">
-            <p>© 2024 WorkBrew. All rights reserved.</p>
+            <p>© 2025 WorkBrew. All rights reserved.</p>
           </div>
         </div>
       </div>
