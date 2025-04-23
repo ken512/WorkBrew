@@ -63,7 +63,7 @@ const SignUp: React.FC = () => {
               placeholder="6文字以上10文字以内"
               required
               minLength={6}         // 最小6文字
-              maxLength={10}        // 最大10文字
+              maxLength={20}        //20文字以内
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />

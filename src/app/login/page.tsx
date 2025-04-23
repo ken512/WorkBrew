@@ -71,8 +71,8 @@ const Login: React.FC = () => {
               id="password"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
               placeholder="6文字以上10文字以内"
-              minLength={6}         // 🔽 最小6文字
-              maxLength={10}        // 🔽 最大10文字
+              minLength={6}         //最小6文字
+              maxLength={20}        //20文字以内
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
