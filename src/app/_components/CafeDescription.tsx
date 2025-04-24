@@ -181,7 +181,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   //戻るボタン処理で from を使い分ける関数
   const handleBack = () => {
     if (from === "favorites") {
-      router.push("/admin/cafe_favorite"); // お気に入り一覧へ
+      router.push("/admin/cafe_favorites"); // お気に入り一覧へ
     } else {
       router.push("/cafe_post"); // 通常の投稿一覧へ
     }
