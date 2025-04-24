@@ -98,7 +98,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   }, [cafe.locationCoordinates, cafe]);
   console.log("地図", cafe.locationCoordinates);
 
-
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -122,10 +121,15 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         router.push("/cafe_post");
       } catch (error: any) {
         const message = error?.message;
-      
-        if (message === "お気に入りに登録しているカフェは削除できません。まずお気に入りから解除してください。") {
+
+        if (
+          message ===
+          "お気に入りに登録しているカフェは削除できません。まずお気に入りから解除してください。"
+        ) {
           alert(message);
-        } else if (message === "他のユーザーの投稿を削除する権限はありません!!") {
+        } else if (
+          message === "他のユーザーの投稿を削除する権限はありません!!"
+        ) {
           alert(message);
         } else {
           alert("予期せぬエラーが発生しました");
@@ -210,14 +214,14 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   };
 
   return (
-    <div className="font-bold max-w-[600px] w-full mx-auto sm:text-sm md:text-xl px-4">
+    <div className="font-bold max-w-[600px] w-full mx-auto sm:text-sm md:text-xl">
       <div className="relative py-6">
         <h1 className="text-[min(13vw,30px)] mb-[100px] pt-[100px] text-center sm:text-sm md:text-xl">
           カフェ詳細
         </h1>
         <button>
           <a
-            className="absolute right-4  px-5 py-2 sm:mt-[70px] rounded-full text-black bg-custom-red hover:bg-custom-green "
+            className="absolute right-4  px-5 py-2 mt-[70px] rounded-full text-black bg-custom-red hover:bg-custom-green "
             onClick={handleBack}
           >
             戻る
@@ -225,179 +229,184 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         </button>
       </div>
       <div className="max-w-[600px] mt-10">
-        {/* ユーザー情報 */}
-        <div className="flex items-star justify-between gap-12 sm:flex-col sm:items-start">
-          <div className="flex items-center gap-2">
-            <Image
-              src={cafe.users.profileIcon}
-              alt="Profile Image"
-              className="rounded-full aspect-square"
-              width={50}
-              height={50}
-            />
-            <p className="text-sm font-bold">{cafe.users.userName}</p>
-          </div>
-
-          {/* カフェ名 */}
-          <p className="text-sm font-semibold break-words sm:text-base mt-4">
-            {cafe.cafeName}
-          </p>
-        </div>
-        {/*  サムネイル画像 */}
-        <div className="relative w-full max-w-[600px] h-[400px] sm:h-[300px] mt-2">
-          <Image
-            src={cafe.thumbnailImage}
-            alt="Cafe Thumbnail"
-            className="rounded-lg object-cover"
-            layout="fill"
-          />
-        </div>
-        {/* カフェ情報詳細 */}
-        <div className="font-bold flex flex-col gap-12 text-lg sm:text-sm">
-          <p className=" mt-[100px]">星評価: {RenderStars(cafe.starRating)}</p>
-          <p>エリア: {cafe.area}</p>
-          <p>
-            営業時間:{" "}
-            {cafe.openingTime && cafe.closingHours
-              ? `${cafe.openingTime} - ${cafe.closingHours}`
-              : "情報なし"}
-          </p>
-          {isValidUrl(cafe.cafeUrl) && (
-            <div className="flex flex-col sm:flex-row">
-              お店のURL:
-              <a
-                href={cafe.cafeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700 underline flex items-center px-2 break-normal sm:break-all"
-              >
-                {cafe.cafeUrl}
-              </a>
-            </div>
-          )}
-          <p>定休日: {cafe.closingDays}</p>
-          <div className="flex">
-            <p>Wi-Fiの有無:</p>
-            <span
-              className={`px-3 py-1 rounded-lg text-black ml-2 ${
-                String(cafe.wifiAvailable).toUpperCase() === "TRUE"
-                  ? "bg-custom-red"
-                  : "bg-custom-blue"
-              }`}
-            >
-              {convertWifiAvailable(cafe.wifiAvailable)}
-            </span>
-          </div>
-          <div className="flex">
-            <p>Wi-Fi速度: </p>
-            <span
-              className={`px-3 py-1 rounded-lg text-black ml-2 ${
-                (updateWiFiAndSeatStatus.wifiSpeed ??
-                  (cafe.wifiSpeed as string)) === "HIGH"
-                  ? "bg-custom-green"
-                  : (updateWiFiAndSeatStatus.wifiSpeed ??
-                      (cafe.wifiSpeed as string)) === "MEDIUM"
-                  ? "bg-custom-orange"
-                  : "bg-custom-red"
-              }`}
-            >
-              {convertWifiSpeed(
-                updateWiFiAndSeatStatus.wifiSpeed ?? (cafe.wifiSpeed as string)
-              )}
-            </span>
-          </div>
-          <div className="flex">
-            <p>Wi-Fi安定: </p>
-            <span
-              className={`px-3 py-1 rounded-lg text-black ml-2 ${
-                cafe.wifiStability === "VERY_STABLE"
-                  ? "bg-custom-green"
-                  : cafe.wifiStability === "STABLE"
-                  ? "bg-custom-orange"
-                  : "bg-custom-red"
-              }`}
-            >
-              {convertWifiStability(cafe.wifiStability)}
-            </span>
-          </div>
-          <div className="flex">
-            <p>電源の有無:</p>
-            <span
-              className={`px-3 py-1 rounded-lg text-black ml-2 ${
-                String(cafe.powerOutlets).toUpperCase() === "TRUE"
-                  ? "bg-custom-red"
-                  : "bg-custom-blue"
-              }`}
-            >
-              {convertPowerOutlets(cafe.powerOutlets)}
-            </span>
-          </div>
-          <div className="flex">
-            <p>空席状況: </p>
-            <span
-              className={`px-3 py-1 rounded-lg text-black ml-2 ${
-                (updateWiFiAndSeatStatus.seatAvailability ??
-                  (cafe.seatAvailability as string)) === "AVAILABLE"
-                  ? "bg-custom-green"
-                  : (updateWiFiAndSeatStatus.seatAvailability ??
-                      (cafe.seatAvailability as string)) === "CROWDED"
-                  ? "bg-custom-orange"
-                  : "bg-custom-red"
-              }`}
-            >
-              {convertSeatAvailability(
-                updateWiFiAndSeatStatus.seatAvailability ??
-                  (cafe.seatAvailability as string)
-              )}
-            </span>
-          </div>
-        </div>
-
-        {/* Googleマップ表示*/}
-        <div
-          id="map"
-          className="my-10 rounded-lg shadow-md h-[400px] w-full border border-blue-500"
-        />
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`}
-          onLoad={() => {
-            if (cafe.locationCoordinates) {
-              initMap(setMap, [cafe]); // 配列にする
-            }
-          }} //Google Maps API のスクリプトが完全に読み込まれた後に実行(undefinedにならないために)
-          strategy="afterInteractive"
-        />
-        {/*空席状況・Wi-Fi速度報告*/}
-        <div className="pt-10">
-          {fieldsToShow.map(({ label, options, key }) => {
-            //Availableがfalseの場合のみ、Wi-Fi速度の選択肢ボタンを非表示
-            if (key === "wifiSpeed" && wifiAvailable === false) {
-              return null; // Wi-Fi速度が表示されないようにする
-            }
-            return (
-              <CafePostButtons
-                key={label}
-                label={label}
-                options={options}
-                onSelect={(selected) => {
-                  updateState(key, selected);
-                }}
+        <div className="mx-4">
+          {/* ユーザー情報 */}
+          <div className="flex items-star justify-between gap-12 flex-col items-start">
+            <div className="flex items-center gap-2">
+              <Image
+                src={cafe.users.profileIcon}
+                alt="Profile Image"
+                className="rounded-full aspect-square"
+                width={50}
+                height={50}
               />
-            );
-          })}
-        </div>
-        <div className="p-4 rounded-lg">
-          <button
-            onClick={measureDownloadSpeed}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            ダウンロード速度を測定
-          </button>
-          {downloadJudgment !== null && (
-            <p className="mt-2 text-lg font-bold text-custom-red">
-              ダウンロード速度: {downloadJudgment.toFixed(2)} Mbps
+              <p className="text-sm font-bold">{cafe.users.userName}</p>
+            </div>
+
+            {/* カフェ名 */}
+            <p className="text-sm font-semibold break-words sm:text-base mt-4">
+              {cafe.cafeName}
             </p>
-          )}
+          </div>
+          {/*  サムネイル画像 */}
+          <div className="relative w-full max-w-[600px] h-[400px] sm:h-[300px] mt-2">
+            <Image
+              src={cafe.thumbnailImage}
+              alt="Cafe Thumbnail"
+              className="rounded-lg object-cover"
+              layout="fill"
+            />
+          </div>
+          {/* カフェ情報詳細 */}
+          <div className="font-bold flex flex-col gap-12 text-lg sm:text-sm">
+            <p className=" mt-[100px]">
+              星評価: {RenderStars(cafe.starRating)}
+            </p>
+            <p>エリア: {cafe.area}</p>
+            <p>
+              営業時間:{" "}
+              {cafe.openingTime && cafe.closingHours
+                ? `${cafe.openingTime} - ${cafe.closingHours}`
+                : "情報なし"}
+            </p>
+            {isValidUrl(cafe.cafeUrl) && (
+              <div className="flex flex-col sm:flex-row">
+                お店のURL:
+                <a
+                  href={cafe.cafeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:text-blue-700 underline flex items-center px-2 break-normal sm:break-all"
+                >
+                  {cafe.cafeUrl}
+                </a>
+              </div>
+            )}
+            <p>定休日: {cafe.closingDays}</p>
+            <div className="flex">
+              <p>Wi-Fiの有無:</p>
+              <span
+                className={`px-3 py-1 rounded-lg text-black ml-2 ${
+                  String(cafe.wifiAvailable).toUpperCase() === "TRUE"
+                    ? "bg-custom-red"
+                    : "bg-custom-blue"
+                }`}
+              >
+                {convertWifiAvailable(cafe.wifiAvailable)}
+              </span>
+            </div>
+            <div className="flex">
+              <p>Wi-Fi速度: </p>
+              <span
+                className={`px-3 py-1 rounded-lg text-black ml-2 ${
+                  (updateWiFiAndSeatStatus.wifiSpeed ??
+                    (cafe.wifiSpeed as string)) === "HIGH"
+                    ? "bg-custom-green"
+                    : (updateWiFiAndSeatStatus.wifiSpeed ??
+                        (cafe.wifiSpeed as string)) === "MEDIUM"
+                    ? "bg-custom-orange"
+                    : "bg-custom-red"
+                }`}
+              >
+                {convertWifiSpeed(
+                  updateWiFiAndSeatStatus.wifiSpeed ??
+                    (cafe.wifiSpeed as string)
+                )}
+              </span>
+            </div>
+            <div className="flex">
+              <p>Wi-Fi安定: </p>
+              <span
+                className={`px-3 py-1 rounded-lg text-black ml-2 ${
+                  cafe.wifiStability === "VERY_STABLE"
+                    ? "bg-custom-green"
+                    : cafe.wifiStability === "STABLE"
+                    ? "bg-custom-orange"
+                    : "bg-custom-red"
+                }`}
+              >
+                {convertWifiStability(cafe.wifiStability)}
+              </span>
+            </div>
+            <div className="flex">
+              <p>電源の有無:</p>
+              <span
+                className={`px-3 py-1 rounded-lg text-black ml-2 ${
+                  String(cafe.powerOutlets).toUpperCase() === "TRUE"
+                    ? "bg-custom-red"
+                    : "bg-custom-blue"
+                }`}
+              >
+                {convertPowerOutlets(cafe.powerOutlets)}
+              </span>
+            </div>
+            <div className="flex">
+              <p>空席状況: </p>
+              <span
+                className={`px-3 py-1 rounded-lg text-black ml-2 ${
+                  (updateWiFiAndSeatStatus.seatAvailability ??
+                    (cafe.seatAvailability as string)) === "AVAILABLE"
+                    ? "bg-custom-green"
+                    : (updateWiFiAndSeatStatus.seatAvailability ??
+                        (cafe.seatAvailability as string)) === "CROWDED"
+                    ? "bg-custom-orange"
+                    : "bg-custom-red"
+                }`}
+              >
+                {convertSeatAvailability(
+                  updateWiFiAndSeatStatus.seatAvailability ??
+                    (cafe.seatAvailability as string)
+                )}
+              </span>
+            </div>
+          </div>
+
+          {/* Googleマップ表示*/}
+          <div
+            id="map"
+            className="my-10 rounded-lg shadow-md h-[400px] w-full border border-blue-500"
+          />
+          <Script
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`}
+            onLoad={() => {
+              if (cafe.locationCoordinates) {
+                initMap(setMap, [cafe]); // 配列にする
+              }
+            }} //Google Maps API のスクリプトが完全に読み込まれた後に実行(undefinedにならないために)
+            strategy="afterInteractive"
+          />
+          {/*空席状況・Wi-Fi速度報告*/}
+          <div className="pt-10">
+            {fieldsToShow.map(({ label, options, key }) => {
+              //Availableがfalseの場合のみ、Wi-Fi速度の選択肢ボタンを非表示
+              if (key === "wifiSpeed" && wifiAvailable === false) {
+                return null; // Wi-Fi速度が表示されないようにする
+              }
+              return (
+                <CafePostButtons
+                  key={label}
+                  label={label}
+                  options={options}
+                  onSelect={(selected) => {
+                    updateState(key, selected);
+                  }}
+                />
+              );
+            })}
+          </div>
+          <div className="p-4 rounded-lg">
+            <button
+              onClick={measureDownloadSpeed}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            >
+              ダウンロード速度を測定
+            </button>
+            {downloadJudgment !== null && (
+              <p className="mt-2 text-lg font-bold text-custom-red">
+                ダウンロード速度: {downloadJudgment.toFixed(2)} Mbps
+              </p>
+            )}
+          </div>
         </div>
         {/*Wi-Fi速度・空席状況 グラフ*/}
         <div className="mt-16">
