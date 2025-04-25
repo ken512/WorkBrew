@@ -17,33 +17,7 @@ model Users {
   profileIcon         String
   biography           String             @db.Text
   cafes               Cafe[]
-  contacts            Contact[]
-  information         Information[]
   favorites           Favorite[]             
-}
-
-model Contact {
-  id                   Int               @id @default(autoincrement())
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
-  userId               Int               @unique
-  contactContent       String            @db.Text
-  users                Users             @relation(fields: [userId], references: [id])           
-}
-
-model Information {
-  id                      Int              @id @default(autoincrement())
-  createdAt               DateTime         @default(now())
-  updatedAt               DateTime         @updatedAt
-  is_suggested            Boolean           
-  latestInfo              String 
-  timeElapsed             String           @db.VarChar(50)
-  recommended_cafe        String
-  recommendation_reason   String           @db.Text
-  userId                  Int
-  cafeId                  Int              
-  user                    Users            @relation(fields: [userId], references: [id])
-  cafe                    Cafe             @relation(fields: [cafeId], references: [id])
 }
 
 enum WifiSpeed {
@@ -86,7 +60,6 @@ model Cafe {
   comment                String
   locationCoordinates    String
   userId                 Int
-  information            Information[]
   favorites              Favorite[]
   users                  Users             @relation(fields: [userId], references: [id])
 }

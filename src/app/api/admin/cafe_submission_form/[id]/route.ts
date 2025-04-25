@@ -26,9 +26,6 @@ export const GET = async (request: NextRequest) => {
           select: { id: true, userName: true },
         },
         favorites: { select: { id: true } },
-        information: {
-          select: { id: true },
-        },
       },
       orderBy: {
         createdAt: "desc",
