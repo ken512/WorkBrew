@@ -41,13 +41,6 @@ export const GET = async (request: NextRequest) => {
             },
           },
         },
-        information: {
-          select: {
-            latestInfo: true,
-            recommended_cafe: true,
-            recommendation_reason: true,
-          },
-        },
       },
     });
 
