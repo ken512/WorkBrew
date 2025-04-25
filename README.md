@@ -49,6 +49,7 @@ npm install
 
 ## サービスのURL
 ゲストログインから登録無しで、全ての機能が試せます。お気軽にお試しください。(ユーザーアカウント登録必須)
+https://work-brew.vercel.app/
 
 <br />
 
