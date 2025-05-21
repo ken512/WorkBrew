@@ -35,7 +35,7 @@ export const LatestDetailDialog: React.FC<Props> = ({
     >
       <div className="bg-beige-200 rounded-lg shadow-lg">
         {/* 画像 */}
-        <div className="relative  sm:max-w-[390px]">
+        <div className="relative w-[500px] h-[300px]">
           <Image
             src={cafe.thumbnailImage}
             alt="thumbnailImage"
