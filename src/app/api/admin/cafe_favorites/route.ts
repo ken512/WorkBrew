@@ -11,8 +11,8 @@ export const GET = async (request: NextRequest) => {
       console.error("API AUTH ERROR", error);
       return NextResponse.json({ status: 401 });
     }
-    console.log("ここ通った")
-    // SupabaseのユーザーIDから、アプリ内のuserId（int）を取得
+    // SupabaseのユーザーIDから、アプリ内のuser
+    // Id（int）を取得
     const user = await prisma.users.findUnique({
       where: { supabaseUserId: currentUser.user.id },
     });
@@ -67,7 +67,7 @@ export const GET = async (request: NextRequest) => {
 };
 
 export const POST = async (request: NextRequest) => {
- 
+
   try {
     const { currentUser, error } = await getCurrentUser(request);
     if (error || !currentUser) {
