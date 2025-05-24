@@ -35,7 +35,7 @@ export const LatestDetailDialog: React.FC<Props> = ({
     >
       <div className="bg-beige-200 rounded-lg shadow-lg">
         {/* 画像 */}
-        <div className="relative w-[500px] h-[300px]">
+        <div className="relative w-[500px] h-[250px] sm:max-w-[390px]">
           <Image
             src={cafe.thumbnailImage}
             alt="thumbnailImage"
@@ -44,7 +44,7 @@ export const LatestDetailDialog: React.FC<Props> = ({
           />
         </div>
         {/* 店舗情報 */}
-        <div className="font-bold p-5 flex flex-col justify-between h-full">
+        <div className="font-bold p-6 sm:p-8 flex flex-col justify-between h-full">
           <h3 className="py-3 overflow-auto max-w-md whitespace-pre-wrap break-words">
             {cafe.cafeName}
           </h3>
@@ -128,7 +128,7 @@ export const RecommendationDetailDialog: React.FC<Props> = ({
           </div>
 
           {/* 店舗情報 */}
-          <div className="font-bold flex flex-col max-h-[80vh] max-w-[500px] overflow-auto  px-4 py-4">
+          <div className="font-bold flex flex-col max-h-[80vh] max-w-[500px] overflow-auto p-6 sm:p-8">
             <h3 className="mb-3 text-lg">{cafe.cafeName}</h3>
 
             <p className="mb-2">星評価 {RenderStars(cafe.starRating)}</p>
