@@ -11,6 +11,7 @@ import { CafeFormStateReturn } from "../_types/CafeFormStateReturn";
 import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import useSWR, { mutate } from "swr";
 import api from "@/_utils/api";
+import toast, { Toaster } from "react-hot-toast";
 import "../../globals.css";
 
 //共通リクエストを使用する
@@ -89,11 +90,11 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
         thumbnailImage: finalThumbnail,
       });
       console.log("API Response:", response);
-      alert("カフェ投稿しました！");
+      toast.success("カフェ投稿しました！");
       mutate(["/api/admin/cafe_submission_form"]); // mutate で最新データを取得
     } catch (error) {
       console.error("投稿に失敗しました:", error);
-      alert("投稿に失敗しました");
+      toast.error("投稿に失敗しました");
     } finally {
       setIsSubmitting(false);
     }
@@ -101,7 +102,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
 
   const validateForm = async () => {
     const tempErrors: FormErrorsType = {};
-
+    
     if (!formState.cafeName) tempErrors.cafeName = "※必須";
 
     // Wi‑Fi有無の必須チェック（null のみ）
@@ -130,7 +131,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       // trim()で余分な空白を削除と指定した文字列に一致しない場合は、エラー表示
       tempErrors.businessHours =
         "営業時間は「HH:MM - HH:MM」の形式で入力してください！";
-      alert(tempErrors.businessHours);
+      toast.error(tempErrors.businessHours);
     }
 
     if (Object.keys(tempErrors).length > 0) {
@@ -226,6 +227,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
 
   return (
     <div className="flex flex-col items-center py-40 sm:px-4 sm:text-sm">
+      <Toaster position="top-center" reverseOrder={false} />
       <form onSubmit={handleSubmit} className="sm:w-full sm:max-w-[350px]">
         {CafeFormFields.map(({ name, label, placeholder, required }) => (
           <div key={name} className="py-2 font-bold w-[700px] sm:w-full">

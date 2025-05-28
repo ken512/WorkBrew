@@ -6,6 +6,7 @@ import { UserAccountForm } from "../_components/UserAccountForm";
 import { UserAccountErrorType } from "../_types/UserAccountErrorType";
 import api from "@/_utils/api";
 import { FooterDefault } from "@/app/_components/Footer/FooterDefault";
+import toast, { Toaster } from "react-hot-toast";
 import "./../../globals.css";
 
 const UserAccount: React.FC = () => {
@@ -34,10 +35,10 @@ const UserAccount: React.FC = () => {
 
     try {
       const data = await api.post("/api/admin/user_account", formState);
-      alert(data.message || "ユーザー登録が完了しました！");
+      toast.success(data.message || "ユーザー登録が完了しました！");
     } catch (error) {
       console.error("ユーザー登録エラー:", error);
-      alert(error instanceof Error ? error.message : "ユーザー登録に失敗しました。もう一度お試しください。");
+      toast.error(error instanceof Error ? error.message : "ユーザー登録に失敗しました。もう一度お試しください。");
     } finally {
       setIsSubmitting(false);
     }
@@ -59,10 +60,10 @@ const UserAccount: React.FC = () => {
 
     try {
       const data = await api.put("/api/admin/user_account", formState);
-      alert(data.message || "ユーザー情報を更新しました");
+      toast.success(data.message || "ユーザー情報を更新しました");
     } catch (error) {
       console.error("更新エラー:", error);
-      alert(error instanceof Error ? error.message : "更新に失敗しました");
+      toast.error(error instanceof Error ? error.message : "更新に失敗しました");
     } finally {
       setIsSubmitting(false);
     }
@@ -72,6 +73,7 @@ const UserAccount: React.FC = () => {
     <div>
       <HeaderAdminBase href="/admin/home" />
       <div className="bg-tan-300 min-h-screen flex flex-col grid-flow-row items-center justify-center mx-0">
+        <Toaster position="top-center" reverseOrder={false} />
         <form>
           <UserAccountForm
             formState={formState}
