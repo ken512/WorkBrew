@@ -25,6 +25,7 @@ import { CafeStatusPieChart } from "./CafeStatusPieChart";
 import "../globals.css";
 import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";
+import toast, { Toaster } from "react-hot-toast";
 import api from "@/_utils/api";
 
 //共通リクエストを使用する
@@ -108,7 +109,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
     // トークンが保存されていない場合
     if (!token) {
       console.error("トークンが保存されていません");
-      alert("ログインしていないため、削除できません。");
+      toast.error("ログインしていないため、削除できません。");
       return; // トークンがない場合は処理を停止
     } else {
       console.log("保存されたトークン:", token);
@@ -117,8 +118,10 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
     if (id) {
       try {
         const res = await api.delete(`/api/public/cafe_post/${id}`, cafes);
-        alert(res.message || "削除しました!!");
+        toast.success(res.message || "削除しました!!");
+        setTimeout(() => {
         router.push("/cafe_post");
+        }, 3000);
       } catch (error: any) {
         const message = error?.message;
 
@@ -126,13 +129,13 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
           message ===
           "お気に入りに登録しているカフェは削除できません。まずお気に入りから解除してください。"
         ) {
-          alert(message);
+          toast.error(message);
         } else if (
           message === "他のユーザーの投稿を削除する権限はありません!!"
         ) {
-          alert(message);
+          toast.error(message);
         } else {
-          alert("予期せぬエラーが発生しました");
+          toast.error("予期せぬエラーが発生しました");
         }
         return;
       }
@@ -215,6 +218,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
 
   return (
     <div className="font-bold max-w-[600px] w-full mx-auto sm:text-sm md:text-xl">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="relative py-6">
         <h1 className="text-[min(13vw,30px)] mb-[100px] pt-[100px] text-center sm:text-sm md:text-xl">
           カフェ詳細
