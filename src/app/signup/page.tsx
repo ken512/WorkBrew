@@ -1,9 +1,10 @@
 "use client";
 import { supabase } from "@/_utils/supabase";
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { Input } from "../_components/Input";
 import { Label } from "../_components/Label";
 import { HeaderPublic } from "../_components/HeaderPublic";
+import toast, { Toaster } from "react-hot-toast";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
 
 const SignUp: React.FC = () => {
@@ -13,7 +14,7 @@ const SignUp: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { data,error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -22,25 +23,24 @@ const SignUp: React.FC = () => {
     });
 
     if (error) {
-      alert("登録に失敗しました");
+      toast.error("登録に失敗しました");
     } else {
-      console.log(data)
+      console.log(data);
       setEmail("");
       setPassword("");
-      alert("確認メールを送信しました");
+      toast.success("確認メールを送信しました");
     }
   };
 
   return (
     <div>
-        <HeaderPublic />
+      <HeaderPublic />
       <div className="bg-tan-300 min-h-screen flex flex-col items-center justify-center sm:px-5">
-      <h1 className="text-3xl font-bold">新規登録</h1>
+        <Toaster position="top-center" reverseOrder={false} />
+        <h1 className="text-3xl font-bold">新規登録</h1>
         <form onSubmit={handleSubmit} className="w-full max-w-[500px] ">
           <div className="py-5">
-            <Label htmlFor="email">
-              メールアドレス
-            </Label>
+            <Label htmlFor="email">メールアドレス</Label>
             <Input
               type="email"
               name="email"
@@ -52,9 +52,7 @@ const SignUp: React.FC = () => {
             />
           </div>
           <div className="py-5">
-            <Label htmlFor="password">
-              パスワード
-            </Label>
+            <Label htmlFor="password">パスワード</Label>
             <input
               type="password"
               name="password"
@@ -62,8 +60,8 @@ const SignUp: React.FC = () => {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
               placeholder="6文字以上10文字以内"
               required
-              minLength={6}         // 最小6文字
-              maxLength={20}        //20文字以内
+              minLength={6} // 最小6文字
+              maxLength={20} //20文字以内
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />

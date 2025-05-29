@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { supabase } from "@/_utils/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-
+import toast from "react-hot-toast";
 // heic2any と browser-image-compression を動的にインポート
 const importHeic2any = () => import("heic2any");
 const importImageCompression = () => import("browser-image-compression");
@@ -48,21 +48,21 @@ export const useImageHandler = (
       "image/heif",
     ];
     if (!allowedTypes.includes(file.type.toLowerCase())) {
-      alert("JPG、PNG、HEICのみアップロード可能です");
+      toast.error("JPG、PNG、HEICのみアップロード可能です");
       return;
     }
 
     // ファイルサイズの検証を追加
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      alert("ファイルサイズは10MB以下にしてください");
+      toast.error("ファイルサイズは10MB以下にしてください");
       return;
     }
 
     try {
       const converted = await convertFile(file);
       if (!converted) {
-        alert("画像の変換に失敗しました");
+        toast.error("画像の変換に失敗しました");
         return;
       }
 
@@ -70,11 +70,11 @@ export const useImageHandler = (
       if (compressed) {
         await uploadFile(compressed);
       } else {
-        alert("画像の圧縮に失敗しました");
+        toast.error("画像の圧縮に失敗しました");
       }
     } catch (error) {
       console.error("画像処理エラー:", error);
-      alert("画像のアップロードに失敗しました");
+      toast.error("画像のアップロードに失敗しました");
     }
   };
 
@@ -123,7 +123,7 @@ export const useImageHandler = (
   //アップロード処理
   const uploadFile = async (file: File) => {
     if (!token) {
-      alert("認証エラー: もう一度ログインしてください");
+      toast.error("認証エラー: もう一度ログインしてください");
       return;
     }
 
@@ -160,7 +160,7 @@ export const useImageHandler = (
     setUploadJudgment(uploadSpeed);
 
     if (error) {
-      alert(`アップロードに失敗しました: ${error.message}`);
+      toast.error(`アップロードに失敗しました: ${error.message}`);
       return;
     }
 
@@ -194,7 +194,7 @@ export const useImageHandler = (
 
     } catch(error) {
       console.error("ダウンロード速度測定エラー:", error);
-      alert("ダウンロード速度測定に失敗しました");
+      toast.error("ダウンロード速度測定に失敗しました");
     }
   }
 
@@ -209,7 +209,7 @@ export const useImageHandler = (
 
   const handleRemove = async () => {
     if (!token) {
-      alert("認証エラー: もう一度ログインしてください");
+      toast.error("認証エラー: もう一度ログインしてください");
       return;
     }
 
@@ -236,7 +236,7 @@ export const useImageHandler = (
       onImageUpload("");
     } catch (error) {
       console.error("画像削除エラー:", error);
-      alert("画像の削除に失敗しました");
+      toast.error("画像の削除に失敗しました");
     }
   };
 
