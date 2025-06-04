@@ -10,7 +10,6 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   const { id } = params; // URLのidパラメータを取得
-  console.log("取得したID:", id);
 
   try {
     const cafes = await prisma.cafe.findUnique({
