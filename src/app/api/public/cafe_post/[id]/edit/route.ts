@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/_utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { UpdateStatus } from "@/app/_types/UpdateStatus";
+
 const prisma = new PrismaClient();
 
 export const GET = async (
@@ -32,6 +32,15 @@ export const GET = async (
         },
       },
     });
+      if (!cafes) {
+      return NextResponse.json(
+        {
+          status: "NOT_FOUND",
+          message: "カフェが見つかりませんでした",
+        },
+        { status: 404 }
+      );
+    }
     return NextResponse.json({ status: "OK", cafes: cafes }, { status: 200 });
   } catch (error) {
     if (error instanceof Error)
@@ -50,7 +59,15 @@ export const PUT = async (
 
   try {
     const {id} = params;
-
-    const updateData:UpdateStatus = {};
+    
+    const cafePostEdit = await prisma.cafe.update({
+      where: {id: parseInt(id),
+          users: {
+              supabaseUserId: currentUser.user.id,
+      },},
+      select: {
+        
+      }
+    })
   }
 };
