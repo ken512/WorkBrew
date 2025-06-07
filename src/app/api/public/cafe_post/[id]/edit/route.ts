@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/_utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-
+import { Cafe } from "@/app/_types/Cafe";
 const prisma = new PrismaClient();
 
 export const GET = async (
@@ -57,6 +57,20 @@ export const PUT = async (
     return NextResponse.json({status: 400});
   }
 
+  const {
+    storeAddress,
+    businessHours,
+    closingDays,
+    cafeUrl,
+    menuOrdered,
+    wifiAvailable,
+    wifiStability,
+    powerOutlets,
+    starRating,
+    comment,
+
+  }: Cafe = await request.json();
+
   try {
     const {id} = params;
     
@@ -65,9 +79,10 @@ export const PUT = async (
           users: {
               supabaseUserId: currentUser.user.id,
       },},
-      select: {
+      data: {
         
-      }
+          comment,
+        }
     })
   }
 };
