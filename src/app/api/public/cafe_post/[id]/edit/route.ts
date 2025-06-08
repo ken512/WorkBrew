@@ -1,4 +1,3 @@
-import { getCurrentUser } from "@/_utils/supabase";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { Cafe } from "@/app/_types/Cafe";
@@ -9,16 +8,10 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    const { currentUser, error } = await getCurrentUser(request);
-
-    if (error || !currentUser) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
-    }
     const { id } = params;
     const cafes = await prisma.cafe.findUnique({
       where: {
         id: parseInt(id),
-        users: { supabaseUserId: currentUser.user.id },
       },
       include: {
         users: {
@@ -32,7 +25,7 @@ export const GET = async (
         },
       },
     });
-      if (!cafes) {
+    if (!cafes) {
       return NextResponse.json(
         {
           status: "NOT_FOUND",
@@ -52,37 +45,59 @@ export const PUT = async (
   request: NextRequest,
   { params }: { params: { id: string } }
 ) => {
-  const {currentUser, error} = await getCurrentUser(request);
-  if(error || !currentUser) {
-    return NextResponse.json({status: 400});
-  }
-
   const {
     storeAddress,
     businessHours,
     closingDays,
     cafeUrl,
     menuOrdered,
-    wifiAvailable,
-    wifiStability,
-    powerOutlets,
-    starRating,
     comment,
-
   }: Cafe = await request.json();
 
+  if (
+    !storeAddress ||
+    !businessHours ||
+    !closingDays ||
+    !cafeUrl ||
+    !menuOrdered ||
+    !comment
+  ) {
+    throw new Error("無効な入力データ");
+  }
+
   try {
-    const {id} = params;
-    
+    const { id } = params;
+
+    //バックエンドでは、受け取った businessHours を開店時間と閉店時間に分割して保存
+    let openingTime = "";
+    let closingHours = "";
+
+    if (businessHours && businessHours.includes("-")) {
+      const [open, close] = businessHours.split("-").map((time) => time.trim());
+      openingTime = open;
+      closingHours = close;
+    }
+
     const cafePostEdit = await prisma.cafe.update({
-      where: {id: parseInt(id),
-          users: {
-              supabaseUserId: currentUser.user.id,
-      },},
+      where: { id: parseInt(id) },
       data: {
-        
-          comment,
-        }
-    })
+        storeAddress,
+        openingTime,
+        closingHours,
+        closingDays,
+        cafeUrl,
+        menuOrdered,
+        comment,
+      },
+    });
+
+    return NextResponse.json(
+      { status: "OK", cafe: cafePostEdit },
+      { status: 200 }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ status: error.message }, { status: 400 });
+    }
   }
 };

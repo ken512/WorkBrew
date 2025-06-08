@@ -103,7 +103,7 @@ export const POST = async (request: NextRequest) => {
       powerOutlets === null ||
       seatAvailability === null
     ) {
-      throw new Error("Invalid input data");
+      throw new Error("無効な入力データ");
     }
     //バックエンドでは、受け取った businessHours を開店時間と閉店時間に分割して保存
     let openingTime = "";
