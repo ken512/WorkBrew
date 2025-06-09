@@ -54,17 +54,6 @@ export const PUT = async (
     comment,
   }: Cafe = await request.json();
 
-  if (
-    !storeAddress ||
-    !businessHours ||
-    !closingDays ||
-    !cafeUrl ||
-    !menuOrdered ||
-    !comment
-  ) {
-    throw new Error("無効な入力データ");
-  }
-
   try {
     const { id } = params;
 
