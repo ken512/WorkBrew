@@ -27,7 +27,6 @@ const CafeSubmissionForm: React.FC = () => {
     }));
   };
   
-  console.log(formState);
   return (
     <div>
       <HeaderAdminBase href="/admin/home" />
