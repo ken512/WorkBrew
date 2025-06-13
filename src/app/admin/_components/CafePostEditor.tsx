@@ -21,16 +21,7 @@ export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
   const { id } = useParams();
   const fetcher = (url: string) => api.get(url);
 
-  const { data } = useSWR(`/api/public/cafe_post/${id}/edit`,([url]) => fetcher(url), {
-    fallback: props.initialData,
-  });
 
-useEffect(() => {
-  if(data?.cafe) {
-    setFormState(data.cafe);
-  }
-}, [data])
-    
     
   
 
