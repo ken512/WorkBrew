@@ -4,7 +4,6 @@ import { Cafe } from "@/app/_types/Cafe";
 const prisma = new PrismaClient();
 
 export const GET = async (
-  request: NextRequest,
   { params }: { params: { id: string } }
 ) => {
   try {
