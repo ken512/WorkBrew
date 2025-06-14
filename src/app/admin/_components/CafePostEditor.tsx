@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useParams } from "next/navigation";
 import { Input } from "@/app/_components/Input";
 import { CafeFormFields } from "../_data/cafeFormFields";
@@ -11,27 +11,33 @@ import toast, { Toaster } from "react-hot-toast";
 import "../../globals.css";
 
 export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
-  formState,
-  setFormState,
   onChange,
   clearForm,
 }) => {
   const [clearSignal, setClearSignal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formState, setFormState] = useState("");
   const { id } = useParams();
   const fetcher = (url: string) => api.get(url);
 
-  const { data } = useSWR(`/api/public/cafe_post/${id}/edit`,([url]) => fetcher(url), {
-    fallback: props.initialData,
-  });
+  const { data: CafePostData } = useSWR(`/api/public/cafe_post/${id}/edit`,fetcher);
 
 useEffect(() => {
-  if(data?.cafe) {
-    setFormState(data.cafe);
+  if(CafePostData?.data?.cafe) {
+    setFormState(CafePostData.data.cafe);
   }
-}, [data])
+}, [CafePostData])
     
+const handleUpdateCafePost = async () => {
+
+  try {
     
-  
+  }
+}
+    
+  return (
+    <>
+    </>
+  )
 
 };
