@@ -16,7 +16,14 @@ export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
 }) => {
   const [clearSignal, setClearSignal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formState, setFormState] = useState("");
+  const [formState, setFormState] = useState({
+    storeAddress: "",
+    businessHours: "",
+    closingDays: "",
+    cafeUrl: "",
+    menuOrdered: "",
+    comment: ""
+  });
   const { id } = useParams();
   const fetcher = (url: string) => api.get(url);
 
@@ -28,10 +35,15 @@ useEffect(() => {
   }
 }, [CafePostData])
     
-const handleUpdateCafePost = async () => {
-
+const handleUpdateCafePost = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  
   try {
-    
+    await api.put(`/api/public/cafe_post/${id}/edit`, formState);
+    toast.success(CafePostData.message || "更新しました！");
+  } catch (error) {
+    console.log("更新失敗:", error);
+    toast.error(error instanceof Error ? error.message : "更新失敗しました。もう一度お試しください！！");
   }
 }
     
