@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect,FormEvent } from "react";
 import { useParams } from "next/navigation";
 import { Input } from "@/app/_components/Input";
 import { CafeFormFields } from "../_data/cafeFormFields";
 import { TextArea } from "@/app/_components/TextArea";
+import { PostClearButton } from "./PostClearButton";
 import { CafeFormStateReturn } from "../_types/CafeFormStateReturn";
 import useSWR from "swr";
 import api from "@/_utils/api";
@@ -35,21 +36,63 @@ useEffect(() => {
   }
 }, [CafePostData])
     
-const handleUpdateCafePost = async (e: React.FormEvent<HTMLFormElement>) => {
+const handleUpdateCafePost = async (e: FormEvent) => {
   e.preventDefault();
-  
+
   try {
-    await api.put(`/api/public/cafe_post/${id}/edit`, formState);
-    toast.success(CafePostData.message || "更新しました！");
+    const data = await api.put(`/api/public/cafe_post/${id}/edit`, formState);
+    toast.success(data.message || "更新しました！");
   } catch (error) {
     console.log("更新失敗:", error);
     toast.error(error instanceof Error ? error.message : "更新失敗しました。もう一度お試しください！！");
   }
 }
+  const handleClear = () => {
+    clearForm();
+    setClearSignal(true);
+    setTimeout(() => setClearSignal(false), 0);
+  }
     
   return (
-    <>
-    </>
+    <div className="flex flex-col items-center py-40 sm:px-4 sm:text-sm">
+      <Toaster position="top-center" reverseOrder={false}/>
+      <form onSubmit={handleUpdateCafePost} className="sm:w-full sm:max-w-[350px]">
+        {CafeFormFields.map(({name, label, placeholder, required}) => (
+          <div key={name} className="py-2 font-bold w-[700px] sm:w-full">
+            <label className="text-gray-700 mr-2">{label}</label>
+          
+          <Input
+          type="text"
+          name={name}
+          id={name}
+          value={String(formState[name as keyof typeof formState] ?? "")}
+          placeholder={placeholder}
+          onChange={onChange}
+          required={required}
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
+          />
+          </div>
+        ))}
+        <div className="mt-10 sm:text-sm sm:p-5 sm:max-w-[350px] ">
+          <TextArea
+          label="コメント欄（カフェの感想やおすすめポイントを記入してください）"
+          placeholder="500文字以内"
+          value={formState.comment}
+          maxLength={500}
+          name="comment"
+          onChange={onChange}
+          rows={15}
+          col={80}
+          />
+        </div>
+        <PostClearButton
+        onSubmit={handleUpdateCafePost}
+        onClear={handleClear}
+        isSubmitting={isSubmitting}
+        
+        />
+      </form>
+    </div>
   )
 
 };
