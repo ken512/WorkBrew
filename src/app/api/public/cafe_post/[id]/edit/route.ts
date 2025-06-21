@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUser } from "@/_utils/supabase";
 import { Cafe } from "@/app/_types/Cafe";
 const prisma = new PrismaClient();
 
@@ -54,7 +55,13 @@ export const PUT = async (
   }: Cafe = await request.json();
 
   try {
+    
     const { id } = params;
+    const { currentUser, error } = await getCurrentUser(request);
+    if (error || !currentUser) {
+      console.error("API AUTH ERROR", error);
+      return NextResponse.json({ status: 401 });
+    }
 
     //バックエンドでは、受け取った businessHours を開店時間と閉店時間に分割して保存
     let openingTime = "";
@@ -66,8 +73,16 @@ export const PUT = async (
       closingHours = close;
     }
 
+    const user = await prisma.users.findUnique({
+      where: { supabaseUserId: currentUser.user.id},
+    });
+
+    if(!user) {
+      return NextResponse.json({status: "ユーザーが見つかりません"}, {status: 401})
+    }
+
     const cafePostEdit = await prisma.cafe.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(id), userId: user.id},
       data: {
         storeAddress,
         openingTime,

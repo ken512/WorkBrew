@@ -85,7 +85,7 @@ export const POST = async (request: NextRequest) => {
     if (!user) {
       return NextResponse.json(
         { status: "ユーザーが見つかりません" },
-        { status: 404 }
+        { status: 401 }
       );
     }
 

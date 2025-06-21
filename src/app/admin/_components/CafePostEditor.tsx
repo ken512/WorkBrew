@@ -29,7 +29,9 @@ export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
   const router = useRouter();
   const fetcher = (url: string) => api.get(url);
 
-  const { data: CafePostData } = useSWR(
+  const { data = { cafes: {} },
+    error,
+    isLoading, } = useSWR(
     `/api/public/cafe_post/${id}/edit`,
     fetcher
   );
@@ -40,10 +42,10 @@ export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
   }
 
   useEffect(() => {
-    if (CafePostData?.data?.cafe) {
-      setFormState(CafePostData.data.cafe);
+    if (cafe?.data?.cafe) {
+      setFormState(cafe.data.cafe);
     }
-  }, [CafePostData]);
+  }, [cafe]);
 
   const handleUpdateCafePost = async (e: FormEvent) => {
     e.preventDefault();
@@ -68,9 +70,21 @@ export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
     setTimeout(() => setClearSignal(false), 0);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">
+          ☕️ コーヒーを淹れています... お待ちください
+        </p>
+      </div>
+    );
+  }
+
+  if (error) return <div>データの取得に失敗しました</div>;
 
   return (
     <div className="flex flex-col items-center py-40 sm:px-4 sm:text-sm">
+
       <button>
           <a
             className="absolute right-4  px-5 py-2 mt-[70px] rounded-full text-black bg-custom-red hover:bg-custom-green "
