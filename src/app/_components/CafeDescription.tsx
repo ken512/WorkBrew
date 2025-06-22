@@ -27,6 +27,7 @@ import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import api from "@/_utils/api";
+import Link from "next/link";
 
 //共通リクエストを使用する
 const fetcher = (url: string) => api.get(url);
@@ -223,6 +224,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         <h1 className="text-[min(13vw,30px)] mb-[100px] pt-[100px] text-center sm:text-sm md:text-xl">
           カフェ詳細
         </h1>
+        <Link href={`/cafe_post/${cafe.id}/edit`} className="text-black">編集する</Link>
         <button>
           <a
             className="absolute right-4  px-5 py-2 mt-[70px] rounded-full text-black bg-custom-red hover:bg-custom-green "
