@@ -6,30 +6,26 @@ import { CafeFormFields } from "../_data/cafeFormFields";
 import { TextArea } from "@/app/_components/TextArea";
 import { PostClearButton } from "./PostClearButton";
 import { CafeFormStateReturn } from "../_types/CafeFormStateReturn";
+import { CafeEditFormData } from "@/app/_types/CafeEditFormData";
 import useSWR from "swr";
 import api from "@/_utils/api";
 import toast, { Toaster } from "react-hot-toast";
 import "../../globals.css";
 
 export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
+  formState,
+  setFormState,
   onChange,
   clearForm,
 }) => {
   const [, setClearSignal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formState, setFormState] = useState({
-    storeAddress: "",
-    businessHours: "",
-    closingDays: "",
-    cafeUrl: "",
-    menuOrdered: "",
-    comment: "",
-  });
   const { id } = useParams();
   const router = useRouter();
+  const [cafes] = useState<CafeEditFormData>();
   const fetcher = (url: string) => api.get(url);
 
-  const { data = { cafes: {} },
+  const { data = {cafes:{}},
     error,
     isLoading, } = useSWR(
     `/api/public/cafe_post/${id}/edit`,
@@ -47,11 +43,12 @@ export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
     }
   }, [cafe]);
 
+
   const handleUpdateCafePost = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
-      const data = await api.put(`/api/public/cafe_post/${id}/edit`, formState);
+      const data = await api.put(`/api/public/cafe_post/${id}/edit`, cafes);
       toast.success(data.message || "更新しました！");
     } catch (error) {
       console.log("更新失敗:", error);
