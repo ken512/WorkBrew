@@ -13,17 +13,6 @@ export const GET = async (
       where: {
         id: parseInt(id),
       },
-      include: {
-        users: {
-          select: { id: true, userName: true, profileIcon: true },
-        },
-        favorites: {
-          select: {
-            userId: true,
-            id: true,
-          },
-        },
-      },
     });
     if (!cafes) {
       return NextResponse.json(
