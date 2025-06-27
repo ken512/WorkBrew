@@ -38,8 +38,8 @@ export const CafePostEditor: React.FC<CafeFormStateReturn> = ({
   }
 
   useEffect(() => {
-    if (cafe?.data?.cafe) {
-      setFormState(cafe.data.cafe);
+    if (cafe?.data) {
+      setFormState(cafe.data);
     }
   }, [cafe]);
 
