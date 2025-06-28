@@ -120,7 +120,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         const res = await api.delete(`/api/public/cafe_post/${id}`, cafes);
         toast.success(res.message || "削除しました!!");
         setTimeout(() => {
-        router.push("/cafe_post");
+          router.push("/cafe_post");
         }, 3000);
       } catch (error: any) {
         const message = error?.message;
@@ -362,6 +362,12 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                     (cafe.seatAvailability as string)
                 )}
               </span>
+            </div>
+            <div className="">
+              <p>おすすめ理由: </p>
+              <div className=" p-2 rounded max-h-[100px] overflow-auto whitespace-pre-wrap break-words">
+              {cafe.comment}
+            </div>
             </div>
           </div>
 
