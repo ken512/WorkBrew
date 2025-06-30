@@ -66,6 +66,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   const [cafes] = useState<Cafe>();
   const router = useRouter();
   const [wifiAvailable, setWifiAvailable] = useState<boolean | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   //onImageUploadを使わない前提で、エラー回避用のダミー関数
   const handleUpload = (url: string) => {
@@ -270,13 +271,17 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
               星評価: {RenderStars(cafe.starRating)}
             </p>
             <p>エリア: {cafe.area}</p>
-            <p>
+            <span
+            onClick={() => setIsEditing(true)}
+            >
               営業時間:{" "}
               {cafe.openingTime && cafe.closingHours
                 ? `${cafe.openingTime} - ${cafe.closingHours}`
                 : "情報なし"}
-            </p>
-            {isValidUrl(cafe.cafeUrl) && (
+            </span>
+            <p>定休日: {cafe.closingDays}</p>
+            <p>頼んだメニュー: {cafe.menuOrdered}</p>
+              {isValidUrl(cafe.cafeUrl) && (
               <div className="flex flex-col sm:flex-row">
                 お店のURL:
                 <a
@@ -289,8 +294,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                 </a>
               </div>
             )}
-            <p>定休日: {cafe.closingDays}</p>
-            <p>頼んだメニュー: {cafe.menuOrdered}</p>
             <div className="flex">
               <p>Wi-Fiの有無:</p>
               <span
