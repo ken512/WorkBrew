@@ -26,6 +26,7 @@ import "../globals.css";
 import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";
 import toast, { Toaster } from "react-hot-toast";
+import { TextArea } from "@/app/_components/TextArea";
 import api from "@/_utils/api";
 
 //共通リクエストを使用する
@@ -38,6 +39,7 @@ type UpdateHandlers = {
   >;
   updateState: (key: keyof UpdateStatus, value: string) => void;
   onUpdate: (e: React.FormEvent) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 };
 
 //ButtonFieldsから特定の項目を絞り出し、CafePostButtonsに渡す用のデータを整える
@@ -53,6 +55,7 @@ const fieldsToShow = ButtonFields.filter(
 
 export const CafeDescription: React.FC<UpdateHandlers> = ({
   onUpdate,
+  onChange,
   updateWiFiAndSeatStatus,
   setUpdateWiFiAndSeatStatus,
 }) => {
@@ -63,6 +66,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   const [cafes] = useState<Cafe>();
   const router = useRouter();
   const [wifiAvailable, setWifiAvailable] = useState<boolean | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   //onImageUploadを使わない前提で、エラー回避用のダミー関数
   const handleUpload = (url: string) => {
@@ -120,7 +124,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         const res = await api.delete(`/api/public/cafe_post/${id}`, cafes);
         toast.success(res.message || "削除しました!!");
         setTimeout(() => {
-        router.push("/cafe_post");
+          router.push("/cafe_post");
         }, 3000);
       } catch (error: any) {
         const message = error?.message;
@@ -267,13 +271,17 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
               星評価: {RenderStars(cafe.starRating)}
             </p>
             <p>エリア: {cafe.area}</p>
-            <p>
+            <span
+            onClick={() => setIsEditing(true)}
+            >
               営業時間:{" "}
               {cafe.openingTime && cafe.closingHours
                 ? `${cafe.openingTime} - ${cafe.closingHours}`
                 : "情報なし"}
-            </p>
-            {isValidUrl(cafe.cafeUrl) && (
+            </span>
+            <p>定休日: {cafe.closingDays}</p>
+            <p>頼んだメニュー: {cafe.menuOrdered}</p>
+              {isValidUrl(cafe.cafeUrl) && (
               <div className="flex flex-col sm:flex-row">
                 お店のURL:
                 <a
@@ -286,7 +294,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                 </a>
               </div>
             )}
-            <p>定休日: {cafe.closingDays}</p>
             <div className="flex">
               <p>Wi-Fiの有無:</p>
               <span
@@ -362,6 +369,21 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                     (cafe.seatAvailability as string)
                 )}
               </span>
+            </div>
+            <div className="">
+              <p>おすすめ理由: </p>
+              <div className=" p-2 rounded ">
+                <TextArea
+                  name="comment"
+                  value={cafe.comment}
+                  onChange={onChange}
+                  maxLength={500}
+                  rows={15}
+                  col={80}
+                >
+                  {cafe.comment}
+                </TextArea>
+              </div>
             </div>
           </div>
 
