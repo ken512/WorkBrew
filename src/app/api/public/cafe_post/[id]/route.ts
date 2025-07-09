@@ -66,7 +66,7 @@ export const PUT = async (
   const { id } = params;
   try {
 
-    const { seatAvailability, wifiSpeed }: UpdateStatus = await request.json();
+    const { seatAvailability, wifiSpeed, area, openingTime, closingHours, businessHours, closingDays, menuOrdered, cafeUrl }: UpdateStatus = await request.json();
 
     //選択した場合のみ、更新する。
     const updateData: UpdateStatus = {};

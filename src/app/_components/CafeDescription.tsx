@@ -39,7 +39,9 @@ type UpdateHandlers = {
   >;
   updateState: (key: keyof UpdateStatus, value: string) => void;
   onUpdate: (e: React.FormEvent) => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 };
 
 //ButtonFieldsから特定の項目を絞り出し、CafePostButtonsに渡す用のデータを整える
@@ -67,6 +69,10 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   const router = useRouter();
   const [wifiAvailable, setWifiAvailable] = useState<boolean | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [openingTime, setOpeningTime] = useState("");
+  const [closingTime, setClosingTime] = useState("");
+  const [closingDays, setClosingDays] = useState("");
+  const [area, setArea] = useState("");
 
   //onImageUploadを使わない前提で、エラー回避用のダミー関数
   const handleUpload = (url: string) => {
@@ -87,8 +93,12 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   useEffect(() => {
     if (cafe && cafe.wifiAvailable !== undefined) {
       setWifiAvailable(cafe.wifiAvailable);
+      setArea(cafe.area || "");
+      setOpeningTime(cafe.openingTime || "");
+      setClosingTime(cafe.closingHours || "");
+      setClosingDays(cafe.closingDays || "");
     }
-  }, [cafe]);
+  }, [cafe, isEditing]);
 
   //クライアント側で使える状態になったら描画させる
   useEffect(() => {
@@ -270,18 +280,52 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
             <p className=" mt-[100px]">
               星評価: {RenderStars(cafe.starRating)}
             </p>
-            <p>エリア: {cafe.area}</p>
-            <span
-            onClick={() => setIsEditing(true)}
-            >
-              営業時間:{" "}
-              {cafe.openingTime && cafe.closingHours
-                ? `${cafe.openingTime} - ${cafe.closingHours}`
-                : "情報なし"}
-            </span>
-            <p>定休日: {cafe.closingDays}</p>
-            <p>頼んだメニュー: {cafe.menuOrdered}</p>
-              {isValidUrl(cafe.cafeUrl) && (
+            {isEditing ? (
+              <div className="">
+                <div className="mt-10">
+                  <label>エリア:</label>
+                  <input
+                    className="p-3 rounded-3xl"
+                    value={area}
+                    onChange={(e) => setArea(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label>営業時間: </label>
+                  <div className="flex">
+                    <input
+                      className="p-3 m-1 rounded-3xl"
+                      value={openingTime}
+                      onChange={(e) => setOpeningTime(e.target.value)}
+                    />
+                    </div>
+                    -
+                    <div className="flex">
+                    <input
+                      className="p-3 rounded-3xl"
+                      value={closingTime}
+                      onChange={(e) => setClosingTime(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <button className="p-2 "  onClick={() => setIsEditing(false)}>
+                  保存
+                </button>
+              </div>
+            ) : (
+              <div className="mt-10" onClick={() => setIsEditing(true)}>
+                <p>エリア: {cafe.area}</p>
+                <span>
+                  営業時間:{" "}
+                  {cafe.openingTime && cafe.closingHours
+                    ? `${cafe.openingTime} - ${cafe.closingHours}`
+                    : "情報なし"}
+                </span>
+                <p>定休日: {cafe.closingDays}</p>
+                <p>頼んだメニュー: {cafe.menuOrdered}</p>
+              </div>
+            )}
+            {isValidUrl(cafe.cafeUrl) && (
               <div className="flex flex-col sm:flex-row">
                 お店のURL:
                 <a
