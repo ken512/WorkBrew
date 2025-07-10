@@ -66,10 +66,19 @@ export const PUT = async (
   const { id } = params;
   try {
 
-    const { seatAvailability, wifiSpeed, area, openingTime, closingHours, businessHours, closingDays, menuOrdered, cafeUrl }: UpdateStatus = await request.json();
+    const { seatAvailability, wifiSpeed, area, businessHours, closingDays, menuOrdered, cafeUrl }: UpdateStatus = await request.json();
+
+    let openingTime = "";
+    let closingHours = "";
+
+    if(businessHours && businessHours.includes("-")) {
+      const [open, close] = businessHours.split("-").map((time) => time.trim());
+      openingTime = open;
+      closingHours = close
+    }
 
     //選択した場合のみ、更新する。
-    const updateData: UpdateStatus = {};
+    const updateData: UpdateStatus = {area,businessHours,closingDays, menuOrdered, cafeUrl};
     if(seatAvailability !== null) updateData.seatAvailability = seatAvailability;
     if(wifiSpeed !== null) updateData.wifiSpeed = wifiSpeed;
     
