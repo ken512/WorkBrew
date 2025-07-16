@@ -35,7 +35,6 @@ export const CafeList: React.FC<Props> = ({ cafes = [] }) => {
       setFavoriteCafeIds(ids);
     }
   }, [favoriteData]);
-  console.log("favoriteData", favoriteData);
 
   const isFavorited = (cafeId: number) => favoriteCafeIds.has(cafeId);
 

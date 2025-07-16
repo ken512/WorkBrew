@@ -7,7 +7,7 @@ type PostClearButtonProps = {
   onClear: () => void;
   onSubmit: (e: React.FormEvent) => void;
   isSubmitting?: boolean;
-  starRating: number;
+  starRating?: number;
 };
 
 export const PostClearButton: React.FC<PostClearButtonProps> = ({
