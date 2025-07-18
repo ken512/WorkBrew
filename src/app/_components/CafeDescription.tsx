@@ -73,6 +73,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   const [closingTime, setClosingTime] = useState("");
   const [closingDays, setClosingDays] = useState("");
   const [area, setArea] = useState("");
+  const [menuOrdered, setMenuOrdered] = useState("");
 
   //onImageUploadを使わない前提で、エラー回避用のダミー関数
   const handleUpload = (url: string) => {
@@ -93,12 +94,8 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   useEffect(() => {
     if (cafe && cafe.wifiAvailable !== undefined) {
       setWifiAvailable(cafe.wifiAvailable);
-      setArea(cafe.area || "");
-      setOpeningTime(cafe.openingTime || "");
-      setClosingTime(cafe.closingHours || "");
-      setClosingDays(cafe.closingDays || "");
     }
-  }, [cafe, isEditing]);
+  }, [cafe]);
 
   //クライアント側で使える状態になったら描画させる
   useEffect(() => {
@@ -111,7 +108,15 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
       initMap(setMap, [cafe]); // 1件だけでも配列に
     }
   }, [cafe.locationCoordinates, cafe]);
-  console.log("地図", cafe.locationCoordinates);
+
+  const handleStartEditing = () => {
+  setArea(cafe.area);
+  setOpeningTime(cafe.openingTime);
+  setClosingTime(cafe.closingHours);
+  setClosingDays(cafe.closingDays);
+  setMenuOrdered(cafe.menuOrdered);
+  setIsEditing(true);
+};
 
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -298,9 +303,9 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                       value={openingTime}
                       onChange={(e) => setOpeningTime(e.target.value)}
                     />
-                    </div>
-                    -
-                    <div className="flex">
+                  </div>
+                  -
+                  <div className="flex">
                     <input
                       className="p-3 rounded-3xl"
                       value={closingTime}
@@ -308,21 +313,23 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                     />
                   </div>
                 </div>
-                <button className="p-2 "  onClick={() => setIsEditing(false)}>
+                <button className="p-2 " onClick={() => setIsEditing(false)}>
                   保存
                 </button>
               </div>
             ) : (
-              <div className="mt-10" onClick={() => setIsEditing(true)}>
-                <p>エリア: {cafe.area}</p>
+              <div className="mt-10" onClick={handleStartEditing}>
+                <p>エリア: {area || cafe.area}</p>
                 <span>
                   営業時間:{" "}
-                  {cafe.openingTime && cafe.closingHours
+                  {openingTime && closingTime
+                    ? `${openingTime} - ${closingTime}`
+                    : cafe.openingTime && cafe.closingHours
                     ? `${cafe.openingTime} - ${cafe.closingHours}`
                     : "情報なし"}
                 </span>
-                <p>定休日: {cafe.closingDays}</p>
-                <p>頼んだメニュー: {cafe.menuOrdered}</p>
+                <p>定休日: {closingDays || cafe.closingDays}</p>
+                <p>頼んだメニュー: { menuOrdered || cafe.menuOrdered}</p>
               </div>
             )}
             {isValidUrl(cafe.cafeUrl) && (
@@ -338,6 +345,21 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                 </a>
               </div>
             )}
+            <div className="">
+              <p>おすすめ理由: </p>
+              <div className=" p-2 rounded ">
+                <TextArea
+                  name="comment"
+                  value={cafe.comment}
+                  onChange={onChange}
+                  maxLength={500}
+                  rows={15}
+                  col={80}
+                >
+                  {cafe.comment}
+                </TextArea>
+              </div>
+            </div>
             <div className="flex">
               <p>Wi-Fiの有無:</p>
               <span
@@ -413,21 +435,6 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                     (cafe.seatAvailability as string)
                 )}
               </span>
-            </div>
-            <div className="">
-              <p>おすすめ理由: </p>
-              <div className=" p-2 rounded ">
-                <TextArea
-                  name="comment"
-                  value={cafe.comment}
-                  onChange={onChange}
-                  maxLength={500}
-                  rows={15}
-                  col={80}
-                >
-                  {cafe.comment}
-                </TextArea>
-              </div>
             </div>
           </div>
 
