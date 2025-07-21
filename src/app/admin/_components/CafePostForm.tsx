@@ -25,8 +25,8 @@ const fetchGeocode = async (url: string) => {
   if (data.status !== "OK" || data.results.length === 0) {
     throw new Error("住所の緯度・経度を取得できませんでした");
   }
-  const { lat, lng } = data.results[0].geometry.location;
-  return `${lat}, ${lng}`;
+  const loc = data.results[0].geometry.location;
+  return `${loc.lat}, ${loc.lng}`;
 };
 
 export const CafePostForm: React.FC<CafeFormStateReturn> = ({
@@ -49,7 +49,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
     },
   });
 
-  // Geocoding APIをSWRで管理
+  //Geocoding APIをSWRで管理
   useSWR(
     formState.storeAddress
       ? `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
