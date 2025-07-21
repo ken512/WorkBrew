@@ -68,7 +68,6 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   );
 
   const handleSubmit = async (e: FormEvent) => {
-    console.log("送信データ:", formState);
     e.preventDefault();
 
     // バリデーションチェック

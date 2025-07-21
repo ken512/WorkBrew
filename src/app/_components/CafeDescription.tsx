@@ -26,6 +26,7 @@ import "../globals.css";
 import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";
 import toast, { Toaster } from "react-hot-toast";
+import { TextArea } from "@/app/_components/TextArea";
 import api from "@/_utils/api";
 
 //共通リクエストを使用する
@@ -38,6 +39,9 @@ type UpdateHandlers = {
   >;
   updateState: (key: keyof UpdateStatus, value: string) => void;
   onUpdate: (e: React.FormEvent) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 };
 
 //ButtonFieldsから特定の項目を絞り出し、CafePostButtonsに渡す用のデータを整える
@@ -53,6 +57,7 @@ const fieldsToShow = ButtonFields.filter(
 
 export const CafeDescription: React.FC<UpdateHandlers> = ({
   onUpdate,
+  onChange,
   updateWiFiAndSeatStatus,
   setUpdateWiFiAndSeatStatus,
 }) => {
@@ -63,6 +68,12 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
   const [cafes] = useState<Cafe>();
   const router = useRouter();
   const [wifiAvailable, setWifiAvailable] = useState<boolean | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [openingTime, setOpeningTime] = useState("");
+  const [closingTime, setClosingTime] = useState("");
+  const [closingDays, setClosingDays] = useState("");
+  const [area, setArea] = useState("");
+  const [menuOrdered, setMenuOrdered] = useState("");
 
   //onImageUploadを使わない前提で、エラー回避用のダミー関数
   const handleUpload = (url: string) => {
@@ -97,7 +108,15 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
       initMap(setMap, [cafe]); // 1件だけでも配列に
     }
   }, [cafe.locationCoordinates, cafe]);
-  console.log("地図", cafe.locationCoordinates);
+
+  const handleStartEditing = () => {
+  setArea(cafe.area);
+  setOpeningTime(cafe.openingTime);
+  setClosingTime(cafe.closingHours);
+  setClosingDays(cafe.closingDays);
+  setMenuOrdered(cafe.menuOrdered);
+  setIsEditing(true);
+};
 
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,7 +139,7 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
         const res = await api.delete(`/api/public/cafe_post/${id}`, cafes);
         toast.success(res.message || "削除しました!!");
         setTimeout(() => {
-        router.push("/cafe_post");
+          router.push("/cafe_post");
         }, 3000);
       } catch (error: any) {
         const message = error?.message;
@@ -266,13 +285,53 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
             <p className=" mt-[100px]">
               星評価: {RenderStars(cafe.starRating)}
             </p>
-            <p>エリア: {cafe.area}</p>
-            <p>
-              営業時間:{" "}
-              {cafe.openingTime && cafe.closingHours
-                ? `${cafe.openingTime} - ${cafe.closingHours}`
-                : "情報なし"}
-            </p>
+            {isEditing ? (
+              <div className="">
+                <div className="mt-10">
+                  <label>エリア:</label>
+                  <input
+                    className="p-3 rounded-3xl"
+                    value={area}
+                    onChange={(e) => setArea(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label>営業時間: </label>
+                  <div className="flex">
+                    <input
+                      className="p-3 m-1 rounded-3xl"
+                      value={openingTime}
+                      onChange={(e) => setOpeningTime(e.target.value)}
+                    />
+                  </div>
+                  -
+                  <div className="flex">
+                    <input
+                      className="p-3 rounded-3xl"
+                      value={closingTime}
+                      onChange={(e) => setClosingTime(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <button className="p-2 " onClick={() => setIsEditing(false)}>
+                  保存
+                </button>
+              </div>
+            ) : (
+              <div className="mt-10" onClick={handleStartEditing}>
+                <p>エリア: {area || cafe.area}</p>
+                <span>
+                  営業時間:{" "}
+                  {openingTime && closingTime
+                    ? `${openingTime} - ${closingTime}`
+                    : cafe.openingTime && cafe.closingHours
+                    ? `${cafe.openingTime} - ${cafe.closingHours}`
+                    : "情報なし"}
+                </span>
+                <p>定休日: {closingDays || cafe.closingDays}</p>
+                <p>頼んだメニュー: { menuOrdered || cafe.menuOrdered}</p>
+              </div>
+            )}
             {isValidUrl(cafe.cafeUrl) && (
               <div className="flex flex-col sm:flex-row">
                 お店のURL:
@@ -286,7 +345,21 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
                 </a>
               </div>
             )}
-            <p>定休日: {cafe.closingDays}</p>
+            <div className="">
+              <p>おすすめ理由: </p>
+              <div className=" p-2 rounded ">
+                <TextArea
+                  name="comment"
+                  value={cafe.comment}
+                  onChange={onChange}
+                  maxLength={500}
+                  rows={15}
+                  col={80}
+                >
+                  {cafe.comment}
+                </TextArea>
+              </div>
+            </div>
             <div className="flex">
               <p>Wi-Fiの有無:</p>
               <span
