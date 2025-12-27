@@ -22,11 +22,11 @@ import { Button } from "../admin/_components/Button";
 import { convertJapaneseToEnglish } from "@/_utils/convertJapaneseToEnglish";
 import { PieChartData } from "../_types/PieChartProps";
 import { CafeStatusPieChart } from "./CafeStatusPieChart";
-import "../globals.css";
 import { Cafe } from "../_types/Cafe";
 import { supabase } from "@/_utils/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import api from "@/_utils/api";
+import "../globals.css";
 
 //共通リクエストを使用する
 const fetcher = (url: string) => api.get(url);
