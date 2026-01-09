@@ -46,6 +46,9 @@ model Cafe {
   thumbnailImage         String            @db.VarChar(255) 
   area                   String
   storeAddress           String  
+  placeId                String?
+  primaryType            String?
+  types                  String[]
   openingTime            String            @db.VarChar(20)
   closingHours           String            @db.VarChar(20)
   closingDays            String
