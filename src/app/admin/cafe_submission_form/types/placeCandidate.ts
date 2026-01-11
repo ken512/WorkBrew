@@ -7,5 +7,5 @@ export type PlaceCandidate = {
   storeAddress: Cafe["storeAddress"];
   locationCoordinates: Coordinate;
   primaryType?: Cafe["primaryType"];
-  types: Cafe[];
+  types: Cafe["types"];
 };

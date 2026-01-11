@@ -1,10 +1,14 @@
 import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
+import { PlaceCandidate } from "../admin/cafe_submission_form/types/placeCandidate";
 
 export type Cafe = {
   id: number;
   cafeName: string;
   area: string;
   storeAddress: string;
+  placeId?: PlaceCandidate["placeId"];
+  primaryType?: PlaceCandidate["primaryType"];
+  types: PlaceCandidate["types"];
   openingTime?: string;
   closingHours?: string;
   businessHours?: string;
