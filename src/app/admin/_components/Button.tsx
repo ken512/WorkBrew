@@ -28,7 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
   const handleClick = (e: React.FormEvent) => {
     if (onClick) {
       onClick(e);
-    }
+    }n
   };
 
   return (
