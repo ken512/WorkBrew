@@ -37,7 +37,7 @@ export const useCurrentLocation = () => {
     }
   }, []);
 
-  // プライバシー配慮で、位置情報をリセット(error/loading も含めて初期化)
+  // 位置情報をキャンセルした場合、リセット(error/loading も含めて初期化)
   const reset = useCallback(() => {
     setLocation(undefined);
     setError(null);
