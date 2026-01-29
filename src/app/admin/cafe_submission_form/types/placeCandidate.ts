@@ -1,7 +1,7 @@
 import { Coordinate } from "./coordinate";
 // 現在地とお店の位置情報のレスポンス型
 export type PlaceCandidate = {
-  placeId?: string;
+  placeId?: number;
   cafeName: string;
   storeAddress: string;
   locationCoordinates: Coordinate;
