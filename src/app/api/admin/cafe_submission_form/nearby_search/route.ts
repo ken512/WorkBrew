@@ -1,26 +1,15 @@
 import { NextResponse } from "next/server";
 import { NearbySearchParams } from "@/app/admin/cafe_submission_form/types/nearbySearchParams";
-import { PlaceCandidate } from "@/app/admin/cafe_submission_form/types/placeCandidate";
+import { mapGoogleNearbySearchToPlaceCandidate } from "@/app/admin/cafe_submission_form/_utils/googleNearbySearch.mapper";
+import { fetchNearbySearch } from "@/app/admin/cafe_submission_form/_utils/fetchGoogleNearbySearch";
 
-// APIキーが漏れるの防ぐため、APIを叩く処理をサーバーサイド側で処理
-// GoogleNearbySearchResponse でGoogleからのレスポンス処理
+// Google APIキーをクライアントに露出させないため、Places API 呼び出しはサーバー側(route.ts)で代理実行する
 
-type GoogleNearbySearchResponse = {
-  places?: Array<{
-    id?: number;
-    displayName?: { text?: string };
-    formattedAddress?: string;
-    location?: { latitude?: number; longitude?: number };
-    primaryType?: string;
-    types?: string[];
-  }>;
-  error?: { message: string };
-};
 
 // POSTメソッドでリクエスト処理とレスポンス
 // Nearby Searchは、POSTのみサポートしている
 export const POST = async (request: Request) => {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
+  const apiKey = process.env.GOOGLE_MAP_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { message: "APIキーがありません" },
@@ -28,54 +17,14 @@ export const POST = async (request: Request) => {
     );
   }
 
-// フロントから受け取ったリクエストボディに NearbySearchParams の型を付けて扱う
-// TODO バリデーションは 運用時の安全で、Zod などを使うと一気に楽かも
   const params = (await request.json()) as NearbySearchParams;
 
-// NearbySearchParamsでは、1つ以上のデータ型を指定するフィールドマスクが必須
-// レスポンスで返すフィールドのリストを指定
-  const res = await fetch(
-    "https://places.googleapis.com/v1/places:searchNearby",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": [
-          "places.id",
-          "places.displayName",
-          "places.formattedAddress",
-          "places.location",
-          "places.primaryType",
-          "places.types",
-        ].join(","),
-      },
-      body: JSON.stringify(params),
-      cache: "no-store",
-    },
-  );
-
-  const json = (await res.json()) as GoogleNearbySearchResponse;
-
-  if (!res.ok) {
-    return NextResponse.json(
-      { message: json.error?.message ?? "Places API error" },
-      { status: res.status },
-    );
+  try {
+    const json = await fetchNearbySearch(params, apiKey);
+    const candidates = mapGoogleNearbySearchToPlaceCandidate(json);
+    return NextResponse.json({ candidates });
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "検索に失敗しました";
+    return NextResponse.json({ message }, { status: 400 });
   }
-
-  // フロント側で扱いやすい候補一覧に整形して、使えない候補を排除
-  const candidates: PlaceCandidate[] = (json.places ?? []).map((place) => ({
-    placeId: place.id,
-    cafeName: place.displayName?.text ?? "",
-    storeAddress: place.formattedAddress ?? "",
-    locationCoordinates: {
-      lat: place.location?.latitude ?? 0,
-      lng: place.location?.longitude ?? 0,
-    },
-    primaryType: place.primaryType,
-    types: place.types ?? [],
-  })).filter((c) => c.placeId && c.cafeName && c.storeAddress);
-
-  return NextResponse.json({candidates})
 };
