@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/app/admin/_components/Button";
+import { Modal } from "./Modal";
 import { useImageHandler } from "@/app/admin/_hooks/useImageHandler";
 import "../../globals.css";
 
@@ -21,6 +22,7 @@ export const ThumbnailHandle: React.FC<{
     measureDownloadSpeed,
   } = useImageHandler(onImageUpload, initialImage, "thumbnail-input");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   //画像がセットされたら、isSubmittingをfalseにする(ボタン表示処理)
   useEffect(() => {
@@ -35,6 +37,9 @@ export const ThumbnailHandle: React.FC<{
     setIsSubmitting(true); // 送信中フラグを設定
     handleAddClick(); // 実際の画像追加処理
   };
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -103,6 +108,54 @@ export const ThumbnailHandle: React.FC<{
             削除
           </Button>
         </div>
+        <div className="px-3">
+          <Button type="button" variant="secondary" onClick={openModal}>
+            現在地取得
+          </Button>
+        </div>
+        <Modal
+          isOpen={isOpen}
+          onClose={closeModal}
+          title="現在地の取得を許可しますか？"
+          showCloseButton
+        >
+          <p className="text-sm leading-relaxed text-gray-600">
+            近くのカフェを表示するために現在地を使用します。
+            <br />
+            許可しなくても検索は可能です。(手入力)
+          </p>
+
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end pt-2">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="
+        inline-flex h-11 items-center justify-center rounded-xl px-4
+        text-sm font-medium text-gray-700
+        ring-1 ring-inset ring-gray-200
+        hover:bg-gray-50 active:bg-gray-100 transition
+      "
+            >
+              キャンセル
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                // getCurrentLocation();
+                closeModal();
+              }}
+              className="
+        inline-flex h-11 items-center justify-center rounded-xl px-4
+        text-sm font-semibold text-white
+        bg-gray-900 hover:bg-gray-800
+        shadow-sm active:scale-[0.99] transition
+      "
+            >
+              取得する
+            </button>
+          </div>
+        </Modal>
       </div>
     </div>
   );
