@@ -4,14 +4,20 @@ import Image from "next/image";
 import { Button } from "@/app/admin/_components/Button";
 import { Modal } from "./Modal";
 import { useImageHandler } from "@/app/admin/_hooks/useImageHandler";
+import { Coordinate } from "../cafe_submission_form/types/coordinate";
 import "../../globals.css";
+import toast from "react-hot-toast";
 
 export const ThumbnailHandle: React.FC<{
   onImageUpload: (imageUrl: string) => void;
   initialImage?: string;
   isSubmitting: boolean;
+  isLoading: boolean;
+  location: Coordinate | undefined;
+  locationError: string | null;
+  getCurrentLocation: () => Promise<Coordinate>;
   setIsSubmitting: (isSubmitting: boolean) => void;
-}> = ({ onImageUpload, initialImage }) => {
+}> = ({ onImageUpload, initialImage, isLoading, locationError, getCurrentLocation }) => {
   const {
     thumbnailImage,
     handleFileChange,
@@ -38,8 +44,19 @@ export const ThumbnailHandle: React.FC<{
     handleAddClick(); // 実際の画像追加処理
   };
 
+
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+
+  const handleConfirmGetLocation = async() => {
+    try {
+      await getCurrentLocation();
+      closeModal();
+      toast.success("現在地取得しました!!");
+    } catch {
+      toast.error("現在地取得できませんでした!!");
+    }
+  }
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -109,7 +126,7 @@ export const ThumbnailHandle: React.FC<{
           </Button>
         </div>
         <div className="px-3">
-          <Button type="button" variant="secondary" onClick={openModal}>
+          <Button type="button" variant="secondary" onClick={openModal} disabled={isLoading}>
             現在地取得
           </Button>
         </div>
@@ -141,10 +158,7 @@ export const ThumbnailHandle: React.FC<{
 
             <button
               type="button"
-              onClick={() => {
-                // getCurrentLocation();
-                closeModal();
-              }}
+              onClick={handleConfirmGetLocation}
               className="
         inline-flex h-11 items-center justify-center rounded-xl px-4
         text-sm font-semibold text-white
@@ -152,11 +166,12 @@ export const ThumbnailHandle: React.FC<{
         shadow-sm active:scale-[0.99] transition
       "
             >
-              取得する
+              {isLoading ? "取得中..." : "取得する"}
             </button>
           </div>
         </Modal>
       </div>
+      {locationError && <p className="text-lg font-bold text-red-500">{locationError}</p>}
     </div>
   );
 };

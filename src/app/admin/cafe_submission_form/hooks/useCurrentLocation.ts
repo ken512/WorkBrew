@@ -29,9 +29,16 @@ export const useCurrentLocation = () => {
     setError(null);
     try {
       const pos = await getPosition({ timeout: 10000, maximumAge: 60000 });
-      setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      setLocation(loc);
+      console.log("現在地取得できました:", loc);
+      return loc;
     } catch (err: unknown) {
-      setError(toErrorMessage(err));
+      const errorMessage = err instanceof Error ? err.message : "位置情報の取得に失敗しました";
+      const msg = toErrorMessage(errorMessage);
+      setError(msg)
+      console.log(msg);
+      throw new Error(msg);
     } finally {
       setIsLoading(false);
     }
