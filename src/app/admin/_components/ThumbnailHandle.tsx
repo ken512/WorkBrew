@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/app/admin/_components/Button";
@@ -15,9 +16,10 @@ export const ThumbnailHandle: React.FC<{
   isLoading: boolean;
   location: Coordinate | undefined;
   locationError: string | null;
+  reset: () => void;
   getCurrentLocation: () => Promise<Coordinate>;
   setIsSubmitting: (isSubmitting: boolean) => void;
-}> = ({ onImageUpload, initialImage, isLoading, locationError, getCurrentLocation }) => {
+}> = ({ onImageUpload, initialImage, isLoading, locationError, getCurrentLocation, reset }) => {
   const {
     thumbnailImage,
     handleFileChange,
@@ -56,6 +58,11 @@ export const ThumbnailHandle: React.FC<{
     } catch {
       toast.error("現在地取得できませんでした!!");
     }
+  }
+
+  const handleClear = () => {
+    reset();
+    closeModal();
   }
 
   return (
@@ -145,12 +152,12 @@ export const ThumbnailHandle: React.FC<{
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end pt-2">
             <button
               type="button"
-              onClick={closeModal}
+              onClick={handleClear}
               className="
         inline-flex h-11 items-center justify-center rounded-xl px-4
-        text-sm font-medium text-gray-700
-        ring-1 ring-inset ring-gray-200
-        hover:bg-gray-50 active:bg-gray-100 transition
+        text-sm font-bold text-black
+        ring-1 ring-inset ring-gray-400
+        hover:bg-gray-200 active:bg-gray-100 transition
       "
             >
               キャンセル
@@ -162,7 +169,7 @@ export const ThumbnailHandle: React.FC<{
               className="
         inline-flex h-11 items-center justify-center rounded-xl px-4
         text-sm font-semibold text-white
-        bg-gray-900 hover:bg-gray-800
+        bg-gray-900 hover:bg-gray-600
         shadow-sm active:scale-[0.99] transition
       "
             >

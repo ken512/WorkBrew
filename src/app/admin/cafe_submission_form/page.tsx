@@ -28,7 +28,7 @@ const CafeSubmissionForm: React.FC = () => {
     }));
   };
 
-  const { location, isLoading, error, getCurrentLocation } =
+  const { location, isLoading, error, getCurrentLocation, reset } =
     useCurrentLocation();
   return (
     <div>
@@ -45,6 +45,7 @@ const CafeSubmissionForm: React.FC = () => {
           isLoading={isLoading}
           location={location}
           locationError={error}
+          reset={reset}
           getCurrentLocation={getCurrentLocation}
         />
         <CafePostForm
