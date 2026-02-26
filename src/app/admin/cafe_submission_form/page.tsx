@@ -5,6 +5,7 @@ import { CafePostForm } from "../_components/CafePostForm";
 import { ThumbnailHandle } from "../_components/ThumbnailHandle";
 import { UseCafeFormState } from "../_hooks/useCafeFormState";
 import { useCurrentLocation } from "./hooks/useCurrentLocation";
+import { useNearbySearchParams } from "./hooks/useNearbySearchParams";
 import "../../globals.css";
 
 const CafeSubmissionForm: React.FC = () => {
@@ -30,6 +31,8 @@ const CafeSubmissionForm: React.FC = () => {
 
   const { location, isLoading, error, getCurrentLocation, reset } =
     useCurrentLocation();
+
+  const nearby = useNearbySearchParams(location);
   return (
     <div>
       <HeaderAdminBase href="/admin/home" />
@@ -55,6 +58,7 @@ const CafeSubmissionForm: React.FC = () => {
           clearForm={clearForm}
           isSubmitting={isSubmitting}
           setIsSubmitting={setIsSubmitting}
+          nearby={nearby}
         />
       </div>
     </div>

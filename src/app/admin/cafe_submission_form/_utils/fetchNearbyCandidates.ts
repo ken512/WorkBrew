@@ -10,7 +10,7 @@ type NearbySearchResult = { candidates: PlaceCandidate[] };
 
 export const fetchNearbyCandidates = async (params: NearbySearchParams): Promise<PlaceCandidate[]> => {
   const res = await api.post<NearbySearchParams, NearbySearchResult>(
-    "/api/admin/cafe_submission_form/nearby-search",
+    "/api/admin/cafe_submission_form/nearby_search",
     params
   );
   return res.candidates;

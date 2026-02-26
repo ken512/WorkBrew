@@ -1,5 +1,5 @@
 
 export type Coordinate = {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 };

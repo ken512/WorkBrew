@@ -5,11 +5,11 @@ import { fetchNearbySearch } from "@/app/admin/cafe_submission_form/_utils/fetch
 
 // Google APIキーをクライアントに露出させないため、Places API 呼び出しはサーバー側(route.ts)で代理実行する
 
-
 // POSTメソッドでリクエスト処理とレスポンス
 // Nearby Searchは、POSTのみサポートしている
+
 export const POST = async (request: Request) => {
-  const apiKey = process.env.GOOGLE_MAP_API_KEY;
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { message: "APIキーがありません" },
@@ -21,7 +21,9 @@ export const POST = async (request: Request) => {
 
   try {
     const json = await fetchNearbySearch(params, apiKey);
+
     const candidates = mapGoogleNearbySearchToPlaceCandidate(json);
+
     return NextResponse.json({ candidates });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "検索に失敗しました";

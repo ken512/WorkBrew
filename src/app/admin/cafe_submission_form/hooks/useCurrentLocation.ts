@@ -29,7 +29,7 @@ export const useCurrentLocation = () => {
     setError(null);
     try {
       const pos = await getPosition({ timeout: 10000, maximumAge: 60000 });
-      const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      const loc = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
       setLocation(loc);
       console.log("現在地取得できました:", loc);
       return loc;
