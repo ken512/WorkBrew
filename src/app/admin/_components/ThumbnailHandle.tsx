@@ -56,7 +56,7 @@ export const ThumbnailHandle: React.FC<{
       closeModal();
       toast.success("現在地取得しました!!");
     } catch {
-      toast.error("現在地取得できませんでした!!");
+      console.error("現在地取得できませんでした!!");
     }
   }
 

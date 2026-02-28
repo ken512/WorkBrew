@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { CafeFormStateProps } from "../_types/CafeFormStateProps";
 import { CafeFormStateReturn } from "../_types/CafeFormStateReturn";
+import { useNearbySearchParams } from "../cafe_submission_form/hooks/useNearbySearchParams";
+import { useCurrentLocation } from "../cafe_submission_form/hooks/useCurrentLocation";
 export const UseCafeFormState = (): CafeFormStateReturn => {
   const cafeState: CafeFormStateProps = {
     cafeName: "",
@@ -20,11 +22,13 @@ export const UseCafeFormState = (): CafeFormStateReturn => {
     starRating: 0,
     comment: "",
     locationCoordinates: "",
+    
   };
 
   const [formState, setFormState] = useState<CafeFormStateProps>(cafeState);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const {location} = useCurrentLocation();
+  const nearby = useNearbySearchParams(location);
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -54,5 +58,6 @@ export const UseCafeFormState = (): CafeFormStateReturn => {
     clearForm,
     isSubmitting,
     setIsSubmitting,
+    nearby,
   };
 };
