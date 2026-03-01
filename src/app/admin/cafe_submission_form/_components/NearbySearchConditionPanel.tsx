@@ -48,7 +48,7 @@ export const NearbySearchConditionPanel = ({
           className="w-full"
           type="range"
           min={100}
-          max={2000}
+          max={500}
           step={50}
           value={radius}
           onChange={(e) => setRadius(Number(e.target.value))}
@@ -76,7 +76,7 @@ export const NearbySearchConditionPanel = ({
         <label className="block text-sm mb-2">候補件数</label>
         <select
           className="w-full rounded-2xl border p-3"
-          value={maxResultCount ?? 20}
+          value={maxResultCount ?? 50}
           onChange={(e) => setMaxResultCount(Number(e.target.value))}
         >
           <option value={5}>5件</option>
