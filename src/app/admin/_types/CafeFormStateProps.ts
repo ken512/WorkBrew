@@ -1,4 +1,5 @@
 import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
+import { Coordinate } from "../cafe_submission_form/types/coordinate";
 
 // カフェの状態管理用の型定義
 export type CafeFormStateProps = {
@@ -6,7 +7,7 @@ export type CafeFormStateProps = {
   thumbnailImage: string;
   area: string;
   storeAddress: string;
-  businessHours: string,
+  businessHours: "",
   closingDays: string;
   cafeUrl: string;
   menuOrdered: string;
@@ -15,7 +16,7 @@ export type CafeFormStateProps = {
   wifiStability?: WifiStability | null;
   powerOutlets: boolean | null;
   seatAvailability: SeatAvailability | null;
-  starRating: number;
+  starRating: number | null;
   comment: string;
-  locationCoordinates: string;
+  locationCoordinates: Coordinate | null;
 }

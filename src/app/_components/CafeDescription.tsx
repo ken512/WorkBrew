@@ -85,18 +85,20 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
       setWifiAvailable(cafe.wifiAvailable);
     }
   }, [cafe]);
-
+  const cafeLocationCoordinate = cafe?.latitude != null && cafe?.longitude != null;
   //クライアント側で使える状態になったら描画させる
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
       window.google &&
       window.google.maps &&
-      cafe.locationCoordinates
+      cafeLocationCoordinate
     ) {
       initMap(setMap, [cafe]); // 1件だけでも配列に
     }
-  }, [cafe.locationCoordinates, cafe]);
+  }, [cafeLocationCoordinate, cafe]);
+  console.log("cafe raw", cafe);
+console.log("lat/lng", cafe?.latitude, cafe?.longitude);
   console.log("地図", cafe.locationCoordinates);
 
   const handleDelete = async (e: React.FormEvent) => {
@@ -371,9 +373,9 @@ export const CafeDescription: React.FC<UpdateHandlers> = ({
             className="my-10 rounded-lg shadow-md h-[400px] w-full border border-blue-500"
           />
           <Script
-            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`}
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&libraries=marker`}
             onLoad={() => {
-              if (cafe.locationCoordinates) {
+              if (cafe?.latitude != null && cafe?.longitude != null) {
                 initMap(setMap, [cafe]); // 配列にする
               }
             }} //Google Maps API のスクリプトが完全に読み込まれた後に実行(undefinedにならないために)
