@@ -4,6 +4,7 @@ import { CafeFormStateProps } from "../_types/CafeFormStateProps";
 import { CafeFormStateReturn } from "../_types/CafeFormStateReturn";
 import { useNearbySearchParams } from "../cafe_submission_form/hooks/useNearbySearchParams";
 import { useCurrentLocation } from "../cafe_submission_form/hooks/useCurrentLocation";
+
 export const UseCafeFormState = (): CafeFormStateReturn => {
   const cafeState: CafeFormStateProps = {
     cafeName: "",
@@ -19,9 +20,9 @@ export const UseCafeFormState = (): CafeFormStateReturn => {
     wifiStability: null,
     powerOutlets: null,
     seatAvailability: null,
-    starRating: 0,
+    starRating: null,
     comment: "",
-    locationCoordinates: "",
+    locationCoordinates: null,
     
   };
 

@@ -1,5 +1,5 @@
 import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
-
+import { Coordinate } from "../admin/cafe_submission_form/types/coordinate";
 export type Cafe = {
   id: number;
   cafeName: string;
@@ -22,7 +22,7 @@ export type Cafe = {
   seatAvailability: SeatAvailability;
   starRating: number | null;
   comment: string; 
-  locationCoordinates: string;
+  locationCoordinates: Coordinate | null;
   createdAt: Date;
   updatedAt: Date;
   userId: number;

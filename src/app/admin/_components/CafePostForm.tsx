@@ -30,7 +30,7 @@ const fetchGeocode = async (url: string) => {
     throw new Error("住所の緯度・経度を取得できませんでした");
   }
   const loc = data.results[0].geometry.location;
-  return `${loc.lat}, ${loc.lng}`;
+    return { latitude: loc.lat, longitude: loc.lng };
 };
 
 export const CafePostForm: React.FC<CafeFormStateReturn> = ({
@@ -70,7 +70,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       onSuccess: (coordinates) => {
         setFormState((prevState) => ({
           ...prevState,
-          locationCoordinates: coordinates,
+          locationCoordinates: { latitude: coordinates.latitude, longitude: coordinates.longitude },
         }));
       },
     },
@@ -108,6 +108,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       setIsSubmitting(false);
     }
   };
+  console.log("送信直前データ:", formState);
 
   const validateForm = async () => {
     const tempErrors: FormErrorsType = {};
@@ -242,15 +243,23 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   };
 
   // 候補選択時の更新処理
-  const handleSelectCandidate = (c: PlaceCandidate) => {
-    setFormState((prev) => ({
-      ...prev,
-      cafeName: c.cafeName,
-      storeAddress: c.storeAddress,
-      locationCoordinates: `${c.locationCoordinates.latitude}, ${c.locationCoordinates.longitude}`,
-    }));
-    setIsOpenCandidates(false);
-  };
+const handleSelectCandidate = (c: PlaceCandidate) => {
+  setFormState((prev) => ({
+    ...prev,
+    cafeName: c.cafeName,
+    storeAddress: c.storeAddress,
+    locationCoordinates: c.locationCoordinates
+      ? {
+          latitude: c.locationCoordinates.latitude,
+          longitude: c.locationCoordinates.longitude,
+        }
+      : null,
+  }));
+  console.log("candidate", c);
+console.log("candidate.locationCoordinates", c.locationCoordinates);
+  setIsOpenCandidates(false);
+};
+
 
   const { params } = nearby;
   // 現在地取得後、お店住所欄をフォーカスすることで現在地から周辺情報を一覧させる
@@ -304,7 +313,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
               type="text"
               name={name}
               id={name}
-              value={String(formState[name as keyof typeof formState] ?? "")}
+              value={String(formState[name as keyof typeof formState] ?? null)}
               placeholder={placeholder}
               onChange={onChange}
               required={required}

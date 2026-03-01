@@ -4,7 +4,7 @@ export type PlaceCandidate = {
   placeId?: number;
   cafeName: string;
   storeAddress: string;
-  locationCoordinates: Coordinate;
+  locationCoordinates: Coordinate | null;
   primaryType?: string;
   types: string[];
 };

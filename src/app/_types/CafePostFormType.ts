@@ -1,5 +1,5 @@
 import { WifiSpeed,  WifiStability, SeatAvailability } from "@prisma/client";
-
+import { Coordinate } from "../admin/cafe_submission_form/types/coordinate";
 export type CafePostFormProps = {
   cafeName: string;
   setCafeName:(cafeName: string) => void;
@@ -29,10 +29,10 @@ export type CafePostFormProps = {
   setPowerOutlets: (powerOutlets: boolean) => void;
   seatAvailability: SeatAvailability;
   setSeatAvailability: (seatAvailability: SeatAvailability) => void;
-  starRating: number;
+  starRating: number | null;
   setStarRating:(starRating: number) => void;
   comment: string;
   setComment: (comment: string) => void;
-  locationCoordinates: string;
-  setLocationCoordinates: (locationCoordinates: string) => void;
+  locationCoordinates: Coordinate | null;
+  setLocationCoordinates: (locationCoordinates: Coordinate) => void;
 }

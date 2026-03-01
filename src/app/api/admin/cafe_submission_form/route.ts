@@ -6,7 +6,6 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export const GET = async (request: NextRequest) => {
-
   try {
     const { currentUser, error } = await getCurrentUser(request);
 
@@ -15,7 +14,7 @@ export const GET = async (request: NextRequest) => {
     }
 
     const user = await prisma.users.findUnique({
-      where: { supabaseUserId: currentUser.user.id }, 
+      where: { supabaseUserId: currentUser.user.id },
       include: {
         cafes: {
           select: {
@@ -48,10 +47,12 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
+    
+
     if (!user) {
       return NextResponse.json(
         { status: "Not Found", message: "ユーザー情報が見つかりません" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     return NextResponse.json({ status: "OK", user }, { status: 200 });
@@ -83,9 +84,6 @@ export const POST = async (request: NextRequest) => {
       cafeName,
       area,
       storeAddress,
-      placeId,
-      primaryType,
-      types,
       businessHours,
       thumbnailImage,
       closingDays,
@@ -104,9 +102,6 @@ export const POST = async (request: NextRequest) => {
     if (
       !cafeName ||
       !storeAddress ||
-      !placeId||
-      !primaryType ||
-      !types ||
       starRating === null ||
       wifiAvailable === null ||
       powerOutlets === null ||
@@ -130,9 +125,6 @@ export const POST = async (request: NextRequest) => {
         cafeName,
         area,
         storeAddress,
-        placeId,
-        primaryType,
-        types,
         openingTime,
         closingHours,
         thumbnailImage,
@@ -146,7 +138,8 @@ export const POST = async (request: NextRequest) => {
         seatAvailability,
         starRating,
         comment,
-        locationCoordinates,
+        latitude: locationCoordinates?.latitude ?? null,
+        longitude: locationCoordinates?.longitude ?? null,
         userId: user.id,
       },
     });

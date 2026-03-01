@@ -61,7 +61,9 @@ model Cafe {
   seatAvailability       SeatAvailability?
   starRating             Int               
   comment                String
-  locationCoordinates    String
+  locationCoordinates    String?
+  latitude               Float?
+  longitude              Float?
   userId                 Int
   favorites              Favorite[]
   users                  Users             @relation(fields: [userId], references: [id])
