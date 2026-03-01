@@ -10,6 +10,7 @@ type InputProps = {
   placeholder?: string;
   required?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   className: string;
 };
 
@@ -21,6 +22,7 @@ export const Input: React.FC<InputProps> = ({
   placeholder,
   required = true,
   onChange,
+  onFocus,
   className,
 }) => {
   return (
@@ -32,6 +34,7 @@ export const Input: React.FC<InputProps> = ({
       placeholder={placeholder}
       required={required}
       onChange={onChange}
+      onFocus={onFocus}
       className={className}
     />
   );

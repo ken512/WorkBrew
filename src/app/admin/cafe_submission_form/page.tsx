@@ -4,6 +4,8 @@ import { HeaderAdminBase } from "../_components/HeaderAdminBase";
 import { CafePostForm } from "../_components/CafePostForm";
 import { ThumbnailHandle } from "../_components/ThumbnailHandle";
 import { UseCafeFormState } from "../_hooks/useCafeFormState";
+import { useCurrentLocation } from "./hooks/useCurrentLocation";
+import { useNearbySearchParams } from "./hooks/useNearbySearchParams";
 import "../../globals.css";
 
 const CafeSubmissionForm: React.FC = () => {
@@ -18,7 +20,7 @@ const CafeSubmissionForm: React.FC = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormState((prev: typeof formState) => ({
@@ -26,18 +28,28 @@ const CafeSubmissionForm: React.FC = () => {
       [name]: value,
     }));
   };
-  
-  console.log(formState);
+
+  const { location, isLoading, error, getCurrentLocation, reset } =
+    useCurrentLocation();
+
+  const nearby = useNearbySearchParams(location);
   return (
     <div>
       <HeaderAdminBase href="/admin/home" />
-      <div className="bg-tan-300">      
-      <h1 className="flex justify-center font-bold text-3xl pt-[100px]">カフェ投稿</h1>
+      <div className="bg-tan-300">
+        <h1 className="flex justify-center font-bold text-3xl pt-[100px]">
+          カフェ投稿
+        </h1>
         <ThumbnailHandle
           onImageUpload={handleImageUpload}
           initialImage={formState.thumbnailImage}
           isSubmitting={isSubmitting}
           setIsSubmitting={setIsSubmitting}
+          isLoading={isLoading}
+          location={location}
+          locationError={error}
+          reset={reset}
+          getCurrentLocation={getCurrentLocation}
         />
         <CafePostForm
           formState={formState}
@@ -46,6 +58,7 @@ const CafeSubmissionForm: React.FC = () => {
           clearForm={clearForm}
           isSubmitting={isSubmitting}
           setIsSubmitting={setIsSubmitting}
+          nearby={nearby}
         />
       </div>
     </div>

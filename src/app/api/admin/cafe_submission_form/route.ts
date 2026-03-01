@@ -21,6 +21,9 @@ export const GET = async (request: NextRequest) => {
           select: {
             id: true,
             cafeName: true,
+            placeId: true,
+            primaryType: true,
+            types: true,
             thumbnailImage: true,
             openingTime: true,
             closingHours: true,
@@ -80,6 +83,9 @@ export const POST = async (request: NextRequest) => {
       cafeName,
       area,
       storeAddress,
+      placeId,
+      primaryType,
+      types,
       businessHours,
       thumbnailImage,
       closingDays,
@@ -98,6 +104,9 @@ export const POST = async (request: NextRequest) => {
     if (
       !cafeName ||
       !storeAddress ||
+      !placeId||
+      !primaryType ||
+      !types ||
       starRating === null ||
       wifiAvailable === null ||
       powerOutlets === null ||
@@ -121,6 +130,9 @@ export const POST = async (request: NextRequest) => {
         cafeName,
         area,
         storeAddress,
+        placeId,
+        primaryType,
+        types,
         openingTime,
         closingHours,
         thumbnailImage,

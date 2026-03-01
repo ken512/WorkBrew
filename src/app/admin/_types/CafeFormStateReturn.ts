@@ -1,4 +1,5 @@
 import { CafeFormStateProps } from "./CafeFormStateProps";
+import { useNearbySearchParams } from "../cafe_submission_form/hooks/useNearbySearchParams";
 
 export type CafeFormStateReturn = {
   formState: CafeFormStateProps;
@@ -8,4 +9,5 @@ export type CafeFormStateReturn = {
   onSubmit?: (e: React.FormEvent) => void;
   isSubmitting: boolean;
   setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  nearby: ReturnType<typeof useNearbySearchParams>; // 関数の戻り値型を取得
 }

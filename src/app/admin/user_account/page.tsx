@@ -9,6 +9,7 @@ import { FooterDefault } from "@/app/_components/Footer/FooterDefault";
 import toast, { Toaster } from "react-hot-toast";
 import "./../../globals.css";
 
+
 const UserAccount: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [formState, setFormState] = useState<UserAccountFormProps>({
@@ -35,7 +36,9 @@ const UserAccount: React.FC = () => {
 
     try {
       const data = await api.post("/api/admin/user_account", formState);
-      toast.success(data.message || "ユーザー登録が完了しました！");
+      // data がオブジェクトで、message というプロパティを持っていたら、それを文字列にして message に入れる。なければ undefined にする
+      const message = typeof data === "object" && data !== null && "message" in data ? String((data as any).message): undefined;
+      toast.success(message || "ユーザー登録が完了しました！");
     } catch (error) {
       console.error("ユーザー登録エラー:", error);
       toast.error(error instanceof Error ? error.message : "ユーザー登録に失敗しました。もう一度お試しください。");
@@ -60,7 +63,8 @@ const UserAccount: React.FC = () => {
 
     try {
       const data = await api.put("/api/admin/user_account", formState);
-      toast.success(data.message || "ユーザー情報を更新しました");
+            const message = typeof data === "object" && data !== null && "message" in data ? String((data as any).message): undefined;
+      toast.success(message || "ユーザー情報を更新しました");
     } catch (error) {
       console.error("更新エラー:", error);
       toast.error(error instanceof Error ? error.message : "更新に失敗しました");

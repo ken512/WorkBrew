@@ -5,6 +5,9 @@ export type Cafe = {
   cafeName: string;
   area: string;
   storeAddress: string;
+  placeId?: string;
+  primaryType?: string;
+  types: string[];
   openingTime?: string;
   closingHours?: string;
   businessHours?: string;

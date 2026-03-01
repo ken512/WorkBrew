@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, FocusEvent, useMemo } from "react";
 import { Input } from "@/app/_components/Input";
 import { CafeFormFields } from "../_data/cafeFormFields";
 import { CafePostButtons } from "./CafePostButtons";
@@ -12,6 +12,10 @@ import { WifiSpeed, WifiStability, SeatAvailability } from "@prisma/client";
 import useSWR, { mutate } from "swr";
 import api from "@/_utils/api";
 import toast, { Toaster } from "react-hot-toast";
+import { fetchNearbyCandidates } from "../cafe_submission_form/_utils/fetchNearbyCandidates";
+import { PlaceCandidate } from "../cafe_submission_form/types/placeCandidate";
+import { NearbySearchConditionPanel } from "../cafe_submission_form/_components/NearbySearchConditionPanel";
+import { CandidateDropdown } from "../cafe_submission_form/_components/CandidateDropdown";
 import "../../globals.css";
 
 //共通リクエストを使用する
@@ -34,12 +38,17 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   setFormState,
   onChange,
   clearForm,
+  nearby,
 }) => {
   const [errors, setErrors] = useState<FormErrorsType>({});
   const [clearSignal, setClearSignal] = useState(false);
   const [rating, setRating] = useState(3); // 星評価の状態
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // エラーメッセージ用の状態
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [candidates, setCandidates] = useState<PlaceCandidate[]>([]);
+  const [isOpenCandidates, setIsOpenCandidates] = useState(false);
+  const [isLoadingCandidates, setIsLoadingCandidates] = useState(false);
+  const [isConditionPanelOpen, setIsConditionPanelOpen] = useState(false);
 
   //  SWRを使ったデータ取得
   useSWR("/api/admin/cafe_submission_form", ([url]) => fetcher(url), {
@@ -53,7 +62,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
   useSWR(
     formState.storeAddress
       ? `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          formState.storeAddress
+          formState.storeAddress,
         )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`
       : null,
     fetchGeocode,
@@ -64,7 +73,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
           locationCoordinates: coordinates,
         }));
       },
-    }
+    },
   );
 
   const handleSubmit = async (e: FormEvent) => {
@@ -138,7 +147,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
 
       // 全体エラー（必須未入力）がある場合だけ、汎用メッセージを出す
       const hasRequiredMissing = Object.values(tempErrors).some(
-        (msg) => msg === "※必須"
+        (msg) => msg === "※必須",
       );
       if (hasRequiredMissing) {
         toast.error("必須項目は入力してください！！");
@@ -152,7 +161,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
 
   const convertSelection = (
     option: string,
-    fieldName: string
+    fieldName: string,
   ): WifiSpeed | WifiStability | SeatAvailability | number | boolean | null => {
     console.log(option, fieldName); // デバッグ用ログ
 
@@ -167,7 +176,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       case "wifiSpeed":
         if (!formState.wifiAvailable) {
           setErrorMessage(
-            "Wi-Fiの有無が「無」の場合、Wi-Fi速度を選択できません。"
+            "Wi-Fiの有無が「無」の場合、Wi-Fi速度を選択できません。",
           );
           return null;
         }
@@ -185,7 +194,7 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
       case "wifiStability":
         if (!formState.wifiAvailable) {
           setErrorMessage(
-            "Wi-Fiの有無が「無」の場合、Wi-Fi安定性を選択できません。"
+            "Wi-Fiの有無が「無」の場合、Wi-Fi安定性を選択できません。",
           );
           return null;
         }
@@ -232,6 +241,53 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
     setTimeout(() => setClearSignal(false), 0);
   };
 
+  // 候補選択時の更新処理
+  const handleSelectCandidate = (c: PlaceCandidate) => {
+    setFormState((prev) => ({
+      ...prev,
+      cafeName: c.cafeName,
+      storeAddress: c.storeAddress,
+      locationCoordinates: `${c.locationCoordinates.latitude}, ${c.locationCoordinates.longitude}`,
+    }));
+    setIsOpenCandidates(false);
+  };
+
+  const { params } = nearby;
+  // 現在地取得後、お店住所欄をフォーカスすることで現在地から周辺情報を一覧させる
+  const handleFocus = async (e: FocusEvent<HTMLInputElement>) => {
+    if (e.currentTarget.name !== "storeAddress") return;
+    if (!params) {
+      toast.error("現在地が取得できていません");
+      return;
+    }
+
+    // 既に候補があるなら再取得せず開くだけ(無駄なAPI叩くのを減らすため)
+    if (candidates.length > 0) {
+      setIsOpenCandidates(true);
+      return;
+    }
+
+    try {
+      setIsLoadingCandidates(true);
+      const listCandidate = await fetchNearbyCandidates(params);
+      setCandidates(listCandidate);
+      setIsConditionPanelOpen(true);
+      setIsOpenCandidates(true);
+    } catch (err) {
+      console.log(err);
+      toast.error("周辺候補の取得に失敗しました");
+    } finally {
+      setIsLoadingCandidates(false);
+    }
+  };
+
+  const paramsKey = useMemo(() => JSON.stringify(params ?? null), [params]);
+  React.useEffect(() => {
+    setCandidates([]);
+    setIsOpenCandidates(false);
+    setIsLoadingCandidates(false);
+  }, [paramsKey]);
+
   return (
     <div className="flex flex-col items-center py-40 sm:px-4 sm:text-sm">
       <Toaster position="top-center" reverseOrder={false} />
@@ -252,8 +308,22 @@ export const CafePostForm: React.FC<CafeFormStateReturn> = ({
               placeholder={placeholder}
               onChange={onChange}
               required={required}
+              onFocus={name === "storeAddress" ? handleFocus : undefined}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block w-full p-5"
             />
+            {name === "storeAddress" && (
+              <>
+                {isConditionPanelOpen && (
+                  <NearbySearchConditionPanel nearby={nearby} />
+                )}
+                <CandidateDropdown
+                  open={isOpenCandidates}
+                  loading={isLoadingCandidates}
+                  candidates={candidates}
+                  onSelect={handleSelectCandidate}
+                />
+              </>
+            )}
           </div>
         ))}
 

@@ -8,7 +8,7 @@ const isLocalhost = typeof window !== "undefined" && window.location.hostname ==
 
 const api = {
   //requestにまとめてメソッドを共通にする
-  request: async <T>(method: string, endpoint: string, body?: T) => {
+  request: async <Res>(method: string, endpoint: string, body?: Res) => {
 
     const baseUrl = isLocalhost
   ? "http://localhost:3000" // ローカル用APIエンドポイント
@@ -44,7 +44,7 @@ const api = {
   },
   //それぞれのメソッドに、request関数を呼び出す
   get: (endpoint: string) => api.request('GET', endpoint),//GETのみSWRで取得するため、bodyは不要(endpointのみ)
-  post: <T>(endpoint: string, body: T) => api.request('POST', endpoint, body),
+  post: <Req, Res>(endpoint: string, body: Req): Promise<Res> => api.request('POST', endpoint, body),// Request・Response両方に型チェックで安全にする
   put: <T>(endpoint: string, body: T) => api.request('PUT', endpoint, body),
   delete: <T>(endpoint: string, body: T) => api.request('DELETE', endpoint, body),
 };
