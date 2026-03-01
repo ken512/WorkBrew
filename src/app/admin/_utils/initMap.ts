@@ -24,17 +24,21 @@ export const initMap = async (
   }
   const map = new google.maps.Map(mapElement, {
     zoom: 16,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapId: process.env.NEXT_PUBLIC_GOOGLE_MAP_ID,
     maxZoom: 25,
     center: { lat: first.latitude!, lng: first.longitude! },
   });
 
   setMap(map);
 
+  const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+  "marker",
+)) as google.maps.MarkerLibrary;
+
   cafeList.forEach((cafe) => {
     if (cafe.latitude == null || cafe.longitude == null) return;
 
-    const marker = new google.maps.Marker({
+    const marker = new AdvancedMarkerElement({
       position: { lat: cafe.latitude, lng: cafe.longitude },
       map,
       title: `${cafe.cafeName} - ${cafe.storeAddress}`,

@@ -373,7 +373,7 @@ console.log("lat/lng", cafe?.latitude, cafe?.longitude);
             className="my-10 rounded-lg shadow-md h-[400px] w-full border border-blue-500"
           />
           <Script
-            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`}
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}&libraries=marker`}
             onLoad={() => {
               if (cafe?.latitude != null && cafe?.longitude != null) {
                 initMap(setMap, [cafe]); // 配列にする
