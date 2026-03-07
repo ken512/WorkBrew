@@ -34,7 +34,7 @@ const Home: React.FC = () => {
   // ローディング中の表示
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-tan-300">
         <p className="text-lg font-semibold">
           ☕️ コーヒーを淹れています... お待ちください
         </p>

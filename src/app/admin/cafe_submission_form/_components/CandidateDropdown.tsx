@@ -18,7 +18,7 @@ export const CandidateDropdown = ({
   return (
     <div className="mt-2 rounded-3xl border bg-white shadow">
       {loading ? (
-        <div className="p-4 text-sm text-black">
+        <div className="bg-tan-300 p-4 text-sm text-black">
           ☕️ コーヒーを淹れています... お待ちください
         </div>
       ): candidates.length === 0 ? (

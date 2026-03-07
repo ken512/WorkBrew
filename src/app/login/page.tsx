@@ -8,6 +8,7 @@ import { HeaderPublic } from "../_components/HeaderPublic";
 import { FooterDefault } from "../_components/Footer/FooterDefault";
 import toast, { Toaster } from "react-hot-toast";
 import { Button } from "../admin/_components/Button";
+import api from "@/_utils/api";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -30,6 +31,7 @@ const Login: React.FC = () => {
       // セッションが取得できているか確認
       const sessionCheck = await supabase.auth.getSession();
       if (sessionCheck.data.session) {
+        await api.post("/api/admin/user_account/init", {});
         toast.success("ログインに成功しました");
         router.replace("/admin/home");
       } else {

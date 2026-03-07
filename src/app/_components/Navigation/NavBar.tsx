@@ -68,7 +68,7 @@ export const NavBar:React.FC = () => {
                 使い方
               </a>
               <a 
-                href="#cafes" 
+                href="/cafe_post" 
                 className="text-gray-700 hover:text-[#d6b288] px-2 sm:px-3 py-2 text-sm lg:text-base font-medium"
               >
                 カフェ一覧

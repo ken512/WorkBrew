@@ -44,7 +44,13 @@ const CafePostClient: React.FC = () => {
   };
 
   if (isLoading) {
-    return <p className="text-center">☕️ データ読み込み中です...</p>;
+    return (
+      <div className="bg-tan-300 flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">
+          ☕️ コーヒーを淹れています... お待ちください
+        </p>
+      </div>
+    );
   }
 
   if (error) {

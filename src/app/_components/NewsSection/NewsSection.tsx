@@ -6,6 +6,7 @@ interface NewsItem {
   publishDate: string;
   updateDate: string;
   title: string;
+  summary?: string;
   tags: string[];
 }
 
@@ -14,6 +15,13 @@ const newsItems: NewsItem[] = [
     publishDate: '2025/04/22',
     updateDate: '2025/04/22',
     title: 'WorkBrewをリリースしました!!',
+    tags: ['Webアプリ関連']
+  },
+  {
+    publishDate: '2026/02/27',
+    updateDate: '2026/02/27',
+    title: '新機能をリリースしました!!',
+    summary: '店舗住所の入力補助機能を追加し、入力の手間を減らしました。',
     tags: ['Webアプリ関連']
   },
 ];
@@ -40,6 +48,9 @@ export const NewsSection: React.FC = () => {
               </div>
               <h3 className="text-lg font-medium mb-2">
                 {item.title}
+              </h3>
+              <h3 className="text-lg font-medium mb-2">
+                {item.summary}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {item.tags.map((tag, tagIndex) => (
