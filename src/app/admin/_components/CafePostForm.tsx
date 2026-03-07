@@ -279,6 +279,7 @@ console.log("candidate.locationCoordinates", c.locationCoordinates);
     try {
       setIsLoadingCandidates(true);
       const listCandidate = await fetchNearbyCandidates(params);
+      console.log("listCandidate: ", listCandidate);
       setCandidates(listCandidate);
       setIsConditionPanelOpen(true);
       setIsOpenCandidates(true);

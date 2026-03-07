@@ -38,7 +38,7 @@ const UserAccount: React.FC = () => {
       const data = await api.post("/api/admin/user_account", formState);
       // data がオブジェクトで、message というプロパティを持っていたら、それを文字列にして message に入れる。なければ undefined にする
       const message = typeof data === "object" && data !== null && "message" in data ? String((data as any).message): undefined;
-      toast.success(message || "ユーザー登録が完了しました！");
+      toast.success(message || "ユーザーアカウントが作成されました！");
     } catch (error) {
       console.error("ユーザー登録エラー:", error);
       toast.error(error instanceof Error ? error.message : "ユーザー登録に失敗しました。もう一度お試しください。");
