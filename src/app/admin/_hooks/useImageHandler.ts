@@ -53,9 +53,9 @@ export const useImageHandler = (
     }
 
     // ファイルサイズの検証を追加
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 20 * 1024 * 1024; // 20MB
     if (file.size > maxSize) {
-      toast.error("ファイルサイズは10MB以下にしてください");
+      toast.error("ファイルサイズは20MB以下にしてください");
       return;
     }
 
