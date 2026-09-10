@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/_utils/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { UpdateStatus } from "@/app/_types/UpdateStatus";
 import { getCurrentUser } from "@/_utils/supabase";
 
-const prisma = new PrismaClient();
+
 
 export const GET = async (
   _req: Request,

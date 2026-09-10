@@ -1,8 +1,8 @@
 import { getCurrentUser } from "@/_utils/supabase";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/_utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+
 
 // ログイン済みユーザーに対応するUsersレコードが未作成の場合、デフォルトアカウントを作成するAPI
 export const POST = async (req: NextRequest) => {
